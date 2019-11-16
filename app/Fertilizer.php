@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RealIrrigation extends Model
+class Fertilizer extends Model
 {
     protected $fillable = [        
-        'initTime', 'endTime','status','id_irrigation'
+        'name','dilution','description'
     ];
 }

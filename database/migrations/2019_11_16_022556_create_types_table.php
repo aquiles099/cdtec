@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRealIrrigationsTable extends Migration
+class CreateTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,13 @@ class CreateRealIrrigationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('real_irrigations', function (Blueprint $table) {
+        Schema::create('types', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('initTime', 45);
-            $table->string('endTime', 45);
-            $table->string('status', 45);
-            $table->unsignedBigInteger('id_irrigation')->unsigned();
-            $table->foreign('id_irrigation')
+            $table->string('description', 45);
+            $table->unsignedBigInteger('id_real_irrigation')->unsigned();
+            $table->foreign('id_real_irrigation')
                 ->references('id')
-                ->on('irrigations')
+                ->on('real_irrigations')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->timestamps();
@@ -35,6 +33,6 @@ class CreateRealIrrigationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('real_irrigations');
+        Schema::dropIfExists('types');
     }
 }
