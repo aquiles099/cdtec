@@ -19,6 +19,7 @@ class CreateFertigationsTable extends Migration
             $table->string('endTime', 45);
             $table->string('dilution', 45);
             $table->boolean('soluble')->default(false);
+            $table->unsignedBigInteger('id_fertilizer')->unsigned();
             $table->foreign('id_fertilizer')
                 ->references('id')
                 ->on('fertilizers')
