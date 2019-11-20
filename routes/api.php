@@ -21,12 +21,10 @@ Route::post('accounts/update/{id}', 'AccountController@update');
 Route::get('farms', 'FarmController@all');
 Route::get('farms/{id}', 'FarmController@get');
 Route::post('farms/store', 'FarmController@store');
-// Route::post('farms/update/{id}', 'FarmController@update');
-// zones
-Route::get('zones', 'FarmController@all');
-Route::get('zones/{id}', 'FarmController@get');
-Route::post('zones/store', 'FarmController@store');
-// Route::post('zones/update/{id}', 'FarmController@update');
+Route::get('farms/{id}/zones', 'FarmController@zones');
+Route::get('farms/{id}/hydraulics', 'FarmController@hydraulics');
+Route::get('farms/{id}/pumpsystems', 'FarmController@pumpsystems');
+Route::get('farms/{id}/measures', 'FarmController@measures');
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
