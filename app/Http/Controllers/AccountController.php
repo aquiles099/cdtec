@@ -56,7 +56,7 @@ class AccountController extends Controller
             'email'           => 'required|string|max:45',
             'comentario'      => 'required|string|max:45',
             'habilitar'       => 'required|string|max:45',
-            'id_farm'         => 'required'
+            'id_farm'         => 'required|integer'
         ],[
             'name.required'          => 'El name es requerido',
             'name.max'               => 'El name debe contener como máximo 45 caracteres',
@@ -77,6 +77,8 @@ class AccountController extends Controller
             'habilitar.required'     => 'El habilitar es requerido',
             'habilitar.max'          => 'El habilitar debe contener como máximo 45 caracteres',
             'id_farm.required'       => 'El id_farm es requerido',
+            'id_farm.integer'        => 'El id_farm debe ser un número entero',
+            
         ]);
         if($validator->fails()){
             return response()->json($validator->errors(), 400);

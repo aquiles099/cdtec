@@ -21,10 +21,10 @@ class MeasureController extends Controller{
             'depthUnit'              => 'required|string|max:45',
             'sensorType'             => 'required|string|max:45',
             'readType'               => 'required|string|max:45',
-            'id_node'                => 'required',
-            'id_zone'                => 'required',
-            'id_farm'                => 'required',
-            'id_physical_connection' => 'required'
+            'id_node'                => 'required|integer',
+            'id_zone'                => 'required|integer',
+            'id_farm'                => 'required|integer',
+            'id_physical_connection' => 'required|integer'
         ],[
             'name.required'                   => 'El name es requerido',
             'name.max'                        => 'El name debe contener como máximo 45 caracteres',
@@ -43,9 +43,13 @@ class MeasureController extends Controller{
             'readType.required'               => 'El readType es requerido',
             'readType.max'                    => 'El readType debe contener como máximo 45 caracteres',
             'id_node.required'                => 'El id_node es requerido',
+            'id_node.integer'                 => 'El id_node debe ser un número entero',
             'id_zone.required'                => 'El id_zone es requerido',
+            'id_zone.integer'                 => 'El id_zone debe ser un número entero',
             'id_farm.required'                => 'El id_farm es requerido',
+            'id_farm.integer'                 => 'El id_farm debe ser un número entero',
             'id_physical_connection.required' => 'El id_physical_connection es requerido',
+            'id_physical_connection.integer'  => 'El id_physical_connection debe ser un número entero',
         ]);
         if($validator->fails()){
             return response()->json($validator->errors(), 400);

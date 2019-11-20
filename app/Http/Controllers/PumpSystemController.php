@@ -11,13 +11,15 @@ class PumpSystemController extends Controller
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
             'name'                   => 'required|string|max:45',
-            'allowPumpSelection'     => 'required',
-            'id_farm'                => 'required',
+            'allowPumpSelection'     => 'required|integer',
+            'id_farm'                => 'required|integer',
         ],[
             'name.required'                   => 'El name es requerido',
             'name.max'                        => 'El name debe contener como máximo 45 caracteres',
             'allowPumpSelection.required'     => 'El allowPumpSelection es requerido',
+            'allowPumpSelection.integer'      => 'El allowPumpSelection debe ser un número entero',
             'id_farm.required'                => 'El id_farm es requerido',
+            'id_farm.integer'                 => 'El id_farm debe ser un número entero',
         ]);
         if($validator->fails()){
             return response()->json($validator->errors(), 400);
