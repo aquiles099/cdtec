@@ -9,7 +9,8 @@
 	"folders_order": [
 		"3e195dbb-c3c0-427c-bfdc-2e358e3e79d6",
 		"00003817-e872-41d6-a94e-75dd109cf644",
-		"ae7a034e-c575-41df-b8f3-7282265345c3"
+		"ae7a034e-c575-41df-b8f3-7282265345c3",
+		"4e97ec1f-dd1e-40cc-849b-bc35d6239850"
 	],
 	"folders": [
 		{
@@ -48,6 +49,19 @@
 			"folders_order": []
 		},
 		{
+			"id": "4e97ec1f-dd1e-40cc-849b-bc35d6239850",
+			"name": "measure",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+			"folder": null,
+			"order": [
+				"40d89136-e777-4f5a-b9ce-387174f4b223"
+			],
+			"folders_order": []
+		},
+		{
 			"id": "ae7a034e-c575-41df-b8f3-7282265345c3",
 			"name": "zone",
 			"description": "",
@@ -55,7 +69,9 @@
 			"events": null,
 			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
 			"folder": null,
-			"order": [],
+			"order": [
+				"7ab35cff-86e4-43dd-a1f0-f6b0226b8203"
+			],
 			"folders_order": []
 		}
 	],
@@ -200,6 +216,115 @@
 			"pathVariables": {}
 		},
 		{
+			"id": "40d89136-e777-4f5a-b9ce-387174f4b223",
+			"name": "registrar",
+			"url": "http://localhost:8000/api/measures/store",
+			"description": "",
+			"data": [
+				{
+					"key": "name",
+					"value": "name",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "unit",
+					"value": "unit",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "lastData",
+					"value": "lastData",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "lastDataDate",
+					"value": "2019-11-13 13:43:23",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "monitoringTime",
+					"value": "monitoringTime",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "sensorDepth",
+					"value": "sensorDepth",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "depthUnit",
+					"value": "depthUnit",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "sensorType",
+					"value": "sensorType",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "readType",
+					"value": "readType",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_node",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_zone",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_farm",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_physical_connection",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "4e97ec1f-dd1e-40cc-849b-bc35d6239850",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
 			"id": "7152a62f-6692-4324-b3e8-9d57a6219549",
 			"name": "lista",
 			"url": "http://localhost:8000/api/accounts",
@@ -318,6 +443,136 @@
 			"auth": null,
 			"events": [],
 			"folder": "3e195dbb-c3c0-427c-bfdc-2e358e3e79d6",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "7ab35cff-86e4-43dd-a1f0-f6b0226b8203",
+			"name": "registrar",
+			"url": "http://localhost:8000/api/zones/store",
+			"description": "",
+			"data": [
+				{
+					"key": "name",
+					"value": "name",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "description",
+					"value": "description",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "latitude",
+					"value": "latitude",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "longitude",
+					"value": "longitude",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "type",
+					"value": "type",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "kc",
+					"value": "kc",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "theoreticalFlow",
+					"value": "theoreticalFlow",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "unitTheoreticalFlow",
+					"value": "unitTheoreticalFlow",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "efficiency",
+					"value": "efficiency",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "humidityRetention",
+					"value": "humidityRetention",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "max",
+					"value": "max",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "min",
+					"value": "min",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "criticalPoint1",
+					"value": "criticalPoint1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "criticalPoint2",
+					"value": "criticalPoint2",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_farm",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_pump_system",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "ae7a034e-c575-41df-b8f3-7282265345c3",
 			"headers": "",
 			"pathVariables": {}
 		},
