@@ -11,7 +11,8 @@
 		"00003817-e872-41d6-a94e-75dd109cf644",
 		"ae7a034e-c575-41df-b8f3-7282265345c3",
 		"4e97ec1f-dd1e-40cc-849b-bc35d6239850",
-		"5950fe62-8c5c-4949-8c56-a37bed3ad283"
+		"5950fe62-8c5c-4949-8c56-a37bed3ad283",
+		"0c98fc22-ce54-4497-b89f-3b3aa7be0a69"
 	],
 	"folders": [
 		{
@@ -59,6 +60,19 @@
 			"folder": null,
 			"order": [
 				"40d89136-e777-4f5a-b9ce-387174f4b223"
+			],
+			"folders_order": []
+		},
+		{
+			"id": "0c98fc22-ce54-4497-b89f-3b3aa7be0a69",
+			"name": "node",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+			"folder": null,
+			"order": [
+				"2ca57d78-81d0-4ec6-904a-6a88223f5f1b"
 			],
 			"folders_order": []
 		},
@@ -160,6 +174,52 @@
 			"auth": null,
 			"events": [],
 			"folder": "00003817-e872-41d6-a94e-75dd109cf644",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "2ca57d78-81d0-4ec6-904a-6a88223f5f1b",
+			"name": "registrar",
+			"url": "http://localhost:8000/api/nodes/store",
+			"description": "",
+			"data": [
+				{
+					"key": "name",
+					"value": "name",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "lat",
+					"value": "lat",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "lng",
+					"value": "lng",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "nodeType",
+					"value": "nodeType",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "0c98fc22-ce54-4497-b89f-3b3aa7be0a69",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -542,14 +602,14 @@
 				},
 				{
 					"key": "kc",
-					"value": "kc",
+					"value": "1",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
 					"key": "theoreticalFlow",
-					"value": "theoreticalFlow",
+					"value": "1",
 					"description": "",
 					"type": "text",
 					"enabled": true
@@ -563,42 +623,42 @@
 				},
 				{
 					"key": "efficiency",
-					"value": "efficiency",
+					"value": "1",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
 					"key": "humidityRetention",
-					"value": "humidityRetention",
+					"value": "1",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
 					"key": "max",
-					"value": "max",
+					"value": "1",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
 					"key": "min",
-					"value": "min",
+					"value": "1",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
 					"key": "criticalPoint1",
-					"value": "criticalPoint1",
+					"value": "1",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
 					"key": "criticalPoint2",
-					"value": "criticalPoint2",
+					"value": "1",
 					"description": "",
 					"type": "text",
 					"enabled": true

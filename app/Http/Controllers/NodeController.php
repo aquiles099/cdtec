@@ -1,0 +1,49 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use App\Node;
+class NodeController extends Controller
+{
+    public function store(Request $request){
+        $validator = Validator::make($request->all(), [
+            'name'                 => 'required|string|max:45',
+            'lat'                  => 'required|string|max:45',
+            'lng'                  => 'required|string|max:45',
+            'nodeType'             => 'required|string|max:45'
+        ],[
+            'name.required'                 => 'El name es requerido',
+            'name.max'                      => 'El name debe contener como máximo 45 caracteres',
+            'lat.required'                  => 'El lat es requerido',
+            'lat.max'                       => 'El lat debe contener como máximo 45 caracteres',
+            'lng.required'                  => 'El lng es requerido',
+            'lng.max'                       => 'El lng debe contener como máximo 45 caracteres',
+            'nodeType.required'             => 'El nodeType es requerido',
+            'nodeType.max'                  => 'El nodeType debe contener como máximo 45 caracteres'            
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors(), 400);
+        }
+        try {
+            $element = Node::create([
+                'name' => $request->get('name'),
+                'lat' => $request->get('lat'),
+                'lng' => $request->get('lng'),
+                'nodeType' => $request->get('nodeType')
+            ]);
+            $response = [
+                'message'=> 'item successfully registered',
+                'data' => $element,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de guardar los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
+}
