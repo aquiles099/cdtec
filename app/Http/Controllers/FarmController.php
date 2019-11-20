@@ -76,20 +76,28 @@ class FarmController extends Controller
         if($validator->fails()){
             return response()->json($validator->errors(), 400);
         }
-        $element = Farm::create([
-            'name' => $request->get('name'),
-            'description' => $request->get('description'),
-            'latitude' => $request->get('latitude'),
-            'longitude' => $request->get('longitude'),
-            'postalAddress' => $request->get('postalAddress'),
-            'timeZone' => $request->get('timeZone'),
-            'webhook' => $request->get('webhook'),
-        ]);
-        $response = [
-            'message'=> 'item successfully registered',
-            'data' => $element,
-        ];
-        return response()->json($response, 200);
+        try{
+            $element = Farm::create([
+                'name' => $request->get('name'),
+                'description' => $request->get('description'),
+                'latitude' => $request->get('latitude'),
+                'longitude' => $request->get('longitude'),
+                'postalAddress' => $request->get('postalAddress'),
+                'timeZone' => $request->get('timeZone'),
+                'webhook' => $request->get('webhook'),
+            ]);
+            $response = [
+                'message'=> 'item successfully registered',
+                'data' => $element,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de guardar los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
     }
     public function zones($id){
         try {            

@@ -12,7 +12,8 @@
 		"ae7a034e-c575-41df-b8f3-7282265345c3",
 		"4e97ec1f-dd1e-40cc-849b-bc35d6239850",
 		"5950fe62-8c5c-4949-8c56-a37bed3ad283",
-		"0c98fc22-ce54-4497-b89f-3b3aa7be0a69"
+		"0c98fc22-ce54-4497-b89f-3b3aa7be0a69",
+		"ef6fe5b8-ce8c-41fd-9b69-19644b5a1be9"
 	],
 	"folders": [
 		{
@@ -28,6 +29,19 @@
 				"aaee44b0-1cb8-4eea-9af6-ec9f427b4b27",
 				"793a5ec9-1197-4048-a77d-18a4546aa029",
 				"2d4f0994-9dda-410d-9f4a-e4335e7ded01"
+			],
+			"folders_order": []
+		},
+		{
+			"id": "ef6fe5b8-ce8c-41fd-9b69-19644b5a1be9",
+			"name": "alarm",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+			"folder": null,
+			"order": [
+				"e969afae-c549-41ee-ace4-88e691350453"
 			],
 			"folders_order": []
 		},
@@ -804,6 +818,59 @@
 			"auth": null,
 			"events": [],
 			"folder": "00003817-e872-41d6-a94e-75dd109cf644",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "e969afae-c549-41ee-ace4-88e691350453",
+			"name": "registrar",
+			"url": "http://localhost:8000/api/alarms/store",
+			"description": "",
+			"data": [
+				{
+					"key": "activationValue",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "date",
+					"value": "date",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_farm",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_zone",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_irrigation",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "ef6fe5b8-ce8c-41fd-9b69-19644b5a1be9",
 			"headers": "",
 			"pathVariables": {}
 		}

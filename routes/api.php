@@ -33,6 +33,8 @@ Route::post('measures/store', 'MeasureController@store');
 Route::post('pumpsystems/store', 'PumpSystemController@store');
 // nodes
 Route::post('nodes/store', 'NodeController@store');
+// alarms
+Route::post('alarms/store', 'AlarmController@store');
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
