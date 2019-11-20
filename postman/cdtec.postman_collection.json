@@ -1,0 +1,359 @@
+{
+	"id": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+	"name": "cdtec",
+	"description": "",
+	"auth": null,
+	"events": null,
+	"variables": [],
+	"order": [],
+	"folders_order": [
+		"3e195dbb-c3c0-427c-bfdc-2e358e3e79d6",
+		"00003817-e872-41d6-a94e-75dd109cf644"
+	],
+	"folders": [
+		{
+			"id": "3e195dbb-c3c0-427c-bfdc-2e358e3e79d6",
+			"name": "account",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+			"folder": null,
+			"order": [
+				"7152a62f-6692-4324-b3e8-9d57a6219549",
+				"aaee44b0-1cb8-4eea-9af6-ec9f427b4b27",
+				"793a5ec9-1197-4048-a77d-18a4546aa029",
+				"2d4f0994-9dda-410d-9f4a-e4335e7ded01"
+			],
+			"folders_order": []
+		},
+		{
+			"id": "00003817-e872-41d6-a94e-75dd109cf644",
+			"name": "farm",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+			"folder": null,
+			"order": [
+				"db76a331-264f-46ab-afa7-0d1f477cb90c",
+				"9acac286-0e2e-4dfd-82c7-3bbadff885f8",
+				"2948156c-617c-4404-bdbf-cb669f7798ed"
+			],
+			"folders_order": []
+		}
+	],
+	"requests": [
+		{
+			"id": "2948156c-617c-4404-bdbf-cb669f7798ed",
+			"name": "obtener por id",
+			"url": "http://localhost:8000/api/farms/1",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "00003817-e872-41d6-a94e-75dd109cf644",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "2d4f0994-9dda-410d-9f4a-e4335e7ded01",
+			"name": "actualizar",
+			"url": "http://localhost:8000/api/accounts/update/1",
+			"description": "",
+			"data": [
+				{
+					"key": "name",
+					"value": "name updated",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "rut",
+					"value": "rut",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "razonsocial",
+					"value": "razon social",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "rutlegal",
+					"value": "rut legal",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "direccion",
+					"value": "direccion",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "telefono",
+					"value": "telefono",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "email",
+					"value": "email",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "comentario",
+					"value": "comentario",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "habilitar",
+					"value": "habilitar",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_farm",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "3e195dbb-c3c0-427c-bfdc-2e358e3e79d6",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "7152a62f-6692-4324-b3e8-9d57a6219549",
+			"name": "lista",
+			"url": "http://localhost:8000/api/accounts",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "3e195dbb-c3c0-427c-bfdc-2e358e3e79d6",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "793a5ec9-1197-4048-a77d-18a4546aa029",
+			"name": "registrar",
+			"url": "http://localhost:8000/api/accounts/store",
+			"description": "",
+			"data": [
+				{
+					"key": "name",
+					"value": "name",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "rut",
+					"value": "rut",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "razonsocial",
+					"value": "razon social",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "rutlegal",
+					"value": "rut legal",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "direccion",
+					"value": "direccion",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "telefono",
+					"value": "telefono",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "email",
+					"value": "email",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "comentario",
+					"value": "comentario",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "habilitar",
+					"value": "habilitar",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_farm",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "3e195dbb-c3c0-427c-bfdc-2e358e3e79d6",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "9acac286-0e2e-4dfd-82c7-3bbadff885f8",
+			"name": "listar",
+			"url": "http://localhost:8000/api/farms",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "00003817-e872-41d6-a94e-75dd109cf644",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "aaee44b0-1cb8-4eea-9af6-ec9f427b4b27",
+			"name": "obtener por id",
+			"url": "http://localhost:8000/api/accounts/1",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "3e195dbb-c3c0-427c-bfdc-2e358e3e79d6",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "db76a331-264f-46ab-afa7-0d1f477cb90c",
+			"name": "registrar",
+			"url": "http://localhost:8000/api/farms/store",
+			"description": "",
+			"data": [
+				{
+					"key": "name",
+					"value": "name",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "description",
+					"value": "description",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "latitude",
+					"value": "latitude",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "longitude",
+					"value": "longitude",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "postalAddress",
+					"value": "postalAddress",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "timeZone",
+					"value": "timeZone",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "webhook",
+					"value": "webhook",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "00003817-e872-41d6-a94e-75dd109cf644",
+			"headers": "",
+			"pathVariables": {}
+		}
+	]
+}

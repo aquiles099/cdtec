@@ -12,7 +12,7 @@ class AccountController extends Controller
         try {
             $response = [
                 'message'=> 'Account list',
-                'data' => Account::all(),
+                'data' => Account::with("farm")->get(),
             ];
             return response()->json($response, 200);
         } catch (\Exception $e) {
@@ -89,6 +89,7 @@ class AccountController extends Controller
             'name' => $request->get('name'),
             'rut' => $request->get('rut'),
             'razonsocial' => $request->get('razonsocial'),
+            'rutlegal' => $request->get('rutlegal'),            
             'direccion' => $request->get('direccion'),
             'telefono' => $request->get('telefono'),
             'email' => $request->get('email'),
@@ -98,7 +99,7 @@ class AccountController extends Controller
         ]);
         $response = [
             'message'=> 'item successfully registered',
-            'data' => $element,
+            'data' => $element->with("farm")->first(),
         ];
         return response()->json($response, 200);
     }
@@ -154,9 +155,9 @@ class AccountController extends Controller
             $account->fill($request->all());
             $response = [
                 'message'=> 'item updated successfully',
-                'data' => $account,
+                'data' => $account->with("farm")->first(),
             ];
-            $count->update();
+            $account->update();
             return response()->json($response, 200);
         } catch (\Exception $e) {
             return response()->json([
