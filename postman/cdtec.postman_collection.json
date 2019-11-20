@@ -10,7 +10,8 @@
 		"3e195dbb-c3c0-427c-bfdc-2e358e3e79d6",
 		"00003817-e872-41d6-a94e-75dd109cf644",
 		"ae7a034e-c575-41df-b8f3-7282265345c3",
-		"4e97ec1f-dd1e-40cc-849b-bc35d6239850"
+		"4e97ec1f-dd1e-40cc-849b-bc35d6239850",
+		"5950fe62-8c5c-4949-8c56-a37bed3ad283"
 	],
 	"folders": [
 		{
@@ -62,6 +63,19 @@
 			"folders_order": []
 		},
 		{
+			"id": "5950fe62-8c5c-4949-8c56-a37bed3ad283",
+			"name": "pumpsystems",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+			"folder": null,
+			"order": [
+				"001ba5ad-e051-45fe-8b5d-2256c1be605e"
+			],
+			"folders_order": []
+		},
+		{
 			"id": "ae7a034e-c575-41df-b8f3-7282265345c3",
 			"name": "zone",
 			"description": "",
@@ -76,6 +90,45 @@
 		}
 	],
 	"requests": [
+		{
+			"id": "001ba5ad-e051-45fe-8b5d-2256c1be605e",
+			"name": "registrar",
+			"url": "http://localhost:8000/api/pumpsystems/store",
+			"description": "",
+			"data": [
+				{
+					"key": "name",
+					"value": "name",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "allowPumpSelection",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_farm",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "5950fe62-8c5c-4949-8c56-a37bed3ad283",
+			"headers": "",
+			"pathVariables": {}
+		},
 		{
 			"id": "1b768820-d632-46ce-a037-0ac61ac44682",
 			"name": "hydraulics por id_farm",

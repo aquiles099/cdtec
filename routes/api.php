@@ -29,6 +29,8 @@ Route::get('farms/{id}/measures', 'FarmController@measures');
 Route::post('zones/store', 'ZoneController@store');
 // measures
 Route::post('measures/store', 'MeasureController@store');
+// measures
+Route::post('pumpsystems/store', 'PumpSystemController@store');
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
