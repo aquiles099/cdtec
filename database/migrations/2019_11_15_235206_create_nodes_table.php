@@ -19,6 +19,12 @@ class CreateNodesTable extends Migration
             $table->string('lat', 45);
             $table->string('lng', 45);
             $table->string('nodeType', 45);
+            $table->unsignedBigInteger('id_farm')->unsigned();
+            $table->foreign('id_farm')
+                ->references('id')
+                ->on('farms')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->timestamps();
         });
     }

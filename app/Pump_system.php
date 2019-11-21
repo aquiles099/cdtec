@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\Farm;
 class Pump_system extends Model
 {
     protected $fillable = [

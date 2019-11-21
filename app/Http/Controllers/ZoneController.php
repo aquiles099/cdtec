@@ -41,7 +41,7 @@ class ZoneController extends Controller
             'kc.required'                   => 'El kc es requerido',
             'kc.integer'                    => 'El kc debe ser un número entero',
             'theoreticalFlow.required'      => 'El theoreticalFlow es requerido',
-            'theoreticalFlow.integer'       => 'El theoreticalFlow debe ser un número entero'
+            'theoreticalFlow.integer'       => 'El theoreticalFlow debe ser un número entero',
             'unitTheoreticalFlow.required'  => 'El unitTheoreticalFlow es requerido',
             'unitTheoreticalFlow.max'       => 'El unitTheoreticalFlow debe contener como máximo 45 caracteres',
             'efficiency.required'           => 'El efficiency es requiredo',

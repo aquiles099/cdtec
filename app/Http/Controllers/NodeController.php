@@ -13,6 +13,7 @@ class NodeController extends Controller
             'lat'                  => 'required|string|max:45',
             'lng'                  => 'required|string|max:45',
             'nodeType'             => 'required|string|max:45'
+            'id_farm'              => 'required|integer',
         ],[
             'name.required'                 => 'El name es requerido',
             'name.max'                      => 'El name debe contener como máximo 45 caracteres',
@@ -21,7 +22,9 @@ class NodeController extends Controller
             'lng.required'                  => 'El lng es requerido',
             'lng.max'                       => 'El lng debe contener como máximo 45 caracteres',
             'nodeType.required'             => 'El nodeType es requerido',
-            'nodeType.max'                  => 'El nodeType debe contener como máximo 45 caracteres'            
+            'nodeType.max'                  => 'El nodeType debe contener como máximo 45 caracteres',
+            'id_farm.required'              => 'El id_farm es requerido',
+            'id_farm.integer'               => 'El id_farm debe ser un número entero',           
         ]);
         if($validator->fails()){
             return response()->json($validator->errors(), 400);
@@ -31,7 +34,8 @@ class NodeController extends Controller
                 'name' => $request->get('name'),
                 'lat' => $request->get('lat'),
                 'lng' => $request->get('lng'),
-                'nodeType' => $request->get('nodeType')
+                'nodeType' => $request->get('nodeType'),
+                'id_farm' => $request->get('id_farm'),                
             ]);
             $response = [
                 'message'=> 'item successfully registered',
