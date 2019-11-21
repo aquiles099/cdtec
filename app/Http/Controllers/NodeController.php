@@ -12,7 +12,7 @@ class NodeController extends Controller
             'name'                 => 'required|string|max:45',
             'lat'                  => 'required|string|max:45',
             'lng'                  => 'required|string|max:45',
-            'nodeType'             => 'required|string|max:45'
+            'nodeType'             => 'required|string|max:45',
             'id_farm'              => 'required|integer',
         ],[
             'name.required'                 => 'El name es requerido',

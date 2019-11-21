@@ -25,6 +25,7 @@ Route::get('farms/{id}/zones', 'FarmController@zones');
 Route::get('farms/{id}/hydraulics', 'FarmController@hydraulics');
 Route::get('farms/{id}/pumpsystems', 'FarmController@pumpsystems');
 Route::get('farms/{id}/measures', 'FarmController@measures');
+Route::get('farms/{id}/nodes', 'FarmController@nodes');
 // zones
 Route::post('zones/store', 'ZoneController@store');
 // measures

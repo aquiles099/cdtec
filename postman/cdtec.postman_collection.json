@@ -60,7 +60,8 @@
 				"7364ad51-1009-48a6-b30b-c9fe5b32fa7a",
 				"1b768820-d632-46ce-a037-0ac61ac44682",
 				"8670d6b4-c316-44fe-b9a0-79e3a9f99f6f",
-				"3bff2d02-3133-4208-9077-9a33513cbe17"
+				"3bff2d02-3133-4208-9077-9a33513cbe17",
+				"d525a4c3-44ee-45ea-abb6-c1f3971f6c43"
 			],
 			"folders_order": []
 		},
@@ -221,6 +222,13 @@
 				{
 					"key": "nodeType",
 					"value": "nodeType",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_farm",
+					"value": "1",
 					"description": "",
 					"type": "text",
 					"enabled": true
@@ -751,6 +759,23 @@
 			"auth": null,
 			"events": [],
 			"folder": "3e195dbb-c3c0-427c-bfdc-2e358e3e79d6",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "d525a4c3-44ee-45ea-abb6-c1f3971f6c43",
+			"name": "nodes por id_farm",
+			"url": "http://localhost:8000/api/farms/1/nodes",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "00003817-e872-41d6-a94e-75dd109cf644",
 			"headers": "",
 			"pathVariables": {}
 		},

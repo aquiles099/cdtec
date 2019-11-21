@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Farm;
 use App\Zone;
+use App\Node;
 use App\Hydraulic;
 use App\Pump_system;
 use App\Measure;
@@ -150,6 +151,22 @@ class FarmController extends Controller
     public function measures($id){
         try {            
             $elements = Measure::where("id_farm",$id)->get();
+            $response = [
+                'message'=> 'items found successfully',
+                'data' => $elements,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
+    public function nodes($id){
+        try {            
+            $elements = Node::where("id_farm",$id)->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,
