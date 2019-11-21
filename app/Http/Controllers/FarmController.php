@@ -10,6 +10,8 @@ use App\Node;
 use App\Hydraulic;
 use App\Pump_system;
 use App\Measure;
+use App\Irrigation;
+use App\RealIrrigation;
 class FarmController extends Controller
 {
     public function all(){
@@ -167,6 +169,38 @@ class FarmController extends Controller
     public function nodes($id){
         try {            
             $elements = Node::where("id_farm",$id)->get();
+            $response = [
+                'message'=> 'items found successfully',
+                'data' => $elements,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
+    public function irrigations($id){
+        try {            
+            $elements = Irrigation::where("id_farm",$id)->get();
+            $response = [
+                'message'=> 'items found successfully',
+                'data' => $elements,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
+    public function realIrrigations($id){
+        try {            
+            $elements = RealIrrigation::where("id_farm",$id)->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,

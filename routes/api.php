@@ -26,6 +26,8 @@ Route::get('farms/{id}/hydraulics', 'FarmController@hydraulics');
 Route::get('farms/{id}/pumpsystems', 'FarmController@pumpsystems');
 Route::get('farms/{id}/measures', 'FarmController@measures');
 Route::get('farms/{id}/nodes', 'FarmController@nodes');
+Route::get('farms/{id}/irrigations', 'FarmController@irrigations');
+Route::get('farms/{id}/realirrigations', 'FarmController@realIrrigations');
 // zones
 Route::post('zones/store', 'ZoneController@store');
 // measures
