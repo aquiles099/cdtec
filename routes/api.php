@@ -28,8 +28,9 @@ Route::get('farms/{id}/nodes', 'FarmController@nodes');
 Route::get('farms/{id}/pumpsystems', 'FarmController@pumpsystems');
 Route::get('farms/{id}/irrigations', 'FarmController@irrigations');
 Route::post('farms/{id}/alarms/triggered', 'FarmController@alarmsTriggered');
-Route::get('farms/{id}/measures', 'FarmController@measures');
 Route::get('farms/{id}/realirrigations', 'FarmController@realIrrigations');
+Route::get('farms/{id}/measures', 'FarmController@measures');
+Route::post('farms/{id}/webhook', 'FarmController@webhookUpdate');
 // zones
 Route::post('zones/store', 'ZoneController@store');
 // measures

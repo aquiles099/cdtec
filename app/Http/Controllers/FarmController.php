@@ -251,11 +251,32 @@ class FarmController extends Controller
         }
     }
     public function alarmsTriggered(Request $request,$id){
-        try {            
+        try {
             $elements = Alarm::where("id_farm",$id)->whereBetween('date', [$request->get('initTime'), $request->get('endTime')])->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
+    public function webhookUpdate(Request $request,$id){
+        try {
+            $element = Farm::find($id);
+            if(is_null($element)){
+                return response()->json(["message"=>"non-existent farm"],404);
+            }
+            $element->webhook=$request->get("webhook");
+            $element->update();
+            $response = [
+                'message'=> 'item successfully updated',
+                'data' => $element,
             ];
             return response()->json($response, 200);
         } catch (\Exception $e) {
