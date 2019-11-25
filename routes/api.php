@@ -33,6 +33,10 @@ Route::get('farms/{id}/measures', 'FarmController@measures');
 Route::post('farms/{id}/webhook', 'FarmController@webhookUpdate');
 // zones
 Route::post('zones/store', 'ZoneController@store');
+Route::get('zones/{id}', 'ZoneController@get');
+Route::post('zones/update/{id}', 'ZoneController@update');
+Route::get('zones/{id}/measures', 'ZoneController@measures');
+Route::get('zones/{id}/irrigations', 'ZoneController@irrigations');
 // measures
 Route::post('measures/store', 'MeasureController@store');
 // measures
