@@ -12,6 +12,7 @@ use App\Pump_system;
 use App\Measure;
 use App\Irrigation;
 use App\RealIrrigation;
+use App\Alarm;
 class FarmController extends Controller
 {
     public function all(){
@@ -91,6 +92,41 @@ class FarmController extends Controller
             ]);
             $response = [
                 'message'=> 'item successfully registered',
+                'data' => $element,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de guardar los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
+    public function update(Request $request,$id){
+        $validator = Validator::make($request->all(), [
+            'name'            => 'required|string|max:45',
+            'description'     => 'required|string|max:45',
+            'webhook'         => 'required|string|max:45',
+        ],[
+            'name.required'            => 'El name es requerido',
+            'name.max'                 => 'El name debe contener como máximo 45 caracteres',
+            'description.required'     => 'El description es requerido',
+            'description.max'          => 'El description debe contener como máximo 45 caracteres',
+            'webhook.required'         => 'El webhook es requerido',
+            'webhook.max'              => 'El webhook debe contener como máximo 45 caracteres'
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors(), 400);
+        }
+        try{
+            $element = Farm::find($id);
+            if(is_null($element)){
+                return response()->json(["message"=>"non-existent farm"],404);
+            }
+            $element->fill($request->all());
+            $response = [
+                'message'=> 'item successfully updated',
                 'data' => $element,
             ];
             return response()->json($response, 200);
@@ -201,6 +237,22 @@ class FarmController extends Controller
     public function realIrrigations($id){
         try {            
             $elements = RealIrrigation::where("id_farm",$id)->get();
+            $response = [
+                'message'=> 'items found successfully',
+                'data' => $elements,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
+    public function alarmsTriggered(Request $request,$id){
+        try {            
+            $elements = Alarm::where("id_farm",$id)->whereBetween('date', [$request->get('initTime'), $request->get('endTime')])->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,

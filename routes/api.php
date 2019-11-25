@@ -21,12 +21,14 @@ Route::post('accounts/update/{id}', 'AccountController@update');
 Route::get('farms', 'FarmController@all');
 Route::get('farms/{id}', 'FarmController@get');
 Route::post('farms/store', 'FarmController@store');
+Route::post('farms/update/{id}', 'FarmController@update');
 Route::get('farms/{id}/zones', 'FarmController@zones');
 Route::get('farms/{id}/hydraulics', 'FarmController@hydraulics');
-Route::get('farms/{id}/pumpsystems', 'FarmController@pumpsystems');
-Route::get('farms/{id}/measures', 'FarmController@measures');
 Route::get('farms/{id}/nodes', 'FarmController@nodes');
+Route::get('farms/{id}/pumpsystems', 'FarmController@pumpsystems');
 Route::get('farms/{id}/irrigations', 'FarmController@irrigations');
+Route::post('farms/{id}/alarms/triggered', 'FarmController@alarmsTriggered');
+Route::get('farms/{id}/measures', 'FarmController@measures');
 Route::get('farms/{id}/realirrigations', 'FarmController@realIrrigations');
 // zones
 Route::post('zones/store', 'ZoneController@store');

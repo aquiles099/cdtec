@@ -63,7 +63,8 @@
 				"3bff2d02-3133-4208-9077-9a33513cbe17",
 				"d525a4c3-44ee-45ea-abb6-c1f3971f6c43",
 				"39b6e69f-1104-48cd-bbf2-5bb630615c13",
-				"fad99deb-787a-49e9-8d36-364bf8da7d15"
+				"fad99deb-787a-49e9-8d36-364bf8da7d15",
+				"98f7afe0-8fc3-45e5-86a8-0b1080d32302"
 			],
 			"folders_order": []
 		},
@@ -739,6 +740,45 @@
 			"dataMode": "params",
 			"headerData": [],
 			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "00003817-e872-41d6-a94e-75dd109cf644",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "98f7afe0-8fc3-45e5-86a8-0b1080d32302",
+			"name": "actualizar",
+			"url": "http://localhost:8000/api/farms/update/1",
+			"description": "",
+			"data": [
+				{
+					"key": "name",
+					"value": "farm updated",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "description",
+					"value": "farm updated",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "webhook",
+					"value": "farm updated webhook",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
 			"pathVariableData": [],
 			"queryParams": [],
 			"auth": null,
