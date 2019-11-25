@@ -64,7 +64,9 @@
 				"d525a4c3-44ee-45ea-abb6-c1f3971f6c43",
 				"39b6e69f-1104-48cd-bbf2-5bb630615c13",
 				"fad99deb-787a-49e9-8d36-364bf8da7d15",
-				"98f7afe0-8fc3-45e5-86a8-0b1080d32302"
+				"98f7afe0-8fc3-45e5-86a8-0b1080d32302",
+				"2bc2ab25-0e98-401c-a396-ed7474c2819e",
+				"69036407-ba43-4580-9dba-00e186e2293f"
 			],
 			"folders_order": []
 		},
@@ -116,7 +118,14 @@
 			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
 			"folder": null,
 			"order": [
-				"7ab35cff-86e4-43dd-a1f0-f6b0226b8203"
+				"7ab35cff-86e4-43dd-a1f0-f6b0226b8203",
+				"f82210e5-dfc3-4355-9c8a-0a56c7262a41",
+				"35ff7976-1459-4996-a150-5418ae24bd51",
+				"35744def-2892-4d5c-8335-cb9c589c299c",
+				"40f4b898-cf13-4860-adf3-fde7cec74342",
+				"56c94c30-fd22-480c-b133-36d0dd2aa2ef",
+				"701af2f2-1c6d-49fe-a938-37fa1612a557",
+				"af0396cb-1f58-4170-9d12-98d760b3f810"
 			],
 			"folders_order": []
 		}
@@ -187,6 +196,38 @@
 			"dataMode": "params",
 			"headerData": [],
 			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "00003817-e872-41d6-a94e-75dd109cf644",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "2bc2ab25-0e98-401c-a396-ed7474c2819e",
+			"name": "alarms tiggered",
+			"url": "http://localhost:8000/api/farms/1/alarms/triggered",
+			"description": "",
+			"data": [
+				{
+					"key": "initTime",
+					"value": "2019-11-24T21:42:14.073Z",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "endTime",
+					"value": "2019-11-25T21:42:14.073Z",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
 			"pathVariableData": [],
 			"queryParams": [],
 			"auth": null,
@@ -337,6 +378,153 @@
 			"pathVariables": {}
 		},
 		{
+			"id": "35744def-2892-4d5c-8335-cb9c589c299c",
+			"name": "measures por id_zone",
+			"url": "http://localhost:8000/api/zones/1/measures",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "ae7a034e-c575-41df-b8f3-7282265345c3",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "35ff7976-1459-4996-a150-5418ae24bd51",
+			"name": "actualizar",
+			"url": "http://localhost:8000/api/zones/update/1",
+			"description": "",
+			"data": [
+				{
+					"key": "name",
+					"value": "name",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "description",
+					"value": "description",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "latitude",
+					"value": "latitude",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "longitude",
+					"value": "longitude",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "type",
+					"value": "type",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "kc",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "theoreticalFlow",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "unitTheoreticalFlow",
+					"value": "unitTheoreticalFlow updated",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "efficiency",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "humidityRetention",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "max",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "min",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "criticalPoint1",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "criticalPoint2",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_farm",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_pump_system",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "ae7a034e-c575-41df-b8f3-7282265345c3",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
 			"id": "39b6e69f-1104-48cd-bbf2-5bb630615c13",
 			"name": "irrigations por id_farm",
 			"url": "http://localhost:8000/api/farms/1/irrigations",
@@ -476,6 +664,97 @@
 			"auth": null,
 			"events": [],
 			"folder": "4e97ec1f-dd1e-40cc-849b-bc35d6239850",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "40f4b898-cf13-4860-adf3-fde7cec74342",
+			"name": "irrigations por id_zone",
+			"url": "http://localhost:8000/api/zones/1/irrigations",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "ae7a034e-c575-41df-b8f3-7282265345c3",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "56c94c30-fd22-480c-b133-36d0dd2aa2ef",
+			"name": "hydraulics por id_zone",
+			"url": "http://localhost:8000/api/zones/1/hydraulics",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "ae7a034e-c575-41df-b8f3-7282265345c3",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "69036407-ba43-4580-9dba-00e186e2293f",
+			"name": "update webhook de farm",
+			"url": "http://localhost:8000/api/farms/1/webhook",
+			"description": "",
+			"data": [
+				{
+					"key": "webhook",
+					"value": "prueba webhook update 1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "00003817-e872-41d6-a94e-75dd109cf644",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "701af2f2-1c6d-49fe-a938-37fa1612a557",
+			"name": "alarms tiggered",
+			"url": "http://localhost:8000/api/zones/1/alarms/triggered",
+			"description": "",
+			"data": [
+				{
+					"key": "initTime",
+					"value": "2019-11-24T21:42:14.073Z",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "endTime",
+					"value": "2019-11-25T21:42:14.073Z",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "ae7a034e-c575-41df-b8f3-7282265345c3",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -756,7 +1035,7 @@
 			"data": [
 				{
 					"key": "name",
-					"value": "farm updated",
+					"value": "farm updateda",
 					"description": "",
 					"type": "text",
 					"enabled": true
@@ -777,14 +1056,19 @@
 				}
 			],
 			"dataMode": "params",
-			"headerData": [],
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/x-www-form-urlencoded"
+				}
+			],
 			"method": "POST",
 			"pathVariableData": [],
 			"queryParams": [],
 			"auth": null,
 			"events": [],
 			"folder": "00003817-e872-41d6-a94e-75dd109cf644",
-			"headers": "",
+			"headers": "Content-Type: application/x-www-form-urlencoded\n",
 			"pathVariables": {}
 		},
 		{
@@ -818,6 +1102,23 @@
 			"auth": null,
 			"events": [],
 			"folder": "3e195dbb-c3c0-427c-bfdc-2e358e3e79d6",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "af0396cb-1f58-4170-9d12-98d760b3f810",
+			"name": "realirrigations por id_zone",
+			"url": "http://localhost:8000/api/zones/1/realirrigations",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "ae7a034e-c575-41df-b8f3-7282265345c3",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -955,6 +1256,23 @@
 			"auth": null,
 			"events": [],
 			"folder": "ef6fe5b8-ce8c-41fd-9b69-19644b5a1be9",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "f82210e5-dfc3-4355-9c8a-0a56c7262a41",
+			"name": "obtener por id",
+			"url": "http://localhost:8000/api/zones/1",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "ae7a034e-c575-41df-b8f3-7282265345c3",
 			"headers": "",
 			"pathVariables": {}
 		},

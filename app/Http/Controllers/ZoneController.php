@@ -9,7 +9,9 @@ use App\Farm;
 use App\Pump_system;
 use App\Measure;
 use App\Irrigation;
-
+use App\Hydraulic;
+use App\Alarm;
+use App\RealIrrigation;
 class ZoneController extends Controller
 {
     public function store(Request $request){
@@ -239,4 +241,53 @@ class ZoneController extends Controller
             ], 500);
         }
     }
+    public function hydraulics($id){
+        try {            
+            $elements = Hydraulic::where("id_zone",$id)->get();
+            $response = [
+                'message'=> 'items found successfully',
+                'data' => $elements,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
+    public function alarmsTriggered(Request $request,$id){
+        try {
+            $elements = Alarm::where("id_zone",$id)->whereBetween('date', [$request->get('initTime'), $request->get('endTime')])->get();
+            $response = [
+                'message'=> 'items found successfully',
+                'data' => $elements,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
+    public function realIrrigations($id){
+        try {
+            $elements = RealIrrigation::where("id_zone",$id)->get();
+            $response = [
+                'message'=> 'items found successfully',
+                'data' => $elements,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
+    
 }
