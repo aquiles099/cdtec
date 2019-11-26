@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Node;
+use App\Measure;
+
 class NodeController extends Controller
 {
     public function store(Request $request){
@@ -45,6 +47,22 @@ class NodeController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Ha ocurrido un error al tratar de guardar los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
+    public function measures($id){
+        try {            
+            $elements = Measure::where("id_node",$id)->get();
+            $response = [
+                'message'=> 'items found successfully',
+                'data' => $elements,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
                 'error' => $e->getMessage(),
                 'linea' => $e->getLine()
             ], 500);

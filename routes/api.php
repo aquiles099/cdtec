@@ -45,9 +45,10 @@ Route::post('measures/store', 'MeasureController@store');
 // measures
 Route::post('pumpsystems/store', 'PumpSystemController@store');
 Route::get('pumpsystems/{id}/zones', 'PumpSystemController@zones');
-
 // nodes
 Route::post('nodes/store', 'NodeController@store');
+Route::get('nodes/{id}/measures', 'NodeController@measures');
+
 // alarms
 Route::post('alarms/store', 'AlarmController@store');
 

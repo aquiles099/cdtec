@@ -92,7 +92,8 @@
 			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
 			"folder": null,
 			"order": [
-				"2ca57d78-81d0-4ec6-904a-6a88223f5f1b"
+				"2ca57d78-81d0-4ec6-904a-6a88223f5f1b",
+				"f31fd147-b9b3-4cbd-a3d1-c35cf498fff3"
 			],
 			"folders_order": []
 		},
@@ -105,7 +106,8 @@
 			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
 			"folder": null,
 			"order": [
-				"001ba5ad-e051-45fe-8b5d-2256c1be605e"
+				"001ba5ad-e051-45fe-8b5d-2256c1be605e",
+				"f74048ba-ecbc-4207-b2fa-82335c946cc8"
 			],
 			"folders_order": []
 		},
@@ -1256,6 +1258,40 @@
 			"auth": null,
 			"events": [],
 			"folder": "ef6fe5b8-ce8c-41fd-9b69-19644b5a1be9",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "f31fd147-b9b3-4cbd-a3d1-c35cf498fff3",
+			"name": "measures por id_node",
+			"url": "http://localhost:8000/api/nodes/1/measures",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "0c98fc22-ce54-4497-b89f-3b3aa7be0a69",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "f74048ba-ecbc-4207-b2fa-82335c946cc8",
+			"name": "zones por id_pump_system",
+			"url": "http://localhost:8000/api/pumpsystems/1/zones",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "5950fe62-8c5c-4949-8c56-a37bed3ad283",
 			"headers": "",
 			"pathVariables": {}
 		},
