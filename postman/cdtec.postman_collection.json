@@ -79,7 +79,8 @@
 			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
 			"folder": null,
 			"order": [
-				"40d89136-e777-4f5a-b9ce-387174f4b223"
+				"40d89136-e777-4f5a-b9ce-387174f4b223",
+				"9733fc5c-b5b4-4252-9f5b-fa8a8979671c"
 			],
 			"folders_order": []
 		},
@@ -1026,6 +1027,23 @@
 			"auth": null,
 			"events": [],
 			"folder": "00003817-e872-41d6-a94e-75dd109cf644",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "9733fc5c-b5b4-4252-9f5b-fa8a8979671c",
+			"name": "obtener por id",
+			"url": "http://localhost:8000/api/measures/1",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "4e97ec1f-dd1e-40cc-849b-bc35d6239850",
 			"headers": "",
 			"pathVariables": {}
 		},

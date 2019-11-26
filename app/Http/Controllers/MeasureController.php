@@ -103,4 +103,26 @@ class MeasureController extends Controller{
             ], 500);
         }
     }
+    public function get($id){
+        try {            
+            $element = Measure::find($id);
+            if(is_null($element)){
+                return response()->json([
+                    "message"=>"non-existent item",
+                    "data"=>$element
+                ],404);
+            }
+            $response = [
+                'message'=> 'item found successfully',
+                'data' => $element,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
 }
