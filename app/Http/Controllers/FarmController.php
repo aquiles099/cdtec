@@ -32,7 +32,7 @@ class FarmController extends Controller
     }
     public function get($id){
         try {            
-            $element = Farm::find($id);
+            $element = Farm::with("accounts")->find($id);
             if(is_null($element)){
                 return response()->json([
                     "message"=>"non-existent item",
