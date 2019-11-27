@@ -20,6 +20,7 @@ class IrrigationController extends Controller
             'sentToNetwork'   => 'required|integer',
             'scheduledType'   => 'required|string|max:45',
             'groupingName'    => 'required|string|max:45',
+            'action'          => 'required|string|max:45',
             'id_pump_system'  => 'required|integer',
             'id_zone'         => 'required|integer',
             'id_volume'       => 'required|integer',
@@ -39,6 +40,8 @@ class IrrigationController extends Controller
             'scheduledType.max'       => 'El scheduledType debe contener como máximo 45 caracteres',
             'groupingName.required'   => 'El groupingName es requerido',
             'groupingName.max'        => 'El groupingName debe contener como máximo 45 caracteres',
+            'action.required'         => 'El action es requerido',
+            'action.max'              => 'El action debe contener como máximo 45 caracteres',
             'id_pump_system.required' => 'El id_pump_system es requerido',
             'id_pump_system.integer'  => 'El id_pump_system debe ser un número entero',
             'id_zone.required'        => 'El id_zone es requerido',
@@ -80,6 +83,7 @@ class IrrigationController extends Controller
                 'sentToNetwork' => $request->get('sentToNetwork')==1?true:false,
                 'scheduledType' => $request->get('scheduledType'),
                 'groupingName' => $request->get('groupingName'),
+                'action' => $request->get('action'),
                 'id_pump_system' => $request->get('id_pump_system'),
                 'id_zone' => $request->get('id_zone'),
                 'id_volume' => $request->get('id_volume'),
@@ -107,6 +111,7 @@ class IrrigationController extends Controller
             'sentToNetwork'   => 'required|integer',
             'scheduledType'   => 'required|string|max:45',
             'groupingName'    => 'required|string|max:45',
+            'action'          => 'required|string|max:45',
             'id_pump_system'  => 'required|integer',
             'id_zone'         => 'required|integer',
             'id_volume'       => 'required|integer',
@@ -126,6 +131,8 @@ class IrrigationController extends Controller
             'scheduledType.max'       => 'El scheduledType debe contener como máximo 45 caracteres',
             'groupingName.required'   => 'El groupingName es requerido',
             'groupingName.max'        => 'El groupingName debe contener como máximo 45 caracteres',
+            'action.required'         => 'El action es requerido',
+            'action.max'              => 'El action debe contener como máximo 45 caracteres',
             'id_pump_system.required' => 'El id_pump_system es requerido',
             'id_pump_system.integer'  => 'El id_pump_system debe ser un número entero',
             'id_zone.required'        => 'El id_zone es requerido',
@@ -196,6 +203,37 @@ class IrrigationController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
+    public function updateAction(Request $request,$id){
+        $validator = Validator::make($request->all(),[
+            'action'          => 'required|string|max:45',
+        ],[
+            'action.required'         => 'El action es requerido',
+            'action.max'              => 'El action debe contener como máximo 45 caracteres',
+        ] );
+        if($validator->fails()){
+            return response()->json($validator->errors(), 400);
+        }
+        try{
+            $element = Irrigation::find($id);
+            // 
+            if(is_null($element)){                
+                return response()->json(["message"=>"non-existent irrigation"],404);
+            }
+            $element->action=$request->get('action');
+            $element->update();
+            $response = [
+                'message'=> 'item successfully updated',
+                'data' => $element,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de guardar los datos.',
                 'error' => $e->getMessage(),
                 'linea' => $e->getLine()
             ], 500);

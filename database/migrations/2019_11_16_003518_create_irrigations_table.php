@@ -22,6 +22,7 @@ class CreateIrrigationsTable extends Migration
             $table->boolean('sentToNetwork')->default(false);
             $table->string('scheduledType', 45);
             $table->string('groupingName', 45);
+            $table->string('action', 45);            
             $table->unsignedBigInteger('id_pump_system')->unsigned();
             $table->foreign('id_pump_system')
                 ->references('id')

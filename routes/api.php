@@ -50,6 +50,7 @@ Route::get('pumpsystems/{id}/zones', 'PumpSystemController@zones');
 // irrigations
 Route::post('irrigations/store', 'IrrigationController@store');
 Route::get('irrigations/{id}', 'IrrigationController@get');
+Route::post('irrigations/{id}', 'IrrigationController@updateAction');
 Route::post('irrigations/update/{id}', 'IrrigationController@update');
 // nodes
 Route::post('nodes/store', 'NodeController@store');

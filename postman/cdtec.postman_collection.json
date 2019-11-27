@@ -13,7 +13,10 @@
 		"4e97ec1f-dd1e-40cc-849b-bc35d6239850",
 		"5950fe62-8c5c-4949-8c56-a37bed3ad283",
 		"0c98fc22-ce54-4497-b89f-3b3aa7be0a69",
-		"ef6fe5b8-ce8c-41fd-9b69-19644b5a1be9"
+		"ef6fe5b8-ce8c-41fd-9b69-19644b5a1be9",
+		"5915d459-49bc-432b-99c3-e7eb0d8bc7d9",
+		"5c290b31-74a2-4582-bc99-058b88d66c65",
+		"7897ebe0-d035-4a24-bc03-1dcbbf79c826"
 	],
 	"folders": [
 		{
@@ -71,6 +74,22 @@
 			"folders_order": []
 		},
 		{
+			"id": "5c290b31-74a2-4582-bc99-058b88d66c65",
+			"name": "irrigation",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+			"folder": null,
+			"order": [
+				"8c718d1b-364b-4c39-92e7-f3a80fec5d90",
+				"add68dbc-bdb7-4e4b-a0d3-72c60675793e",
+				"dacb3225-586b-49ee-87d8-32c55e8dfbfa",
+				"3f6a1336-7b49-41de-a4db-eeb156c72f1f"
+			],
+			"folders_order": []
+		},
+		{
 			"id": "4e97ec1f-dd1e-40cc-849b-bc35d6239850",
 			"name": "measure",
 			"description": "",
@@ -80,7 +99,8 @@
 			"folder": null,
 			"order": [
 				"40d89136-e777-4f5a-b9ce-387174f4b223",
-				"9733fc5c-b5b4-4252-9f5b-fa8a8979671c"
+				"9733fc5c-b5b4-4252-9f5b-fa8a8979671c",
+				"c4d9159f-3f42-4cba-82e4-78c966897446"
 			],
 			"folders_order": []
 		},
@@ -99,6 +119,19 @@
 			"folders_order": []
 		},
 		{
+			"id": "5915d459-49bc-432b-99c3-e7eb0d8bc7d9",
+			"name": "physicalconnection",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+			"folder": null,
+			"order": [
+				"9be7124c-5c93-4c98-8c1b-1ce5478ec71c"
+			],
+			"folders_order": []
+		},
+		{
 			"id": "5950fe62-8c5c-4949-8c56-a37bed3ad283",
 			"name": "pumpsystems",
 			"description": "",
@@ -109,6 +142,19 @@
 			"order": [
 				"001ba5ad-e051-45fe-8b5d-2256c1be605e",
 				"f74048ba-ecbc-4207-b2fa-82335c946cc8"
+			],
+			"folders_order": []
+		},
+		{
+			"id": "7897ebe0-d035-4a24-bc03-1dcbbf79c826",
+			"name": "volume",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+			"folder": null,
+			"order": [
+				"84b6c37e-9856-47ae-8ac8-7c739de15f0a"
 			],
 			"folders_order": []
 		},
@@ -562,6 +608,31 @@
 			"pathVariables": {}
 		},
 		{
+			"id": "3f6a1336-7b49-41de-a4db-eeb156c72f1f",
+			"name": "actualizar action",
+			"url": "http://localhost:8000/api/irrigations/1",
+			"description": "",
+			"data": [
+				{
+					"key": "action",
+					"value": "action updated",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "5c290b31-74a2-4582-bc99-058b88d66c65",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
 			"id": "40d89136-e777-4f5a-b9ce-387174f4b223",
 			"name": "registrar",
 			"url": "http://localhost:8000/api/measures/store",
@@ -583,14 +654,14 @@
 				},
 				{
 					"key": "lastData",
-					"value": "lastData",
+					"value": "1",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
 					"key": "lastDataDate",
-					"value": "2019-11-13 13:43:23",
+					"value": "2019-11-27 13:23:53",
 					"description": "",
 					"type": "text",
 					"enabled": true
@@ -1014,6 +1085,52 @@
 			"pathVariables": {}
 		},
 		{
+			"id": "84b6c37e-9856-47ae-8ac8-7c739de15f0a",
+			"name": "registrar",
+			"url": "http://localhost:8000/api/volumes/store",
+			"description": "",
+			"data": [
+				{
+					"key": "value",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "unitName",
+					"value": "unitName",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "unitAbrev",
+					"value": "unitAbrev",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "type",
+					"value": "type",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "7897ebe0-d035-4a24-bc03-1dcbbf79c826",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
 			"id": "8670d6b4-c316-44fe-b9a0-79e3a9f99f6f",
 			"name": "pumpsystems por id_farm",
 			"url": "http://localhost:8000/api/farms/1/pumpsystems",
@@ -1027,6 +1144,108 @@
 			"auth": null,
 			"events": [],
 			"folder": "00003817-e872-41d6-a94e-75dd109cf644",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "8c718d1b-364b-4c39-92e7-f3a80fec5d90",
+			"name": "registrar",
+			"url": "http://localhost:8000/api/irrigations/store",
+			"description": "",
+			"data": [
+				{
+					"key": "value",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "initTime",
+					"value": "initTime",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "endTime",
+					"value": "endTime",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "status",
+					"value": "status",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "sentToNetwork",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "scheduledType",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "groupingName",
+					"value": "test",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_pump_system",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_zone",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_volume",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_farm",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "action",
+					"value": "action",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "5c290b31-74a2-4582-bc99-058b88d66c65",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -1109,6 +1328,52 @@
 			"pathVariables": {}
 		},
 		{
+			"id": "9be7124c-5c93-4c98-8c1b-1ce5478ec71c",
+			"name": "registrar",
+			"url": "http://localhost:8000/api/physicalconnection/store ",
+			"description": "",
+			"data": [
+				{
+					"key": "expansionPort",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "expansionBoard",
+					"value": "expansionBoard",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "nodePort",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "type",
+					"value": "type",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "5915d459-49bc-432b-99c3-e7eb0d8bc7d9",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
 			"id": "aaee44b0-1cb8-4eea-9af6-ec9f427b4b27",
 			"name": "obtener por id",
 			"url": "http://localhost:8000/api/accounts/1",
@@ -1122,6 +1387,23 @@
 			"auth": null,
 			"events": [],
 			"folder": "3e195dbb-c3c0-427c-bfdc-2e358e3e79d6",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "add68dbc-bdb7-4e4b-a0d3-72c60675793e",
+			"name": "obtener por id",
+			"url": "http://localhost:8000/api/irrigations/1",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "5c290b31-74a2-4582-bc99-058b88d66c65",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -1143,6 +1425,23 @@
 			"pathVariables": {}
 		},
 		{
+			"id": "c4d9159f-3f42-4cba-82e4-78c966897446",
+			"name": "obtener data por id",
+			"url": "http://localhost:8000/api/measures/1/data",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "4e97ec1f-dd1e-40cc-849b-bc35d6239850",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
 			"id": "d525a4c3-44ee-45ea-abb6-c1f3971f6c43",
 			"name": "nodes por id_farm",
 			"url": "http://localhost:8000/api/farms/1/nodes",
@@ -1156,6 +1455,108 @@
 			"auth": null,
 			"events": [],
 			"folder": "00003817-e872-41d6-a94e-75dd109cf644",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "dacb3225-586b-49ee-87d8-32c55e8dfbfa",
+			"name": "actualizar",
+			"url": "http://localhost:8000/api/irrigations/update/1",
+			"description": "",
+			"data": [
+				{
+					"key": "value",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "initTime",
+					"value": "initTime",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "endTime",
+					"value": "endTime",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "status",
+					"value": "status",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "sentToNetwork",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "scheduledType",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "groupingName",
+					"value": "test",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_pump_system",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_zone",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_volume",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_farm",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "action",
+					"value": "action",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "5c290b31-74a2-4582-bc99-058b88d66c65",
 			"headers": "",
 			"pathVariables": {}
 		},
