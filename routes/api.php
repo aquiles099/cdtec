@@ -44,9 +44,11 @@ Route::get('zones/{id}/realirrigations', 'ZoneController@realIrrigations');
 Route::post('measures/store', 'MeasureController@store');
 Route::get('measures/{id}', 'MeasureController@get');
 Route::get('measures/{id}/data', 'MeasureController@data');
-// measures
+// pumpsystems
 Route::post('pumpsystems/store', 'PumpSystemController@store');
 Route::get('pumpsystems/{id}/zones', 'PumpSystemController@zones');
+// irrigations
+Route::post('irrigations/store', 'IrrigationController@store');
 // nodes
 Route::post('nodes/store', 'NodeController@store');
 Route::get('nodes/{id}/measures', 'NodeController@measures');
@@ -56,6 +58,8 @@ Route::post('alarms/store', 'AlarmController@store');
 
 // PhysicalConnection
 Route::post('physicalconnection/store', 'PhysicalConnectionController@store');
+// volumes
+Route::post('volumes/store', 'VolumeController@store');
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
