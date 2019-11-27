@@ -85,7 +85,8 @@
 				"8c718d1b-364b-4c39-92e7-f3a80fec5d90",
 				"add68dbc-bdb7-4e4b-a0d3-72c60675793e",
 				"dacb3225-586b-49ee-87d8-32c55e8dfbfa",
-				"3f6a1336-7b49-41de-a4db-eeb156c72f1f"
+				"3f6a1336-7b49-41de-a4db-eeb156c72f1f",
+				"744a57a9-fea1-49e1-9d6f-5861e2b62bc1"
 			],
 			"folders_order": []
 		},
@@ -863,6 +864,23 @@
 			"auth": null,
 			"events": [],
 			"folder": "00003817-e872-41d6-a94e-75dd109cf644",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "744a57a9-fea1-49e1-9d6f-5861e2b62bc1",
+			"name": "http://localhost:8000/api/irrigations/1",
+			"url": "http://localhost:8000/api/irrigations/1",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "DELETE",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "5c290b31-74a2-4582-bc99-058b88d66c65",
 			"headers": "",
 			"pathVariables": {}
 		},
