@@ -105,7 +105,7 @@ class MeasureController extends Controller{
     }
     public function get($id){
         try {            
-            $element = Measure::find($id);
+            $element = Measure::with("physicalConnection")->find($id);
             if(is_null($element)){
                 return response()->json([
                     "message"=>"non-existent item",

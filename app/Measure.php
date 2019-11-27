@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Farm;
+use App\PhysicalConnection;
 class Measure extends Model
 {
     protected $fillable = [        
@@ -12,5 +13,9 @@ class Measure extends Model
     public function farm()
     {
         return $this->hasOne(Farm::class,'id','id_farm');
+    }
+    public function physicalConnection()
+    {
+        return $this->hasOne(PhysicalConnection::class,'id','id_physical_connection');
     }
 }

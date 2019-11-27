@@ -53,6 +53,9 @@ Route::get('nodes/{id}/measures', 'NodeController@measures');
 // alarms
 Route::post('alarms/store', 'AlarmController@store');
 
+// PhysicalConnection
+Route::post('physicalconnection/store', 'PhysicalConnectionController@store');
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
