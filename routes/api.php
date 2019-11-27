@@ -52,6 +52,7 @@ Route::post('irrigations/store', 'IrrigationController@store');
 Route::get('irrigations/{id}', 'IrrigationController@get');
 Route::post('irrigations/{id}', 'IrrigationController@updateAction');
 Route::post('irrigations/update/{id}', 'IrrigationController@update');
+Route::delete('irrigations/{id}', 'IrrigationController@delete');
 // nodes
 Route::post('nodes/store', 'NodeController@store');
 Route::get('nodes/{id}/measures', 'NodeController@measures');

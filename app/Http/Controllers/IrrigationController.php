@@ -239,4 +239,24 @@ class IrrigationController extends Controller
             ], 500);
         }
     }
+    public function delete($id){
+        try {
+            $element = Irrigation::find($id);
+            if(is_null($element)){
+                return response()->json(["message"=>"non-existent Irrigation"],404);
+            }
+            $element->delete();
+            $response = [
+                'message'=> 'item successfully deleted',
+                'data' => $element,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de eliminar los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
 }
