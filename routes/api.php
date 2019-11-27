@@ -43,6 +43,7 @@ Route::get('zones/{id}/realirrigations', 'ZoneController@realIrrigations');
 // measures
 Route::post('measures/store', 'MeasureController@store');
 Route::get('measures/{id}', 'MeasureController@get');
+Route::get('measures/{id}/data', 'MeasureController@data');
 // measures
 Route::post('pumpsystems/store', 'PumpSystemController@store');
 Route::get('pumpsystems/{id}/zones', 'PumpSystemController@zones');
