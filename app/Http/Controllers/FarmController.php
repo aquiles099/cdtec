@@ -129,6 +129,7 @@ class FarmController extends Controller
                 'message'=> 'item successfully updated',
                 'data' => $element,
             ];
+            $element->update();
             return response()->json($response, 200);
         } catch (\Exception $e) {
             return response()->json([
