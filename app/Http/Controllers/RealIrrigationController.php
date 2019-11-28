@@ -8,6 +8,7 @@ use App\RealIrrigation;
 use App\Irrigation;
 use App\Farm;
 use App\Zone;
+use App\Pump_system;
 class RealIrrigationController extends Controller
 {
     public function store(Request $request){
@@ -39,8 +40,9 @@ class RealIrrigationController extends Controller
             $irrigation = Irrigation::find($request->get('id_irrigation'));
             $zone = Zone::find($request->get('id_zone'));
             $farm = Farm::find($request->get('id_farm'));
+            $pumpSystem = Pump_system::find($request->get('id_pump_system'));
             $messages=[];
-            if(is_null($farm)||is_null($irrigation)||is_null($zone)){
+            if(is_null($farm)||is_null($irrigation)||is_null($zone)||is_null($pumpSystem)){
                 if(is_null($farm)){
                 array_push($messages,"non-existent farm");
                 }
@@ -50,6 +52,9 @@ class RealIrrigationController extends Controller
                 if(is_null($irrigation)){
                 array_push($messages,"non-existent irrigation");
                 }
+                if(is_null($pumpSystem)){
+                array_push($messages,"non-existent Pump System");
+                }
                 return response()->json(["message"=>$messages],404);
             }
             $element = RealIrrigation::create([
@@ -58,7 +63,8 @@ class RealIrrigationController extends Controller
                 'status' => $request->get('status'),
                 'id_irrigation' => $request->get('id_irrigation'),
                 'id_zone' => $request->get('id_zone'),
-                'id_farm' => $request->get('id_farm'),                
+                'id_farm' => $request->get('id_farm'), 
+                'id_pump_system' => $request->get('id_pump_system'),                                
             ]);
             $response = [
                 'message'=> 'item successfully registered',

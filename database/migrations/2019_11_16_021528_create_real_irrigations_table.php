@@ -35,6 +35,12 @@ class CreateRealIrrigationsTable extends Migration
                 ->references('id')
                 ->on('zones')
                 ->onDelete('cascade')
+                ->onUpdate('cascade'); 
+            $table->unsignedBigInteger('id_pump_system')->unsigned();
+            $table->foreign('id_pump_system')
+                ->references('id')
+                ->on('pump_systems')
+                ->onDelete('cascade')
                 ->onUpdate('cascade');                
             $table->timestamps();
         });

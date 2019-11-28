@@ -8,7 +8,7 @@ use App\Zone;
 class RealIrrigation extends Model
 {
     protected $fillable = [        
-        'initTime', 'endTime','status','id_irrigation','id_farm','id_zone'
+        'initTime', 'endTime','status','id_irrigation','id_farm','id_zone','id_pump_system'
     ];
     public function farm()
     {

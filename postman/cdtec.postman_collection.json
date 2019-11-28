@@ -1573,6 +1573,13 @@
 					"description": "",
 					"type": "text",
 					"enabled": true
+				},
+				{
+					"key": "id_pump_system",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
 				}
 			],
 			"dataMode": "params",

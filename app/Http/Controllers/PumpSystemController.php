@@ -74,4 +74,36 @@ class PumpSystemController extends Controller
             ], 500);
         }
     }
+    public function irrigations($id){
+        try {            
+            $elements = Irrigation::where("id_pump_system",$id)->get();
+            $response = [
+                'message'=> 'items found successfully',
+                'data' => $elements,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
+    public function realIrrigations($id){
+        try {            
+            $elements = RealIrrigation::where("id_pump_system",$id)->get();
+            $response = [
+                'message'=> 'items found successfully',
+                'data' => $elements,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
 }

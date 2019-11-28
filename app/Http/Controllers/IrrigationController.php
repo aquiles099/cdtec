@@ -88,7 +88,7 @@ class IrrigationController extends Controller
                 'id_pump_system' => $request->get('id_pump_system'),
                 'id_zone' => $request->get('id_zone'),
                 'id_volume' => $request->get('id_volume'),
-                'id_farm' => $request->get('id_farm'),                
+                'id_farm' => $request->get('id_farm'), 
             ]);
             $response = [
                 'message'=> 'item successfully registered',
