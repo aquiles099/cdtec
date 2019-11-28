@@ -50,7 +50,7 @@ Route::get('pumpsystems/{id}', 'PumpSystemController@get');
 Route::get('pumpsystems/{id}/zones', 'PumpSystemController@zones');
 Route::get('pumpsystems/{id}/irrigations', 'PumpSystemController@irrigations');
 Route::get('pumpsystems/{id}/realirrigations', 'PumpSystemController@realIrrigations');
-Route::post('pumpsystems/{id}/tanks', 'PumpSystemController@tanks');
+Route::get('pumpsystems/{id}/tanks', 'PumpSystemController@tanks');
 // hydraulics
 Route::get('hydraulics/{id}', 'HydraulicController@get');
 Route::post('hydraulics/{id}', 'HydraulicController@store');
@@ -67,6 +67,7 @@ Route::get('realirrigations/{id}', 'RealIrrigationController@get');
 // nodes
 Route::post('nodes/store', 'NodeController@store');
 Route::get('nodes/{id}/measures', 'NodeController@measures');
+Route::get('nodes/{id}', 'NodeController@get');
 // alarms
 Route::post('alarms/store', 'AlarmController@store');
 // PhysicalConnection

@@ -132,7 +132,8 @@
 			"folder": null,
 			"order": [
 				"2ca57d78-81d0-4ec6-904a-6a88223f5f1b",
-				"f31fd147-b9b3-4cbd-a3d1-c35cf498fff3"
+				"f31fd147-b9b3-4cbd-a3d1-c35cf498fff3",
+				"8b8e6a2a-d969-44e1-8fd3-5f78ab945570"
 			],
 			"folders_order": []
 		},
@@ -160,7 +161,8 @@
 			"order": [
 				"001ba5ad-e051-45fe-8b5d-2256c1be605e",
 				"f74048ba-ecbc-4207-b2fa-82335c946cc8",
-				"6ae7cd1e-1300-42b0-8183-f94313ce5845"
+				"6ae7cd1e-1300-42b0-8183-f94313ce5845",
+				"eae0e08d-484c-4cea-ac26-77b88b2c174b"
 			],
 			"folders_order": []
 		},
@@ -1249,6 +1251,23 @@
 			"pathVariables": {}
 		},
 		{
+			"id": "8b8e6a2a-d969-44e1-8fd3-5f78ab945570",
+			"name": "obtener por id",
+			"url": "http://localhost:8000/api/nodes/1",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "0c98fc22-ce54-4497-b89f-3b3aa7be0a69",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
 			"id": "8c718d1b-364b-4c39-92e7-f3a80fec5d90",
 			"name": "registrar",
 			"url": "http://localhost:8000/api/irrigations/store",
@@ -1905,6 +1924,23 @@
 			"auth": null,
 			"events": [],
 			"folder": "ef6fe5b8-ce8c-41fd-9b69-19644b5a1be9",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "eae0e08d-484c-4cea-ac26-77b88b2c174b",
+			"name": "tanks por id_pump_system",
+			"url": "http://localhost:8000/api/pumpsystems/1/tanks",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "5950fe62-8c5c-4949-8c56-a37bed3ad283",
 			"headers": "",
 			"pathVariables": {}
 		},
