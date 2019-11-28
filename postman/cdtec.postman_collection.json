@@ -16,7 +16,8 @@
 		"ef6fe5b8-ce8c-41fd-9b69-19644b5a1be9",
 		"5915d459-49bc-432b-99c3-e7eb0d8bc7d9",
 		"5c290b31-74a2-4582-bc99-058b88d66c65",
-		"7897ebe0-d035-4a24-bc03-1dcbbf79c826"
+		"7897ebe0-d035-4a24-bc03-1dcbbf79c826",
+		"483906e9-9b39-44db-a36b-b266945ed146"
 	],
 	"folders": [
 		{
@@ -86,7 +87,8 @@
 				"add68dbc-bdb7-4e4b-a0d3-72c60675793e",
 				"dacb3225-586b-49ee-87d8-32c55e8dfbfa",
 				"3f6a1336-7b49-41de-a4db-eeb156c72f1f",
-				"744a57a9-fea1-49e1-9d6f-5861e2b62bc1"
+				"744a57a9-fea1-49e1-9d6f-5861e2b62bc1",
+				"2e68c19b-3cc5-47e2-8a5a-2068ec03a2b0"
 			],
 			"folders_order": []
 		},
@@ -143,6 +145,20 @@
 			"order": [
 				"001ba5ad-e051-45fe-8b5d-2256c1be605e",
 				"f74048ba-ecbc-4207-b2fa-82335c946cc8"
+			],
+			"folders_order": []
+		},
+		{
+			"id": "483906e9-9b39-44db-a36b-b266945ed146",
+			"name": "realirrigation",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+			"folder": null,
+			"order": [
+				"69155b3a-15f4-41d5-868c-5bab92fb4484",
+				"d7180334-e697-47fd-bc0a-101dd85d76f3"
 			],
 			"folders_order": []
 		},
@@ -424,6 +440,23 @@
 			"auth": null,
 			"events": [],
 			"folder": "3e195dbb-c3c0-427c-bfdc-2e358e3e79d6",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "2e68c19b-3cc5-47e2-8a5a-2068ec03a2b0",
+			"name": "realirrigations por id_irrigation",
+			"url": "http://localhost:8000/api/irrigations/1/realirrigations",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "5c290b31-74a2-4582-bc99-058b88d66c65",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -802,6 +835,23 @@
 			"pathVariables": {}
 		},
 		{
+			"id": "69155b3a-15f4-41d5-868c-5bab92fb4484",
+			"name": "obtener por id",
+			"url": "http://localhost:8000/api/realirrigations/1/",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "483906e9-9b39-44db-a36b-b266945ed146",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
 			"id": "701af2f2-1c6d-49fe-a938-37fa1612a557",
 			"name": "alarms tiggered",
 			"url": "http://localhost:8000/api/zones/1/alarms/triggered",
@@ -869,7 +919,7 @@
 		},
 		{
 			"id": "744a57a9-fea1-49e1-9d6f-5861e2b62bc1",
-			"name": "http://localhost:8000/api/irrigations/1",
+			"name": "eliminar",
 			"url": "http://localhost:8000/api/irrigations/1",
 			"description": "",
 			"data": null,
@@ -1473,6 +1523,66 @@
 			"auth": null,
 			"events": [],
 			"folder": "00003817-e872-41d6-a94e-75dd109cf644",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "d7180334-e697-47fd-bc0a-101dd85d76f3",
+			"name": "registrar",
+			"url": "http://localhost:8000/api/realirrigations/store",
+			"description": "",
+			"data": [
+				{
+					"key": "initTime",
+					"value": "initTime",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "endTime",
+					"value": "endTime",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "status",
+					"value": "status",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_zone",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_irrigation",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_farm",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "483906e9-9b39-44db-a36b-b266945ed146",
 			"headers": "",
 			"pathVariables": {}
 		},

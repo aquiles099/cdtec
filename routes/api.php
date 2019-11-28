@@ -53,6 +53,10 @@ Route::get('irrigations/{id}', 'IrrigationController@get');
 Route::post('irrigations/{id}', 'IrrigationController@updateAction');
 Route::post('irrigations/update/{id}', 'IrrigationController@update');
 Route::delete('irrigations/{id}', 'IrrigationController@delete');
+Route::get('irrigations/{id}/realirrigations', 'IrrigationController@realIrrigations');
+// realIrrigations
+Route::post('realirrigations/store', 'RealIrrigationController@store');
+Route::get('realirrigations/{id}', 'RealIrrigationController@get');
 // nodes
 Route::post('nodes/store', 'NodeController@store');
 Route::get('nodes/{id}/measures', 'NodeController@measures');

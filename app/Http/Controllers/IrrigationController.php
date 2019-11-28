@@ -9,6 +9,7 @@ use App\Volume;
 use App\Zone;
 use App\Pump_system;
 use App\Irrigation;
+use App\RealIrrigation;
 class IrrigationController extends Controller
 {
     public function store(Request $request){
@@ -254,6 +255,22 @@ class IrrigationController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Ha ocurrido un error al tratar de eliminar los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
+    public function realIrrigations($id){
+        try {            
+            $elements = RealIrrigation::where("id_irrigation",$id)->get();
+            $response = [
+                'message'=> 'items found successfully',
+                'data' => $elements,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
                 'error' => $e->getMessage(),
                 'linea' => $e->getLine()
             ], 500);
