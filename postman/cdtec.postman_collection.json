@@ -17,7 +17,8 @@
 		"5915d459-49bc-432b-99c3-e7eb0d8bc7d9",
 		"5c290b31-74a2-4582-bc99-058b88d66c65",
 		"7897ebe0-d035-4a24-bc03-1dcbbf79c826",
-		"483906e9-9b39-44db-a36b-b266945ed146"
+		"483906e9-9b39-44db-a36b-b266945ed146",
+		"77e5b831-c56a-4828-8c22-4cc48cf220c0"
 	],
 	"folders": [
 		{
@@ -71,6 +72,20 @@
 				"98f7afe0-8fc3-45e5-86a8-0b1080d32302",
 				"2bc2ab25-0e98-401c-a396-ed7474c2819e",
 				"69036407-ba43-4580-9dba-00e186e2293f"
+			],
+			"folders_order": []
+		},
+		{
+			"id": "77e5b831-c56a-4828-8c22-4cc48cf220c0",
+			"name": "hydraulic",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+			"folder": null,
+			"order": [
+				"ee2ac1d4-151f-4807-a572-29f47d1c4476",
+				"b39795e4-f6e4-47b9-aeae-e95995507b2f"
 			],
 			"folders_order": []
 		},
@@ -1511,6 +1526,66 @@
 			"pathVariables": {}
 		},
 		{
+			"id": "b39795e4-f6e4-47b9-aeae-e95995507b2f",
+			"name": "registrar",
+			"url": "http://localhost:8000/api/hydraulics/store",
+			"description": "",
+			"data": [
+				{
+					"key": "name",
+					"value": "name",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "type",
+					"value": "type",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_zone",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_node",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_farm",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_physical_connection",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "77e5b831-c56a-4828-8c22-4cc48cf220c0",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
 			"id": "c4d9159f-3f42-4cba-82e4-78c966897446",
 			"name": "obtener data por id",
 			"url": "http://localhost:8000/api/measures/1/data",
@@ -1830,6 +1905,23 @@
 			"auth": null,
 			"events": [],
 			"folder": "ef6fe5b8-ce8c-41fd-9b69-19644b5a1be9",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "ee2ac1d4-151f-4807-a572-29f47d1c4476",
+			"name": "obtener por id",
+			"url": "http://localhost:8000/api/hydraulics/1/",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "77e5b831-c56a-4828-8c22-4cc48cf220c0",
 			"headers": "",
 			"pathVariables": {}
 		},
