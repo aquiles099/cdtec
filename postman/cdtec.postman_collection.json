@@ -144,7 +144,8 @@
 			"folder": null,
 			"order": [
 				"001ba5ad-e051-45fe-8b5d-2256c1be605e",
-				"f74048ba-ecbc-4207-b2fa-82335c946cc8"
+				"f74048ba-ecbc-4207-b2fa-82335c946cc8",
+				"6ae7cd1e-1300-42b0-8183-f94313ce5845"
 			],
 			"folders_order": []
 		},
@@ -848,6 +849,23 @@
 			"auth": null,
 			"events": [],
 			"folder": "483906e9-9b39-44db-a36b-b266945ed146",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "6ae7cd1e-1300-42b0-8183-f94313ce5845",
+			"name": "obtener por id",
+			"url": "http://localhost:8000/api/pumpsystems/1/",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "5950fe62-8c5c-4949-8c56-a37bed3ad283",
 			"headers": "",
 			"pathVariables": {}
 		},
