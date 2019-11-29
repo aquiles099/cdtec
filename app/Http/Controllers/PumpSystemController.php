@@ -60,7 +60,7 @@ class PumpSystemController extends Controller
     }
     public function get($id){
         try {            
-            $element = Pump_system::find($id);
+            $element = Pump_system::with("farm")->find($id);
             if(is_null($element)){
                 return response()->json([
                     "message"=>"non-existent item",
@@ -82,7 +82,7 @@ class PumpSystemController extends Controller
     }
     public function zones($id){
         try {
-            $elements = Zone::where("id_pump_system",$id)->get();
+            $elements = Zone::where("id_pump_system",$id)->with("polygons")->with("types")->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,
@@ -98,7 +98,7 @@ class PumpSystemController extends Controller
     }
     public function irrigations($id){
         try {            
-            $elements = Irrigation::where("id_pump_system",$id)->get();
+            $elements = Irrigation::where("id_pump_system",$id)->with("zone")->with("volume")->with("farm")->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,
@@ -114,7 +114,7 @@ class PumpSystemController extends Controller
     }
     public function realIrrigations($id){
         try {            
-            $elements = RealIrrigation::where("id_pump_system",$id)->get();
+            $elements = RealIrrigation::where("id_pump_system",$id)->with("zone")->with("irrigations")->with("farm")->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,

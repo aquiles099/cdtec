@@ -262,7 +262,7 @@ class IrrigationController extends Controller
     }
     public function realIrrigations($id){
         try {            
-            $elements = RealIrrigation::where("id_irrigation",$id)->get();
+            $elements = RealIrrigation::where("id_irrigation",$id)->with("zone")->with("pumpSystem")->with("farm")->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,

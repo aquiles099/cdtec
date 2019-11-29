@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Node;
 use App\Measure;
+use App\Farm;
 
 class NodeController extends Controller
 {
@@ -32,6 +33,10 @@ class NodeController extends Controller
             return response()->json($validator->errors(), 400);
         }
         try {
+            $farm = Farm::find($request->get('id_farm'));
+            if(is_null($farm)){
+                return response()->json(["message"=>"non-existent farm"],404);
+            }
             $element = Node::create([
                 'name' => $request->get('name'),
                 'lat' => $request->get('lat'),
@@ -70,7 +75,7 @@ class NodeController extends Controller
     }
     public function get($id){
         try {            
-            $element = Node::find($id);
+            $element = Node::with("farm")->find($id);
             if(is_null($element)){
                 return response()->json([
                     "message"=>"non-existent item",

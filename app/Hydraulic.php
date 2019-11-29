@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Farm;
 use App\Zone;
 use App\Node;
+use App\PhysicalConnection;
 class Hydraulic extends Model
 {
     protected $fillable = [
@@ -22,5 +23,9 @@ class Hydraulic extends Model
     public function node()
     {
         return $this->hasOne(Node::class,'id','id_node');
+    }
+    public function physicalConnection()
+    {
+        return $this->hasOne(PhysicalConnection::class,'id','id_physical_connection');
     }
 }

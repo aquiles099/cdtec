@@ -74,7 +74,10 @@ Route::post('alarms/store', 'AlarmController@store');
 Route::post('physicalconnection/store', 'PhysicalConnectionController@store');
 // volumes
 Route::post('volumes/store', 'VolumeController@store');
-
+// polygons
+Route::post('polygons/store', 'PolygonController@store');
+// types
+Route::post('types/store', 'TypeController@store');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

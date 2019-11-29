@@ -19,7 +19,7 @@ class FarmController extends Controller
         try {
             $response = [
                 'message'=> 'Farm list',
-                'data' => Farm::all(),
+                'data' => Farm::with("accounts")->get(),
             ];
             return response()->json($response, 200);
         } catch (\Exception $e) {
@@ -141,7 +141,7 @@ class FarmController extends Controller
     }
     public function zones($id){
         try {            
-            $elements = Zone::where("id_farm",$id)->get();
+            $elements = Zone::where("id_farm",$id)->with("polygons")->with("types")->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,
@@ -157,7 +157,12 @@ class FarmController extends Controller
     }
     public function hydraulics($id){
         try {            
-            $elements = Hydraulic::where("id_farm",$id)->get();
+            $elements = Hydraulic::where("id_farm",$id)
+                ->with("farm")
+                ->with("zone")
+                ->with("node")
+                ->with("physicalConnection")
+                ->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,
@@ -173,7 +178,7 @@ class FarmController extends Controller
     }
     public function pumpsystems($id){
         try {            
-            $elements = Pump_system::where("id_farm",$id)->get();
+            $elements = Pump_system::where("id_farm",$id)->with("farm")->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,
@@ -205,7 +210,7 @@ class FarmController extends Controller
     }
     public function nodes($id){
         try {            
-            $elements = Node::where("id_farm",$id)->get();
+            $elements = Node::where("id_farm",$id)->with("farm")->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,
@@ -221,7 +226,7 @@ class FarmController extends Controller
     }
     public function irrigations($id){
         try {            
-            $elements = Irrigation::where("id_farm",$id)->get();
+            $elements = Irrigation::where("id_farm",$id)->with("zone")->with("volume")->with("pumpSystem")->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,
@@ -237,7 +242,7 @@ class FarmController extends Controller
     }
     public function realIrrigations($id){
         try {            
-            $elements = RealIrrigation::where("id_farm",$id)->get();
+            $elements = RealIrrigation::where("id_farm",$id)->with("zone")->with("pumpSystem")->with("irrigations")->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,

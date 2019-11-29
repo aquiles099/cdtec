@@ -228,7 +228,7 @@ class ZoneController extends Controller
     }
     public function irrigations($id){
         try {            
-            $elements = Irrigation::where("id_zone",$id)->get();
+            $elements = Irrigation::where("id_zone",$id)->with("farm")->with("volume")->with("pumpSystem")->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,
@@ -276,7 +276,7 @@ class ZoneController extends Controller
     }
     public function realIrrigations($id){
         try {
-            $elements = RealIrrigation::where("id_zone",$id)->get();
+            $elements = RealIrrigation::where("id_zone",$id)->with("pumpSystem")->with("irrigations")->with("farm")->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,

@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Farm;
+use App\Type;
+use App\Polygon;
 class Zone extends Model
 {
     protected $fillable = [
@@ -16,5 +18,13 @@ class Zone extends Model
     public function farm()
     {
         return $this->hasOne(Farm::class,'id','id_farm');
+    }
+    public function types()
+    {
+        return $this->hasMany(Type::class,'id_zone','id');
+    }
+    public function polygons()
+    {
+        return $this->hasMany(Polygon::class,'id_zone','id');
     }
 }

@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Farm;
 use App\Zone;
+use App\Pump_system;
+use App\Irrigation;
 class RealIrrigation extends Model
 {
     protected $fillable = [        
@@ -17,5 +19,13 @@ class RealIrrigation extends Model
     public function zone()
     {
         return $this->hasOne(Zone::class,'id','id_zone');
+    }
+    public function pumpSystem()
+    {
+        return $this->hasOne(Pump_system::class,'id','id_pump_system');
+    }
+    public function irrigations()
+    {
+        return $this->hasOne(Irrigation::class,'id','id_irrigation');
     }
 }
