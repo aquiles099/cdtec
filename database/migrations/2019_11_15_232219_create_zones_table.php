@@ -16,31 +16,26 @@ class CreateZonesTable extends Migration
         Schema::create('zones', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 45);
-            $table->string('description', 45);
-            $table->string('latitude', 45);
-            $table->string('longitude', 45);
-            $table->string('type', 45);
-            $table->integer('kc')->default(0);
-            $table->integer('theoreticalFlow')->default(0);
-            $table->string('unitTheoreticalFlow', 45);
-            $table->integer('efficiency')->default(0);
-            $table->integer('humidityRetention')->default(0);
-            $table->integer('max')->default(0);
-            $table->integer('min')->default(0);
-            $table->integer('criticalPoint1')->default(0);
-            $table->integer('criticalPoint2')->default(0);
+            $table->string('description')->nullable();
+            $table->integer('latitude')->nullable();
+            $table->integer('longitude')->nullable();
+            $table->string('type', 45)->nullable();
+            $table->integer('kc')->nullable();
+            $table->integer('theoreticalFlow')->nullable();
+            $table->string('unitTheoreticalFlow', 45)->nullable();
+            $table->integer('efficiency')->nullable();
+            $table->integer('humidityRetention')->nullable();
+            $table->integer('max')->nullable();
+            $table->integer('min')->nullable();
+            $table->integer('criticalPoint1')->nullable();
+            $table->integer('criticalPoint2')->nullable();
             $table->unsignedBigInteger('id_farm')->unsigned();
             $table->foreign('id_farm')
                 ->references('id')
                 ->on('farms')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->unsignedBigInteger('id_pump_system')->unsigned();
-            $table->foreign('id_pump_system')
-                ->references('id')
-                ->on('pump_systems')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');            
+            $table->integer('id_pump_system')->nullable();
             $table->timestamps();
         });
     }

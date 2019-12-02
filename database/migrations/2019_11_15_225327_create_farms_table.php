@@ -16,12 +16,13 @@ class CreateFarmsTable extends Migration
         Schema::create('farms', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 45);
-            $table->string('description', 45);
-            $table->string('latitude', 45);
-            $table->string('longitude', 45);
-            $table->string('postalAddress', 45);
-            $table->string('timeZone', 45);
-            $table->string('webhook', 45);
+            $table->string('description', 45)->nullable();
+            $table->string('latitude', 45)->nullable();
+            $table->string('longitude', 45)->nullable();
+            $table->string('postalAddress', 45)->nullable();
+            $table->string('timeZone', 45)->nullable();
+            $table->string('webhook', 45)->nullable();
+            $table->unsignedInteger('id_wiseconn')->nullable();
             $table->timestamps();
         });
     }

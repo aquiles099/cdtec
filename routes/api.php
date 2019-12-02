@@ -76,6 +76,8 @@ Route::post('physicalconnection/store', 'PhysicalConnectionController@store');
 Route::post('volumes/store', 'VolumeController@store');
 // polygons
 Route::post('polygons/store', 'PolygonController@store');
+// test
+Route::get('test', 'Controller@test');
 // types
 Route::post('types/store', 'TypeController@store');
 Route::middleware('auth:api')->get('/user', function (Request $request) {

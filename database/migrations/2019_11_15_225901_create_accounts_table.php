@@ -16,14 +16,15 @@ class CreateAccountsTable extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 45);
-            $table->string('rut', 45);
-            $table->string('razonsocial', 45);
-            $table->string('rutlegal', 45);
-            $table->string('direccion', 45);
-            $table->string('telefono', 45);
-            $table->string('email', 45);
-            $table->string('comentario', 45);
-            $table->string('habilitar', 45);
+            $table->string('rut', 45)->nullable();
+            $table->string('razonsocial', 45)->nullable();
+            $table->string('rutlegal', 45)->nullable();
+            $table->string('direccion', 45)->nullable();
+            $table->string('telefono', 45)->nullable();
+            $table->string('email', 45)->nullable();
+            $table->string('comentario', 45)->nullable();
+            $table->string('habilitar', 45)->nullable();
+            $table->unsignedInteger('id_wiseconn')->nullable();
             $table->unsignedBigInteger('id_farm')->unsigned();
             $table->foreign('id_farm')
                 ->references('id')

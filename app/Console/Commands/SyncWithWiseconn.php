@@ -1,22 +1,49 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Console\Commands;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client;
 use App\Farm;
 use App\Account;
 use App\Zone;
-class Controller extends BaseController
+class SyncWithWiseconn extends Command
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-    public function test(){
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'SyncWithWiseconn:run';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Sync with wiseconn API';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
         $client = new Client([
             'base_uri' => 'https://apiv2.wiseconn.com',
-            'timeout'  => 50.0,
+            'timeout'  => 100.0,
         ]);        
         try {            
             $farmsResponse = $client->request('GET', 'farms', [
@@ -75,16 +102,10 @@ class Controller extends BaseController
                 
             }
             
-            $response = [
-                'message'=> 'item successfully registered'
-            ];
-            # code...
-            dd($response);
+            \Log::info("Success: Sync with wiseconn successfully");
         } catch (\Exception $e) {
-            return response()->json([
-                'error' => $e->getMessage(),
-                'linea' => $e->getLine()
-            ], 500);
-        }        
+            \Log::error("Error:" . $e->getMessage());
+            \Log::error("Linea:" . $e->getLine());
+        }      
     }
 }

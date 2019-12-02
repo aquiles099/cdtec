@@ -7,7 +7,7 @@ use App\Farm;
 class Account extends Model
 {
     protected $fillable = [
-        'name', 'rut','razonsocial', 'rutlegal','direccion', 'telefono','email','comentario', 'habilitar','id_farm'
+        'name', 'rut','razonsocial', 'rutlegal','direccion', 'telefono','email','comentario', 'habilitar','id_farm','id_wiseconn'
     ];
     public function farm()
     {
