@@ -8,21 +8,21 @@ use GuzzleHttp\Client;
 use App\Farm;
 use App\Account;
 use App\Zone;
-class SyncWithWiseconn extends Command
+class CloneWiseconnData extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'SyncWithWiseconn:run';
+    protected $signature = 'CloneWiseconnData:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Sync with wiseconn API';
+    protected $description = 'Clone wiseconn data';
 
     /**
      * Create a new command instance.
