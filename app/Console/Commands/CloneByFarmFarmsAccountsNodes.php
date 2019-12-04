@@ -103,7 +103,7 @@ class CloneByFarmFarmsAccountsNodes extends Command
                 }
             }
             # code...
-            $this->info("Success: Clone farms, accounts and nodes data");
+            $this->info("Success: Clone farms, accounts and nodes data by farm");
         } catch (\Exception $e) {
             $this->error("Error:" . $e->getMessage());
             $this->error("Linea:" . $e->getLine());

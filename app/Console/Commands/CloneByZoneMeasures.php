@@ -102,7 +102,7 @@ class CloneByZoneMeasures extends Command
                     }  
                 }
             }
-            $this->info("Success: Clone measures data");
+            $this->info("Success: Clone measures data by zone by zone");
         } catch (\Exception $e) {
             $this->error("Error:" . $e->getMessage());
             $this->error("Linea:" . $e->getLine());

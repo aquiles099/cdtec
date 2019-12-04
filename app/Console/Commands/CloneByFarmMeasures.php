@@ -101,7 +101,7 @@ class CloneByFarmMeasures extends Command
                     }  
                 }                    
             }
-            $this->info("Success: Clone measures data");
+            $this->info("Success: Clone measures data by farm");
         } catch (\Exception $e) {
             $this->error("Error:" . $e->getMessage());
             $this->error("Linea:" . $e->getLine());

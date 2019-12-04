@@ -83,7 +83,7 @@ class CloneByZoneAlarms extends Command
                 }                
             }
             # code...
-            $this->info("Success: Clone farms, accounts and nodes data");
+            $this->info("Success: Clone farms, accounts and nodes data by zone");
         } catch (\Exception $e) {
             $this->error($e->getMessage());
             $this->error($e->getLine());

@@ -9,6 +9,7 @@ use App\Farm;
 use App\Alarm;
 use App\Zone;
 use App\RealIrrigation;
+use Carbon\Carbon;
 
 class CloneByFarmAlarms extends Command
 {
@@ -70,7 +71,7 @@ class CloneByFarmAlarms extends Command
         try {
             $farms=Farm::all();
             foreach ($farms as $key => $farm) {
-                $alarmsResponse = $this->requestWiseconn($client,'GET','/farms/'.$farm->id_wiseconn.'/alarms/triggered/?endTime='.$initTime.'&initTime='.$initTime);
+                $alarmsResponse = $this->requestWiseconn($client,'GET','/farms/'.$farm->id_wiseconn.'/alarms/triggered/?endTime='.$endTime.'&initTime='.$initTime);
                 $alarms=json_decode($alarmsResponse->getBody()->getContents());
                 foreach ($alarms as $key => $alarm) {
                     $zone=Zone::where("id_wiseconn",$alarm->zoneId)->first();

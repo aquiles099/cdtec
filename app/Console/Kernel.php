@@ -64,6 +64,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('clonebyfarm:realirrigations:volumes:run')->hourly();
         // php artisan clonebyfarm:alarms:run
         // $schedule->command('clonebyfarm:alarms:run')->hourly();
+        // php artisan clonebyzone:pumpsystems:run
         // $schedule->command('clonebyzone:pumpsystems:run')->hourly();
         // php artisan clonebyzone:measures:run
         // $schedule->command('clonebyzone:measures:run')->hourly();

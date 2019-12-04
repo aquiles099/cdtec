@@ -83,7 +83,7 @@ class CloneByZoneHydraulics extends Command
                     }
                 }
             }
-            $this->info("Success: Clone hydraulics and newPhysicalConnections data");
+            $this->info("Success: Clone hydraulics and newPhysicalConnections data by zone");
         } catch (\Exception $e) {
             $this->error("Error:" . $e->getMessage());
             $this->error("Linea:" . $e->getLine());

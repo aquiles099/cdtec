@@ -70,7 +70,7 @@ class CloneByZonePumpsystems extends Command
                     }
                 }
             }
-            $this->info("Success: Clone pumpsystems data");
+            $this->info("Success: Clone pumpsystems data by zone by zone");
         } catch (\Exception $e) {
             $this->error("Error:" . $e->getMessage());
             $this->error("Linea:" . $e->getLine());

@@ -83,7 +83,7 @@ class CloneByFarmHydraulics extends Command
                     }
                 }
             }
-            $this->info("Success: Clone hydraulics and newPhysicalConnections data");
+            $this->info("Success: Clone hydraulics and physical connections data by farm");
         } catch (\Exception $e) {
             $this->error("Error:" . $e->getMessage());
             $this->error("Linea:" . $e->getLine());

@@ -95,7 +95,7 @@ class CloneByZoneIrrigationsVolumes extends Command
                     }
                 }                    
             }
-            $this->info("Success: Clone irrigations and volumes data");
+            $this->info("Success: Clone irrigations and volumes data by zone");
         } catch (\Exception $e) {
             $this->error("Error:" . $e->getMessage());
             $this->error("Linea:" . $e->getLine());
