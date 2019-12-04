@@ -67,18 +67,24 @@ class Controller extends BaseController
         $initTime=Carbon::now(date_default_timezone_get())->format('Y-m-d');
         $endTime=Carbon::now(date_default_timezone_get())->addDays(15)->format('Y-m-d');
         try{
+            $totalAlarms=[];
             $farms=Farm::all();
             foreach ($farms as $key => $farm) {
-                $irrigationsResponse = $this->requestWiseconn($client,'GET','/farms/'.$farm->id_wiseconn.'/irrigations/?endTime='.$endTime.'&initTime='.$initTime);
-                $irrigations=json_decode($irrigationsResponse->getBody()->getContents());
-                foreach ($irrigations as $key => $irrigation) {
-                    $zone=Zone::where("id_wiseconn",$irrigation->zoneId)->first();
-                    $pumpSystem=Pump_system::where("id_wiseconn",$irrigation->pumpSystemId)->first();
-                    if(is_null(Irrigation::where("id_wiseconn",$irrigation->id)->first())&&!is_null($zone)&&!is_null($pumpSystem)){ 
-                        $newVolume =$this->volumeCreate($irrigation);
-                        $newIrrigation =$this->irrigationCreate($irrigation,$farm,$zone,$newVolume,$pumpSystem);                                                                 
-                    }
-                }                    
+                try{
+                    $alarmsResponse = $this->requestWiseconn($client,'GET','/farms/'.$farm->id_wiseconn.'/alarms/triggered/?endTime=2019-03-10&initTime=2019-03-01');
+                    $alarms=json_decode($alarmsResponse->getBody()->getContents());
+                    array_push($totalAlarms,$alarms);
+                    // foreach ($irrigations as $key => $irrigation) {
+                    //     $zone=Zone::where("id_wiseconn",$irrigation->zoneId)->first();
+                    //     $pumpSystem=Pump_system::where("id_wiseconn",$irrigation->pumpSystemId)->first();
+                    //     if(is_null(Irrigation::where("id_wiseconn",$irrigation->id)->first())&&!is_null($zone)&&!is_null($pumpSystem)){ 
+                    //         $newVolume =$this->volumeCreate($irrigation);
+                    //         $newIrrigation =$this->irrigationCreate($irrigation,$farm,$zone,$newVolume,$pumpSystem);                                                                 
+                    //     }
+                    // }
+                } catch (\Exception $e) {
+                    \Log::error("Error:" . $e->getMessage());
+                }                     
             }
             return ("Success: Clone real irrigations and volumes data");
         } catch (\Exception $e) {
