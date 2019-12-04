@@ -15,39 +15,25 @@ class CreateMeasuresTable extends Migration
     {
         Schema::create('measures', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name', 45);
-            $table->string('unit', 45);
-            $table->integer('lastData')->default(0);
-            $table->timestamp('lastDataDate')->useCurrent();
-            $table->string('monitoringTime', 45);
-            $table->string('sensorDepth', 45);
-            $table->string('depthUnit', 45);
-            $table->string('sensorType', 45);
-            $table->string('readType', 45);
-            $table->unsignedBigInteger('id_node')->unsigned();
-            $table->foreign('id_node')
-                ->references('id')
-                ->on('nodes')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->unsignedBigInteger('id_zone')->unsigned();
-            $table->foreign('id_zone')
-                ->references('id')
-                ->on('zones')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            $table->text('name');
+            $table->string('unit', 45)->nullable();
+            $table->integer('lastData')->nullable();
+            $table->timestamp('lastDataDate')->nullable();
+            $table->string('monitoringTime', 45)->nullable();
+            $table->string('sensorDepth', 45)->nullable();
+            $table->string('depthUnit', 45)->nullable();
+            $table->string('sensorType', 45)->nullable();
+            $table->string('readType', 45)->nullable();
             $table->unsignedBigInteger('id_farm')->unsigned();
             $table->foreign('id_farm')
                 ->references('id')
                 ->on('farms')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->unsignedBigInteger('id_physical_connection')->unsigned();
-            $table->foreign('id_physical_connection')
-                ->references('id')
-                ->on('physical_connections')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            $table->unsignedInteger('id_node')->nullable();
+            $table->unsignedInteger('id_zone')->nullable();
+            $table->unsignedInteger('id_physical_connection')->nullable();
+            $table->string('id_wiseconn')->nullable();
             $table->timestamps();
         });
     }

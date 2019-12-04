@@ -8,20 +8,14 @@ use GuzzleHttp\Client;
 use App\Farm;
 use App\Account;
 use App\Node;
-// use App\Zone;
-// use App\Hydraulic;
-// use App\PhysicalConnection;
-// use App\Pump_system;
-use Carbon\Carbon;
-// use DateTime;
-class CloneFarmsAccountsNodes extends Command
+class CloneByFarmFarmsAccountsNodes extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'clone:farms:accounts:nodes:run';
+    protected $signature = 'clonebyfarm:farms:accounts:nodes:run';
 
     /**
      * The console command description.

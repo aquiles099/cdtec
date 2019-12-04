@@ -4,10 +4,11 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Console\Commands\CloneFarmsAccountsNodes;
-use App\Console\Commands\CloneZones;
-use App\Console\Commands\ClonePumpsystems;
-use App\Console\Commands\CloneHydraulics;
+use App\Console\Commands\CloneByFarmFarmsAccountsNodes;
+use App\Console\Commands\CloneByFarmZones;
+use App\Console\Commands\CloneByFarmPumpsystems;
+use App\Console\Commands\CloneByFarmHydraulics;
+use App\Console\Commands\CloneByFarmMeasures;
 class Kernel extends ConsoleKernel
 {
     /**
@@ -16,10 +17,11 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        CloneFarmsAccountsNodes::class,
-        CloneZones::class,
-        ClonePumpsystems::class,
-        CloneHydraulics::class
+        CloneByFarmFarmsAccountsNodes::class,
+        CloneByFarmZones::class,
+        CloneByFarmPumpsystems::class,
+        CloneByFarmHydraulics::class,
+        CloneByFarmMeasures::class
     ];
 
     /**
@@ -30,10 +32,16 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('clone:farms:accounts:nodes:run')->hourly();
-        // $schedule->command('clone:zones:run')->hourly();
-        // $schedule->command('clone:pumpsystems:run')->hourly();
-        // $schedule->command('clone:hydraulics:run')->hourly();
+        // php artisan clonebyfarm:farms:accounts:nodes:run
+        // $schedule->command('clonebyfarm:farms:accounts:nodes:run')->hourly();
+        // php artisan clonebyfarm:zones:run
+        // $schedule->command('clonebyfarm:zones:run')->hourly();
+        // php artisan clonebyfarm:pumpsystems:run
+        // $schedule->command('clonebyfarm:pumpsystems:run')->hourly();
+        // php artisan clonebyfarm:hydraulics:run
+        // $schedule->command('clonebyfarm:hydraulics:run')->hourly();
+        // php artisan clonebyfarm:measures:run
+        // $schedule->command('clonebyfarm:measures:run')->hourly();
     }
 
     /**

@@ -9,14 +9,14 @@ use App\Zone;
 use App\Node;
 use App\Hydraulic;
 use App\PhysicalConnection;
-class CloneHydraulics extends Command
+class CloneByFarmHydraulics extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'clone:hydraulics:run';
+    protected $signature = 'clonebyfarm:hydraulics:run';
 
     /**
      * The console command description.
@@ -75,17 +75,13 @@ class CloneHydraulics extends Command
             $farms=Farm::all();
             foreach ($farms as $key => $farm) {
                 $hydraulicsResponse = $this->requestWiseconn($client,'GET','/farms/'.$farm->id_wiseconn.'/hydraulics');
-                $hydraulics=json_decode($hydraulicsResponse->getBody()->getContents());
-                $nodes=Node::all();
-                $zones=Zone::all();
-                foreach ($nodes as $key => $node) { 
-                    foreach ($zones as $key => $zone) {
-                        foreach ($hydraulics as $key => $hydraulic) {
-                            if(is_null(Hydraulic::where("id_wiseconn",$hydraulic->id)->first())&&$hydraulic->farmId==$farm->id_wiseconn&&$hydraulic->nodeId==$node->id_wiseconn){ 
-                                $newPhysicalConnection =$this->physicalConnectionCreate($hydraulic);
-                                $newHydraulic =$this->hydraulicCreate($hydraulic,$farm,$zone,$node,$newPhysicalConnection);                                                                 
-                            }  
-                        }
+                $hydraulics=json_decode($hydraulicsResponse->getBody()->getContents());                
+                foreach ($hydraulics as $key => $hydraulic) {
+                    $zone=Zone::where("id_wiseconn",$measure->zoneId)->first();
+                    $node=Node::where("id_wiseconn",$measure->nodeId)->first();
+                    if(is_null(Hydraulic::where("id_wiseconn",$hydraulic->id)->first())&&!is_null($zone)&&!is_null($node)){ 
+                        $newPhysicalConnection =$this->physicalConnectionCreate($hydraulic);
+                        $newHydraulic =$this->hydraulicCreate($hydraulic,$farm,$zone,$node,$newPhysicalConnection);                                                                 
                     }
                 }
             }

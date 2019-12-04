@@ -1,25 +1,41 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Console\Commands;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client;
-use App\Farm;
-use App\Account;
-use App\Zone;
-use App\Hydraulic;
-use App\PhysicalConnection;
-use App\Node;
-use App\Pump_system;
-use App\Measure;
 use Carbon\Carbon;
-use DateTime;
-class Controller extends BaseController
+use App\Farm;
+use App\Node;
+use App\Zone;
+use App\Measure;
+use App\PhysicalConnection;
+class CloneByFarmMeasures extends Command
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'clonebyfarm:measures:run';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Clone measures data';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
     protected function requestWiseconn($client,$method,$uri){
         return $client->request($method, $uri, [
             'headers' => [
@@ -53,12 +69,13 @@ class Controller extends BaseController
             'id_wiseconn' => $measure->id
         ]); 
     }
-    protected function test(){
-        // dd([
-        //     "initTime"=> Carbon::now(date_default_timezone_get())->toDateTimeString(),
-        //     "endTime"=>Carbon::now(date_default_timezone_get())->addDays(30)->toDateTimeString(),
-        //     "timezone"=>date_default_timezone_get()
-        // ]);
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
         $client = new Client([
             'base_uri' => 'https://apiv2.wiseconn.com',
             'timeout'  => 100.0,
@@ -82,11 +99,12 @@ class Controller extends BaseController
                         }
                         
                     }  
-                }
-                    
+                }                    
             }
+            \Log::info("Success: Clone measures data");
         } catch (\Exception $e) {
-            return response()->json(["message"=>"Error:" . $e->getMessage(),"linea"=>"Error:" . $e->getLine()]);
+            \Log::error("Error:" . $e->getMessage());
+            \Log::error("Linea:" . $e->getLine());
         } 
     }
 }

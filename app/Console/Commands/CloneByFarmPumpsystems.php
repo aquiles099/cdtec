@@ -6,14 +6,14 @@ use Illuminate\Console\Command;
 use GuzzleHttp\Client;
 use App\Farm;
 use App\Pump_system;
-class ClonePumpsystems extends Command
+class CloneByFarmPumpsystems extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'clone:pumpsystems:run';
+    protected $signature = 'clonebyfarm:pumpsystems:run';
 
     /**
      * The console command description.

@@ -6,14 +6,14 @@ use Illuminate\Console\Command;
 use GuzzleHttp\Client;
 use App\Farm;
 use App\Zone;
-class CloneZones extends Command
+class CloneByFarmZones extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'clone:zones:run';
+    protected $signature = 'clonebyfarm:zones:run';
 
     /**
      * The console command description.
