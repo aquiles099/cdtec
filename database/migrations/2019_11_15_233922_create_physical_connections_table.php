@@ -15,10 +15,10 @@ class CreatePhysicalConnectionsTable extends Migration
     {
         Schema::create('physical_connections', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('expansionPort')->default(0);
-            $table->string('expansionBoard', 45);
-            $table->integer('nodePort')->default(0);
-            $table->string('type', 45);
+            $table->integer('expansionPort')->nullable();
+            $table->string('expansionBoard', 45)->nullable();
+            $table->integer('nodePort')->nullable();
+            $table->string('type', 45)->nullable();
             $table->timestamps();
         });
     }

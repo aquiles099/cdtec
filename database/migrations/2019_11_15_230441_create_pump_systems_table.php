@@ -23,6 +23,7 @@ class CreatePumpSystemsTable extends Migration
                 ->on('farms')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+            $table->integer('id_wiseconn')->nullable();
             $table->timestamps();
         });
     }

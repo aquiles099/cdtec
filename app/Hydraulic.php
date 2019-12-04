@@ -10,7 +10,7 @@ use App\PhysicalConnection;
 class Hydraulic extends Model
 {
     protected $fillable = [
-        'name','type','id_physical_connection','id_node', 'id_farm','id_zone'
+        'name','type','id_physical_connection','id_node', 'id_farm','id_zone','id_wiseconn'
     ];
     public function farm()
     {

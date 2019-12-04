@@ -16,7 +16,7 @@ class CreateHydraulicsTable extends Migration
         Schema::create('hydraulics', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 45);
-            $table->string('type', 45);
+            $table->string('type', 45)->nullable();
             $table->unsignedBigInteger('id_physical_connection')->unsigned();
             $table->foreign('id_physical_connection')
                 ->references('id')
@@ -40,7 +40,8 @@ class CreateHydraulicsTable extends Migration
                 ->references('id')
                 ->on('zones')
                 ->onDelete('cascade')
-                ->onUpdate('cascade');                
+                ->onUpdate('cascade');            
+            $table->unsignedInteger('id_wiseconn')->nullable();
             $table->timestamps();
         });
     }

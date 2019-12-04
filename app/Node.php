@@ -7,7 +7,7 @@ use App\Farm;
 class Node extends Model
 {
     protected $fillable = [
-        'name','lat', 'lng','nodeType','id_farm'
+        'name','lat', 'lng','nodeType','id_farm','id_wiseconn'
     ];
     public function farm()
     {

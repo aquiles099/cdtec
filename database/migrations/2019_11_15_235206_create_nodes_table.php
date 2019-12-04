@@ -15,9 +15,9 @@ class CreateNodesTable extends Migration
     {
         Schema::create('nodes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name', 45);
-            $table->string('lat', 45);
-            $table->string('lng', 45);
+            $table->string('name');
+            $table->string('lat', 45)->nullable();
+            $table->string('lng', 45)->nullable();
             $table->string('nodeType', 45);
             $table->unsignedBigInteger('id_farm')->unsigned();
             $table->foreign('id_farm')
@@ -25,6 +25,7 @@ class CreateNodesTable extends Migration
                 ->on('farms')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+            $table->unsignedInteger('id_wiseconn')->nullable();
             $table->timestamps();
         });
     }

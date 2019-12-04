@@ -4,7 +4,10 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-
+use App\Console\Commands\CloneFarmsAccountsNodes;
+use App\Console\Commands\CloneZones;
+use App\Console\Commands\ClonePumpsystems;
+use App\Console\Commands\CloneHydraulics;
 class Kernel extends ConsoleKernel
 {
     /**
@@ -13,7 +16,10 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        CloneFarmsAccountsNodes::class,
+        CloneZones::class,
+        ClonePumpsystems::class,
+        CloneHydraulics::class
     ];
 
     /**
@@ -24,8 +30,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        // $schedule->command('clone:farms:accounts:nodes:run')->hourly();
+        // $schedule->command('clone:zones:run')->hourly();
+        // $schedule->command('clone:pumpsystems:run')->hourly();
+        // $schedule->command('clone:hydraulics:run')->hourly();
     }
 
     /**

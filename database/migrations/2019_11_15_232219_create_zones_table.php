@@ -36,6 +36,7 @@ class CreateZonesTable extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->integer('id_pump_system')->nullable();
+            $table->integer('id_wiseconn')->nullable();
             $table->timestamps();
         });
     }
