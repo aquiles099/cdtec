@@ -20,7 +20,7 @@ class CloneByFarmZones extends Command
      *
      * @var string
      */
-    protected $description = 'Clone zones data';
+    protected $description = 'Clone zones data by farm';
 
     /**
      * Create a new command instance.

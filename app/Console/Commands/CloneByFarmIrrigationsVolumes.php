@@ -1,22 +1,41 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Console\Commands;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client;
 use App\Farm;
 use App\Irrigation;
 use App\Zone;
-use App\Node;
 use App\Pump_system;
 use App\Volume;
 use Carbon\Carbon;
-class Controller extends BaseController
+class CloneByFarmIrrigationsVolumes extends Command
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'clonebyfarm:irrigations:volumes:run';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Clone irrigations data by farm';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
     protected function requestWiseconn($client,$method,$uri){
         return $client->request($method, $uri, [
             'headers' => [
@@ -50,12 +69,13 @@ class Controller extends BaseController
             'id_wiseconn' => $irrigation->id
         ]); 
     }
-    protected function test(){
-        // dd([
-        //     "initTime"=> Carbon::now(date_default_timezone_get())->format('Y-m-d'),
-        //     "endTime"=>Carbon::now(date_default_timezone_get())->addDays(25)->format('Y-m-d'),
-        //     "timezone"=>date_default_timezone_get()
-        // ]);
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
         $client = new Client([
             'base_uri' => 'https://apiv2.wiseconn.com',
             'timeout'  => 100.0,
@@ -67,16 +87,19 @@ class Controller extends BaseController
             foreach ($farms as $key => $farm) {
                 $irrigationsResponse = $this->requestWiseconn($client,'GET','/farms/'.$farm->id_wiseconn.'/irrigations/?endTime='.$endTime.'&initTime='.$initTime);
                 $irrigations=json_decode($irrigationsResponse->getBody()->getContents());
-                dd($irrigations);
                 foreach ($irrigations as $key => $irrigation) {
-                    if(is_null(Irrigation::where("id_wiseconn",$irrigation->id)->first())){
+                    $zone=Zone::where("id_wiseconn",$irrigation->zoneId)->first();
+                    $pumpSystem=Pump_system::where("id_wiseconn",$irrigation->pumpSystemId)->first();
+                    if(is_null(Irrigation::where("id_wiseconn",$irrigation->id)->first())&&!is_null($zone)&&!is_null($pumpSystem)){ 
                         $newVolume =$this->volumeCreate($irrigation);
-                        $newIrrigationConnection =$this->irrigationCreate($irrigation,$farm,$zone,$volume,$pumpSystem);                
-                    }  
+                        $newIrrigation =$this->irrigationCreate($irrigation,$farm,$zone,$newVolume,$pumpSystem);                                                                 
+                    }
                 }                    
             }
+            \Log::info("Success: Clone irrigations and volumes data");
         } catch (\Exception $e) {
-            return response()->json(["message"=>"Error:" . $e->getMessage(),"linea"=>"Error:" . $e->getLine()]);
-        } 
+            \Log::error("Error:" . $e->getMessage());
+            \Log::error("Linea:" . $e->getLine());
+        }  
     }
 }

@@ -10,7 +10,7 @@ use App\Pump_system;
 class Irrigation extends Model
 {
     protected $fillable = [        
-        'initTime', 'endTime','status','sentToNetwork','scheduledType','groupingName','action','id_pump_system','id_zone','id_volume','id_farm'
+        'initTime', 'endTime','status','sentToNetwork','scheduledType','groupingName','action','id_pump_system','id_zone','id_volume','id_farm','id_wiseconn'
     ];
     public function farm()
     {

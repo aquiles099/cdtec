@@ -15,38 +15,24 @@ class CreateIrrigationsTable extends Migration
     {
         Schema::create('irrigations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('value')->default(0);
-            $table->string('initTime', 45);
-            $table->string('endTime', 45);
-            $table->string('status', 45);
+            $table->integer('value')->nullable();
+            $table->string('initTime', 45)->nullable();
+            $table->string('endTime', 45)->nullable();
+            $table->string('status', 45)->nullable();
             $table->boolean('sentToNetwork')->default(false);
-            $table->string('scheduledType', 45);
-            $table->string('groupingName', 45);
-            $table->string('action', 45);            
-            $table->unsignedBigInteger('id_pump_system')->unsigned();
-            $table->foreign('id_pump_system')
-                ->references('id')
-                ->on('pump_systems')
-                ->onDelete('cascade')
-                ->onUpdate('cascade'); 
-            $table->unsignedBigInteger('id_zone')->unsigned();
-            $table->foreign('id_zone')
-                ->references('id')
-                ->on('zones')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->unsignedBigInteger('id_volume')->unsigned();
-            $table->foreign('id_volume')
-                ->references('id')
-                ->on('volumes')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            $table->string('scheduledType', 45)->nullable();
+            $table->string('groupingName', 45)->nullable();
+            $table->string('action', 45)->nullable();            
+            $table->integer('id_pump_system')->nullable();
+            $table->integer('id_zone')->nullable();
+            $table->integer('id_volume')->nullable();
             $table->unsignedBigInteger('id_farm')->unsigned();
             $table->foreign('id_farm')
                 ->references('id')
                 ->on('farms')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+            $table->unsignedInteger('id_wiseconn')->nullable();
             $table->timestamps();
         });
     }

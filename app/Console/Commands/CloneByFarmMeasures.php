@@ -25,7 +25,7 @@ class CloneByFarmMeasures extends Command
      *
      * @var string
      */
-    protected $description = 'Clone measures data';
+    protected $description = 'Clone measures data by farm';
 
     /**
      * Create a new command instance.

@@ -23,7 +23,7 @@ class CloneByFarmHydraulics extends Command
      *
      * @var string
      */
-    protected $description = 'Clone hydraulics data';
+    protected $description = 'Clone hydraulics data by farm';
 
     /**
      * Create a new command instance.
@@ -85,9 +85,10 @@ class CloneByFarmHydraulics extends Command
                     }
                 }
             }
+            \Log::info("Success: Clone hydraulics and newPhysicalConnections data");
         } catch (\Exception $e) {
             \Log::error("Error:" . $e->getMessage());
             \Log::error("Linea:" . $e->getLine());
-        } 
+        }    
     }
 }

@@ -22,7 +22,7 @@ class CloneByFarmFarmsAccountsNodes extends Command
      *
      * @var string
      */
-    protected $description = 'Clone farms, accounts and nodes data';
+    protected $description = 'Clone farms, accounts and nodes data by farm';
 
     /**
      * Create a new command instance.
