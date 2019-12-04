@@ -12,6 +12,11 @@ use App\Console\Commands\CloneByFarmMeasures;
 use App\Console\Commands\CloneByFarmIrrigationsVolumes;
 use App\Console\Commands\CloneByFarmRealIrrigationsVolumes;
 use App\Console\Commands\CloneByFarmAlarms;
+use App\Console\Commands\CloneByZonePumpsystems;
+use App\Console\Commands\CloneByZoneMeasures;
+use App\Console\Commands\CloneByZoneIrrigationsVolumes;
+use App\Console\Commands\CloneByZoneRealIrrigationsVolumes;
+use App\Console\Commands\CloneByZoneAlarms;
 class Kernel extends ConsoleKernel
 {
     /**
@@ -27,7 +32,12 @@ class Kernel extends ConsoleKernel
         CloneByFarmMeasures::class,
         CloneByFarmIrrigationsVolumes::class,
         CloneByFarmRealIrrigationsVolumes::class,
-        CloneByFarmAlarms::class
+        CloneByFarmAlarms::class,
+        CloneByZonePumpsystems::class,
+        CloneByZoneMeasures::class,
+        CloneByZoneIrrigationsVolumes::class,
+        CloneByZoneRealIrrigationsVolumes::class,
+        CloneByZoneAlarms::class,
     ];
 
     /**
@@ -53,7 +63,16 @@ class Kernel extends ConsoleKernel
         // php artisan clonebyfarm:realirrigations:volumes:run
         // $schedule->command('clonebyfarm:realirrigations:volumes:run')->hourly();
         // php artisan clonebyfarm:alarms:run
-        // $schedule->command('clonebyfarm:alarms:run')->hourly();        
+        // $schedule->command('clonebyfarm:alarms:run')->hourly();
+        // $schedule->command('clonebyzone:pumpsystems:run')->hourly();
+        // php artisan clonebyzone:measures:run
+        // $schedule->command('clonebyzone:measures:run')->hourly();
+        // php artisan clonebyzone:irrigations:volumes:run
+        // $schedule->command('clonebyzone:irrigations:volumes:run')->hourly();
+        // php artisan clonebyzone:realirrigations:volumes:run
+        // $schedule->command('clonebyzone:realirrigations:volumes:run')->hourly();
+        // php artisan clonebyzone:alarms:run
+        // $schedule->command('clonebyzone:alarms:run')->hourly();
     }
 
     /**

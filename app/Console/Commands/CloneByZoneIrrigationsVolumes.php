@@ -11,21 +11,21 @@ use App\Zone;
 use App\Pump_system;
 use App\Volume;
 use Carbon\Carbon;
-class CloneByFarmIrrigationsVolumes extends Command
+class CloneByZoneIrrigationsVolumes extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'clonebyfarm:irrigations:volumes:run';
+    protected $signature = 'clonebyzone:irrigations:volumes:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Clone irrigations data by farm';
+    protected $description = 'Clone irrigations data by zone';
 
     /**
      * Create a new command instance.

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client;
 use App\Farm;
 use App\Zone;
@@ -82,10 +83,10 @@ class CloneByFarmZones extends Command
                     }
                 }
             }
-            \Log::info("Success: Clone pumpsystems data");
+            $this->info("Success: Clone pumpsystems data");
         } catch (\Exception $e) {
-            \Log::error("Error:" . $e->getMessage());
-            \Log::error("Linea:" . $e->getLine());
+            $this->error("Error:" . $e->getMessage());
+            $this->error("Linea:" . $e->getLine());
         } 
     }
 }

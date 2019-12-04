@@ -9,21 +9,21 @@ use App\Farm;
 use App\Node;
 use App\Hydraulic;
 use App\PhysicalConnection;
-class CloneByFarmHydraulics extends Command
+class CloneByZoneHydraulics extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'clonebyfarm:hydraulics:run';
+    protected $signature = 'clonebyzone:hydraulics:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Clone hydraulics data by farm';
+    protected $description = 'Clone hydraulics data by zone';
 
     /**
      * Create a new command instance.
@@ -71,12 +71,12 @@ class CloneByFarmHydraulics extends Command
             'timeout'  => 100.0,
         ]);
         try{
-            $farms=Farm::all();
-            foreach ($farms as $key => $farm) {
-                $hydraulicsResponse = $this->requestWiseconn($client,'GET','/farms/'.$farm->id_wiseconn.'/hydraulics');
+            $zones=Zone::all();
+            foreach ($zones as $key => $zone) {
+                $hydraulicsResponse = $this->requestWiseconn($client,'GET','/zones/'.$zone->id_wiseconn.'/hydraulics');
                 $hydraulics=json_decode($hydraulicsResponse->getBody()->getContents());            
                 foreach ($hydraulics as $key => $hydraulic) {
-                    $node=Node::where("id_wiseconn",$hydraulic->nodeId)->first();
+                    $farm=Node::where("id_wiseconn",$hydraulic->farmId)->first();
                     if(is_null(Hydraulic::where("id_wiseconn",$hydraulic->id)->first())&&!is_null($node)){ 
                         $newPhysicalConnection =$this->physicalConnectionCreate($hydraulic);
                         $newHydraulic =$this->hydraulicCreate($hydraulic,$farm,$node,$newPhysicalConnection);                                                                 

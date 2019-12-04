@@ -11,21 +11,22 @@ use App\Node;
 use App\Zone;
 use App\Measure;
 use App\PhysicalConnection;
-class CloneByFarmMeasures extends Command
+
+class CloneByZoneMeasures extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'clonebyfarm:measures:run';
+    protected $signature = 'clonebyzone:measures:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Clone measures data by farm';
+    protected $description = 'Clone measures data by zone';
 
     /**
      * Create a new command instance.
@@ -62,8 +63,8 @@ class CloneByFarmMeasures extends Command
             'depthUnit'=> isset($measure->depthUnit)?isset($measure->depthUnit):null,
             'sensorType'=> isset($measure->sensorType)?isset($measure->sensorType):null,
             'readType'=> isset($measure->readType)?isset($measure->readType):null,
-            'id_farm' => $farm->id,
-            'id_zone' => isset($zone->id)?$zone->id:null,
+            'id_farm' => isset($farm->id)?$farm->id:null,
+            'id_zone' => $zone->id,
             'id_physical_connection' => isset($newPhysicalConnection->id)?$newPhysicalConnection->id:null,
             'id_node' => isset($node->id)?$node->id:null,
             'id_wiseconn' => $measure->id
@@ -81,25 +82,25 @@ class CloneByFarmMeasures extends Command
             'timeout'  => 100.0,
         ]);
         try{
-            $farms=Farm::all();
-            foreach ($farms as $key => $farm) {
-                $measuresResponse = $this->requestWiseconn($client,'GET','/farms/'.$farm->id_wiseconn.'/measures');
+            $zones=Zone::all();
+            foreach ($zones as $key => $zone) {
+                $measuresResponse = $this->requestWiseconn($client,'GET','/zones/'.$zone->id_wiseconn.'/measures');
                 $measures=json_decode($measuresResponse->getBody()->getContents());
                 foreach ($measures as $key => $measure) {
                     if(is_null(Measure::where("id_wiseconn",$measure->id)->first())){
                         $newPhysicalConnection =$this->physicalConnectionCreate($measure);
                         if(isset($measure->farmId)&&isset($measure->nodeId)&&isset($measure->zoneId)){
-                            $zone=Zone::where("id_wiseconn",$measure->zoneId)->first();
+                            $farm=Farm::where("id_wiseconn",$measure->farmId)->first();
                             $node=Node::where("id_wiseconn",$measure->nodeId)->first();
-                            if($measure->farmId==$farm->id_wiseconn&&!is_null($zone)&&!is_null($node)){ 
-                                $newmeasure =$this->measureCreate($measure,$farm,$zone,$node,$newPhysicalConnection); 
+                            if($measure->farmId==$farm->id_wiseconn&&!is_null($farm)&&!is_null($node)){ 
+                                $newmeasure =$this->measureCreate($measure,$farm,$farm,$node,$newPhysicalConnection); 
                             }
                         }else{
                             $newmeasure =$this->measureCreate($measure,$farm,null,null,$newPhysicalConnection); 
                         }
                         
                     }  
-                }                    
+                }
             }
             $this->info("Success: Clone measures data");
         } catch (\Exception $e) {

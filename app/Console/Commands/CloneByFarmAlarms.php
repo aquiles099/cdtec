@@ -81,10 +81,10 @@ class CloneByFarmAlarms extends Command
                 }                
             }
             # code...
-            \Log::info("Success: Clone farms, accounts and nodes data");
+            $this->info("Success: Clone farms, accounts and nodes data");
         } catch (\Exception $e) {
-            \Log::error("Error:" . $e->getMessage());
-            \Log::error("Linea:" . $e->getLine());
+            $this->error("Error:" . $e->getMessage());
+            $this->error("Linea:" . $e->getLine());
         }    
     }
 }

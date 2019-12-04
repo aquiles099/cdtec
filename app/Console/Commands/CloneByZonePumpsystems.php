@@ -7,21 +7,21 @@ use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client;
 use App\Farm;
 use App\Pump_system;
-class CloneByFarmPumpsystems extends Command
+class CloneByZonePumpsystems extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'clonebyfarm:pumpsystems:run';
+    protected $signature = 'clonebyzone:pumpsystems:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Clone pumpsystems data by farm';
+    protected $description = 'Clone pumpsystems data by zone';
 
     /**
      * Create a new command instance.
