@@ -15,14 +15,9 @@ class CreateExpansionsTable extends Migration
     {
         Schema::create('expansions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('nodePort')->default(0);
-            $table->string('expansionBoard', 45);
-            $table->unsignedBigInteger('id_node')->unsigned();
-            $table->foreign('id_node')
-                ->references('id')
-                ->on('nodes')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            $table->integer('nodePort')->nullable();
+            $table->string('expansionBoard', 45)->nullable();
+            $table->unsignedInteger('id_node')->nullable();
             $table->timestamps();
         });
     }

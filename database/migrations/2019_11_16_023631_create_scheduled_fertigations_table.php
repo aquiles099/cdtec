@@ -15,29 +15,14 @@ class CreateScheduledFertigationsTable extends Migration
     {
         Schema::create('scheduled_fertigations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('initTime', 45);
-            $table->string('endTime', 45);
-            $table->integer('proportion')->default(0);
-            $table->integer('preirrigation')->default(0);
-            $table->integer('postirrigation')->default(0);
-            $table->unsignedBigInteger('id_fertilizer')->unsigned();
-            $table->foreign('id_fertilizer')
-                ->references('id')
-                ->on('fertilizers')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->unsignedBigInteger('id_volume')->unsigned();
-            $table->foreign('id_volume')
-                ->references('id')
-                ->on('volumes')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->unsignedBigInteger('id_irrigation')->unsigned();
-            $table->foreign('id_irrigation')
-                ->references('id')
-                ->on('irrigations')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            $table->string('initTime', 45)->nullable();
+            $table->string('endTime', 45)->nullable();
+            $table->integer('proportion')->nullable(0);
+            $table->integer('preirrigation')->nullable(0);
+            $table->integer('postirrigation')->nullable(0);            
+            $table->unsignedInteger('id_fertilizer')->nullable(); 
+            $table->unsignedInteger('id_volume')->nullable(); 
+            $table->unsignedInteger('id_irrigation')->nullable(); 
             $table->timestamps();
         });
     }

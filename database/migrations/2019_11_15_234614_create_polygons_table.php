@@ -15,15 +15,10 @@ class CreatePolygonsTable extends Migration
     {
         Schema::create('polygons', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('lat', 45);
-            $table->string('lng', 45);
-            $table->string('type', 45);
-            $table->unsignedBigInteger('id_zone')->unsigned();
-            $table->foreign('id_zone')
-                ->references('id')
-                ->on('zones')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            $table->string('lat', 45)->nullable();
+            $table->string('lng', 45)->nullable();
+            $table->string('type', 45)->nullable();
+            $table->unsignedInteger('id_zone')->nullable();
             $table->timestamps();
         });
     }

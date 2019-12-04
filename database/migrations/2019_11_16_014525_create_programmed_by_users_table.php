@@ -15,13 +15,8 @@ class CreateProgrammedByUsersTable extends Migration
     {
         Schema::create('programmed_by_users', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name', 45);
-            $table->unsignedBigInteger('id_irrigation')->unsigned();
-            $table->foreign('id_irrigation')
-                ->references('id')
-                ->on('irrigations')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            $table->string('name', 45)->nullable();
+            $table->unsignedInteger('id_irrigation')->nullable();
             $table->timestamps();
         });
     }

@@ -57,7 +57,7 @@ class CloneByZoneRealIrrigationsVolumes extends Command
             'initTime' => isset($realIrrigation->initTime)?$realIrrigation->initTime:null,
             'endTime' =>isset($realIrrigation->endTime)?$realIrrigation->endTime:null,
             'status'=> isset($realIrrigation->status)?$realIrrigation->status:null,
-            'id_farm'=> $farm->id,
+            'id_farm'=> isset($farm->id)?$farm->id:null,
             'id_pump_system'=> isset($pumpSystem->id)?$pumpSystem->id:null,
             'id_zone'=> isset($zone->id)?$zone->id:null,
             'id_wiseconn' => $realIrrigation->id

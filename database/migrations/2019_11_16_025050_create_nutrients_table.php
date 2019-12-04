@@ -15,14 +15,9 @@ class CreateNutrientsTable extends Migration
     {
         Schema::create('nutrients', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name', 45);
-            $table->string('percentage', 45);
-            $table->unsignedBigInteger('id_fertigation')->unsigned();
-            $table->foreign('id_fertigation')
-                ->references('id')
-                ->on('fertigations')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            $table->string('name', 45)->nullable();
+            $table->string('percentage', 45)->nullable();            
+            $table->unsignedInteger('id_fertigation')->nullable();
             $table->timestamps();
         });
     }

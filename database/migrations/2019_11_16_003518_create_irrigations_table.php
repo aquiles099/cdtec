@@ -23,15 +23,10 @@ class CreateIrrigationsTable extends Migration
             $table->string('scheduledType', 45)->nullable();
             $table->string('groupingName', 45)->nullable();
             $table->string('action', 45)->nullable();            
-            $table->integer('id_pump_system')->nullable();
-            $table->integer('id_zone')->nullable();
-            $table->integer('id_volume')->nullable();
-            $table->unsignedBigInteger('id_farm')->unsigned();
-            $table->foreign('id_farm')
-                ->references('id')
-                ->on('farms')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            $table->unsignedInteger('id_pump_system')->nullable();
+            $table->unsignedInteger('id_zone')->nullable();
+            $table->unsignedInteger('id_volume')->nullable();
+            $table->unsignedInteger('id_farm')->nullable();
             $table->unsignedInteger('id_wiseconn')->nullable();
             $table->timestamps();
         });

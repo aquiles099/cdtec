@@ -15,18 +15,13 @@ class CreateHydraulicsTable extends Migration
     {
         Schema::create('hydraulics', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name', 45);
+            $table->string('name', 45)->nullable();
             $table->string('type', 45)->nullable();
-            $table->unsignedBigInteger('id_farm')->unsigned();
-            $table->foreign('id_farm')
-                ->references('id')
-                ->on('farms')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->integer('id_node')->nullable();
-            $table->integer('id_physical_connection')->nullable();
-            $table->integer('id_zone')->nullable();         
-            $table->integer('id_wiseconn')->nullable();
+            $table->unsignedInteger('id_farm')->nullable();
+            $table->unsignedInteger('id_node')->nullable();
+            $table->unsignedInteger('id_physical_connection')->nullable();
+            $table->unsignedInteger('id_zone')->nullable();         
+            $table->unsignedInteger('id_wiseconn')->nullable();
             $table->timestamps();
         });
     }

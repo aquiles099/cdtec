@@ -29,14 +29,9 @@ class CreateZonesTable extends Migration
             $table->integer('min')->nullable();
             $table->integer('criticalPoint1')->nullable();
             $table->integer('criticalPoint2')->nullable();
-            $table->unsignedBigInteger('id_farm')->unsigned();
-            $table->foreign('id_farm')
-                ->references('id')
-                ->on('farms')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->integer('id_pump_system')->nullable();
-            $table->integer('id_wiseconn')->nullable();
+            $table->unsignedInteger('id_farm')->nullable();
+            $table->unsignedInteger('id_pump_system')->nullable();
+            $table->unsignedInteger('id_wiseconn')->nullable();
             $table->timestamps();
         });
     }

@@ -18,16 +18,11 @@ class CreateAlarmsTable extends Migration
             $table->integer('activationValue')->nullable();
             $table->text('description')->nullable();        
             $table->string('date', 45)->nullable();
-            $table->unsignedBigInteger('id_farm')->unsigned();
-            $table->foreign('id_farm')
-                ->references('id')
-                ->on('farms')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->integer('id_zone')->nullable();
-            $table->integer('id_irrigation')->nullable();
-            $table->integer('id_real_irrigation')->nullable();            
-            $table->integer('id_wiseconn')->nullable();
+            $table->unsignedInteger('id_farm')->nullable();
+            $table->unsignedInteger('id_zone')->nullable();
+            $table->unsignedInteger('id_irrigation')->nullable();
+            $table->unsignedInteger('id_real_irrigation')->nullable();            
+            $table->unsignedInteger('id_wiseconn')->nullable();
             $table->timestamps();
         });
     }

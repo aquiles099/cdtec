@@ -15,15 +15,10 @@ class CreatePumpSystemsTable extends Migration
     {
         Schema::create('pump_systems', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name', 45);
-            $table->boolean('allowPumpSelection')->default(false);
-            $table->unsignedBigInteger('id_farm')->unsigned();
-            $table->foreign('id_farm')
-                ->references('id')
-                ->on('farms')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->integer('id_wiseconn')->nullable();
+            $table->string('name', 45)->nullable();
+            $table->boolean('allowPumpSelection')->nullable();
+            $table->unsignedInteger('id_farm')->nullable();
+            $table->unsignedInteger('id_wiseconn')->nullable();
             $table->timestamps();
         });
     }

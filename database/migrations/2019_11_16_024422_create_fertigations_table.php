@@ -15,28 +15,13 @@ class CreateFertigationsTable extends Migration
     {
         Schema::create('fertigations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('initTime', 45);
-            $table->string('endTime', 45);
-            $table->string('dilution', 45);
-            $table->boolean('soluble')->default(false);
-            $table->unsignedBigInteger('id_fertilizer')->unsigned();
-            $table->foreign('id_fertilizer')
-                ->references('id')
-                ->on('fertilizers')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->unsignedBigInteger('id_real_irrigation')->unsigned();
-            $table->foreign('id_real_irrigation')
-                ->references('id')
-                ->on('real_irrigations')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->unsignedBigInteger('id_volume')->unsigned();
-            $table->foreign('id_volume')
-                ->references('id')
-                ->on('volumes')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            $table->string('initTime', 45)->nullable();
+            $table->string('endTime', 45)->nullable();
+            $table->string('dilution', 45)->nullable();
+            $table->boolean('soluble')->nullable();
+            $table->unsignedInteger('id_fertilizer')->nullable();
+            $table->unsignedInteger('id_real_irrigation')->nullable();
+            $table->unsignedInteger('id_volume')->nullable();
             $table->timestamps();
         });
     }

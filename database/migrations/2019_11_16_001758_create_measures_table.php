@@ -23,13 +23,8 @@ class CreateMeasuresTable extends Migration
             $table->string('sensorDepth', 45)->nullable();
             $table->string('depthUnit', 45)->nullable();
             $table->string('sensorType', 45)->nullable();
-            $table->string('readType', 45)->nullable();
-            $table->unsignedBigInteger('id_farm')->unsigned();
-            $table->foreign('id_farm')
-                ->references('id')
-                ->on('farms')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            $table->string('readType', 45)->nullable();            
+            $table->unsignedInteger('id_farm')->nullable();
             $table->unsignedInteger('id_node')->nullable();
             $table->unsignedInteger('id_zone')->nullable();
             $table->unsignedInteger('id_physical_connection')->nullable();

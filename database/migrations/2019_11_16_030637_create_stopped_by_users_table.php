@@ -15,13 +15,8 @@ class CreateStoppedByUsersTable extends Migration
     {
         Schema::create('stopped_by_users', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name', 45);
-            $table->unsignedBigInteger('id_real_irrigation')->unsigned();
-            $table->foreign('id_real_irrigation')
-                ->references('id')
-                ->on('real_irrigations')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            $table->string('id_real_irrigation', 45)->nullable();            
+            $table->unsignedInteger('id_real_irrigation')->nullable();
             $table->timestamps();
         });
     }

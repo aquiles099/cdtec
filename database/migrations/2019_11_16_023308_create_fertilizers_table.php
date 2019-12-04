@@ -15,9 +15,9 @@ class CreateFertilizersTable extends Migration
     {
         Schema::create('fertilizers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name', 45);
-            $table->string('dilution', 45);
-            $table->string('description', 45);
+            $table->string('name', 45)->nullable();
+            $table->string('dilution', 45)->nullable();
+            $table->string('description', 45)->nullable();
             $table->timestamps();
         });
     }

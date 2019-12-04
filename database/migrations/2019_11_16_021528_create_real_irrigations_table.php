@@ -18,16 +18,11 @@ class CreateRealIrrigationsTable extends Migration
             $table->string('initTime', 45)->nullable();
             $table->string('endTime', 45)->nullable();
             $table->string('status', 45)->nullable();
-            $table->unsignedBigInteger('id_farm')->unsigned();
-            $table->foreign('id_farm')
-                ->references('id')
-                ->on('farms')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->integer('id_irrigation')->nullable();
-            $table->integer('id_zone')->nullable();
-            $table->integer('id_pump_system')->nullable();   
-            $table->integer('id_wiseconn')->nullable();
+            $table->unsignedInteger('id_farm')->nullable();
+            $table->unsignedInteger('id_irrigation')->nullable();
+            $table->unsignedInteger('id_zone')->nullable();
+            $table->unsignedInteger('id_pump_system')->nullable();   
+            $table->unsignedInteger('id_wiseconn')->nullable();
             $table->timestamps();
         });
     }

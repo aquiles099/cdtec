@@ -15,19 +15,9 @@ class CreateTypesTable extends Migration
     {
         Schema::create('types', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('description', 45);
-            $table->unsignedBigInteger('id_real_irrigation')->unsigned();
-            $table->foreign('id_real_irrigation')
-                ->references('id')
-                ->on('real_irrigations')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->unsignedBigInteger('id_zone')->unsigned();
-            $table->foreign('id_zone')
-                ->references('id')
-                ->on('zones')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');                
+            $table->string('description', 45)->nullable();            
+            $table->unsignedInteger('id_real_irrigation')->nullable();
+            $table->unsignedInteger('id_zone')->nullable();               
             $table->timestamps();
         });
     }

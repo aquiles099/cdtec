@@ -15,18 +15,13 @@ class CreatePhControlsTable extends Migration
     {
         Schema::create('ph_controls', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('setPoint')->default(0);
-            $table->integer('preIrrigationSeconds')->default(0);
-            $table->integer('postIrrigationSeconds')->default(0);
-            $table->integer('phAverage')->default(0);
-            $table->integer('CEAverage')->default(0);
-            $table->integer('pHInjectorId')->default(0);
-            $table->unsignedBigInteger('id_real_irrigation')->unsigned();
-            $table->foreign('id_real_irrigation')
-                ->references('id')
-                ->on('real_irrigations')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            $table->integer('setPoint')->nullable();
+            $table->integer('preIrrigationSeconds')->nullable();
+            $table->integer('postIrrigationSeconds')->nullable();
+            $table->integer('phAverage')->nullable();
+            $table->integer('CEAverage')->nullable();
+            $table->integer('pHInjectorId')->nullable();
+            $table->unsignedInteger('id_real_irrigation')->nullable();
             $table->timestamps();
         });
     }
