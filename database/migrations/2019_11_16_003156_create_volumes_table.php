@@ -15,10 +15,10 @@ class CreateVolumesTable extends Migration
     {
         Schema::create('volumes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('value')->default(0);
-            $table->string('unitName', 45);
-            $table->string('unitAbrev', 45);
-            $table->string('type', 45);
+            $table->integer('value')->nullable();
+            $table->string('unitName', 45)->nullable();
+            $table->string('unitAbrev', 45)->nullable();
+            $table->string('type', 45)->nullable();
             $table->timestamps();
         });
     }

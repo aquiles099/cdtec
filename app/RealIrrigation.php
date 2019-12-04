@@ -10,7 +10,7 @@ use App\Irrigation;
 class RealIrrigation extends Model
 {
     protected $fillable = [        
-        'initTime', 'endTime','status','id_irrigation','id_farm','id_zone','id_pump_system'
+    'initTime', 'endTime','status','id_irrigation','id_farm','id_zone','id_pump_system','id_wiseconn'
     ];
     public function farm()
     {

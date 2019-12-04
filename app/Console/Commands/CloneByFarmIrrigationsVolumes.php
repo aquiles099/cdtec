@@ -48,8 +48,7 @@ class CloneByFarmIrrigationsVolumes extends Command
         return Volume::create([
             'value'=> isset($irrigation->volume)?$irrigation->volume->value:null,
             'unitName'=> isset($irrigation->volume)?$irrigation->volume->unitName:null,
-            'unitAbrev'=> isset($irrigation->volume)?$irrigation->volume->unitAbrev:null,
-            'type'=>isset($irrigation->volume)?$irrigation->volume->type:null
+            'unitAbrev'=> isset($irrigation->volume)?$irrigation->volume->unitAbrev:null
         ]);
     }
     protected function irrigationCreate($irrigation,$farm,$zone,$volume,$pumpSystem){
@@ -81,7 +80,7 @@ class CloneByFarmIrrigationsVolumes extends Command
             'timeout'  => 100.0,
         ]);
         $initTime=Carbon::now(date_default_timezone_get())->format('Y-m-d');
-        $endTime=Carbon::now(date_default_timezone_get())->addDays(25)->format('Y-m-d');
+        $endTime=Carbon::now(date_default_timezone_get())->addDays(15)->format('Y-m-d');
         try{
             $farms=Farm::all();
             foreach ($farms as $key => $farm) {

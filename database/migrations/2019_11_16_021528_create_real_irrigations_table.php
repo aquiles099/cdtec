@@ -15,33 +15,19 @@ class CreateRealIrrigationsTable extends Migration
     {
         Schema::create('real_irrigations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('initTime', 45);
-            $table->string('endTime', 45);
-            $table->string('status', 45);
-            $table->unsignedBigInteger('id_irrigation')->unsigned();
-            $table->foreign('id_irrigation')
-                ->references('id')
-                ->on('irrigations')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            $table->string('initTime', 45)->nullable();
+            $table->string('endTime', 45)->nullable();
+            $table->string('status', 45)->nullable();
             $table->unsignedBigInteger('id_farm')->unsigned();
             $table->foreign('id_farm')
                 ->references('id')
                 ->on('farms')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->unsignedBigInteger('id_zone')->unsigned();
-            $table->foreign('id_zone')
-                ->references('id')
-                ->on('zones')
-                ->onDelete('cascade')
-                ->onUpdate('cascade'); 
-            $table->unsignedBigInteger('id_pump_system')->unsigned();
-            $table->foreign('id_pump_system')
-                ->references('id')
-                ->on('pump_systems')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');                
+            $table->integer('id_irrigation')->nullable();
+            $table->integer('id_zone')->nullable();
+            $table->integer('id_pump_system')->nullable();   
+            $table->integer('id_wiseconn')->nullable();
             $table->timestamps();
         });
     }

@@ -10,6 +10,7 @@ use App\Console\Commands\CloneByFarmPumpsystems;
 use App\Console\Commands\CloneByFarmHydraulics;
 use App\Console\Commands\CloneByFarmMeasures;
 use App\Console\Commands\CloneByFarmIrrigationsVolumes;
+use App\Console\Commands\CloneByFarmRealIrrigationsVolumes;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,7 +25,8 @@ class Kernel extends ConsoleKernel
         CloneByFarmPumpsystems::class,
         CloneByFarmHydraulics::class,
         CloneByFarmMeasures::class,
-        CloneByFarmIrrigationsVolumes::class
+        CloneByFarmIrrigationsVolumes::class,
+        CloneByFarmRealIrrigationsVolumes::class,
     ];
 
     /**
@@ -47,6 +49,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('clonebyfarm:measures:run')->hourly();
         // php artisan clonebyfarm:irrigations:volumes:run
         // $schedule->command('clonebyfarm:irrigations:volumes:run')->hourly();
+        // php artisan clonebyfarm:realirrigations:volumes:run
+        // $schedule->command('clonebyfarm:realirrigations:volumes:run')->hourly();
     }
 
     /**
