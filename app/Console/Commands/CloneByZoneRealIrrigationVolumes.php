@@ -12,7 +12,7 @@ use App\Pump_system;
 use App\Volume;
 use Carbon\Carbon;
 
-class CloneByZoneRealIrrigationsVolumes extends Command
+class CloneByZoneRealIrrigationVolumes extends Command
 {
     /**
      * The name and signature of the console command.
