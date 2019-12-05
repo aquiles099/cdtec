@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+
 use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
@@ -12,21 +13,21 @@ use App\Zone;
 use App\Measure;
 use App\PhysicalConnection;
 
-class CloneByZoneMeasures extends Command
+class CloneByNodeMeasures extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'clonebyzone:measures:run';
+    protected $signature = 'clonebynode:measures:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Clone measures data by zone';
+    protected $description = 'Clone measures by node';
 
     /**
      * Create a new command instance.
@@ -37,7 +38,7 @@ class CloneByZoneMeasures extends Command
     {
         parent::__construct();
     }
-    protected function requestWiseconn($client,$method,$uri){
+protected function requestWiseconn($client,$method,$uri){
         return $client->request($method, $uri, [
             'headers' => [
                 'api_key' => '9Ev6ftyEbHhylMoKFaok',
@@ -52,7 +53,7 @@ class CloneByZoneMeasures extends Command
             'nodePort'=> isset($measure->physicalConnection)?$measure->physicalConnection->nodePort:null
         ]);
     }
-    protected function measureCreate($measure,$farm,$zone,$newPhysicalConnection){
+    protected function measureCreate($measure,$farm,$zone,$node,$newPhysicalConnection){
         return Measure::create([
             'name' => $measure->name,
             'unit' => isset($measure->unit)?isset($measure->unit):null,
@@ -64,7 +65,7 @@ class CloneByZoneMeasures extends Command
             'sensorType'=> isset($measure->sensorType)?isset($measure->sensorType):null,
             'readType'=> isset($measure->readType)?isset($measure->readType):null,
             'id_farm' => isset($farm->id)?$farm->id:null,
-            'id_zone' => isset($zone->id)?$farm->id:null,
+            'id_zone' => isset($zone->id)?$zone->id:null,
             'id_physical_connection' => isset($newPhysicalConnection->id)?$newPhysicalConnection->id:null,
             'id_wiseconn' => $measure->id
         ]); 
@@ -81,16 +82,16 @@ class CloneByZoneMeasures extends Command
             'timeout'  => 100.0,
         ]);
         try{
-            $zones=Zone::all();
-            foreach ($zones as $key => $zone) {
-                $measuresResponse = $this->requestWiseconn($client,'GET','/zones/'.$zone->id_wiseconn.'/measures');
+            $nodes=Node::all();
+            foreach ($nodes as $key => $node) {
+                $measuresResponse = $this->requestWiseconn($client,'GET','/nodes/'.$node->id_wiseconn.'/measures');
                 $measures=json_decode($measuresResponse->getBody()->getContents());
                 foreach ($measures as $key => $measure) {
                     if(is_null(Measure::where("id_wiseconn",$measure->id)->first())){
                         $newPhysicalConnection =$this->physicalConnectionCreate($measure);
                         if(isset($measure->farmId)&&isset($measure->nodeId)&&isset($measure->zoneId)){
                             $farm=Farm::where("id_wiseconn",$measure->farmId)->first();
-                            $zone=Zone::where("id_wiseconn",$measure->zoneId)->first();                            
+                            $zone=Zone::where("id_wiseconn",$measure->zoneId)->first(); 
                             if($measure->farmId==$farm->id_wiseconn&&!is_null($farm)&&!is_null($zone)){ 
                                 $newmeasure =$this->measureCreate($measure,$farm,$zone,$newPhysicalConnection); 
                             }
@@ -101,7 +102,7 @@ class CloneByZoneMeasures extends Command
                     }  
                 }
             }
-            $this->info("Success: Clone measures data by zone by zone");
+            $this->info("Success: Clone measures data by node");
         } catch (\Exception $e) {
             $this->error("Error:" . $e->getMessage());
             $this->error("Linea:" . $e->getLine());

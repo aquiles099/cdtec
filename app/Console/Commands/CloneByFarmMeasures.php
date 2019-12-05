@@ -62,10 +62,9 @@ class CloneByFarmMeasures extends Command
             'depthUnit'=> isset($measure->depthUnit)?isset($measure->depthUnit):null,
             'sensorType'=> isset($measure->sensorType)?isset($measure->sensorType):null,
             'readType'=> isset($measure->readType)?isset($measure->readType):null,
-            'id_farm' => $farm->id,
+            'id_farm' => isset($farm->id)?$farm->id:null,
             'id_zone' => isset($zone->id)?$zone->id:null,
             'id_physical_connection' => isset($newPhysicalConnection->id)?$newPhysicalConnection->id:null,
-            'id_node' => isset($node->id)?$node->id:null,
             'id_wiseconn' => $measure->id
         ]); 
     }
@@ -89,13 +88,13 @@ class CloneByFarmMeasures extends Command
                     if(is_null(Measure::where("id_wiseconn",$measure->id)->first())){
                         $newPhysicalConnection =$this->physicalConnectionCreate($measure);
                         if(isset($measure->farmId)&&isset($measure->nodeId)&&isset($measure->zoneId)){
-                            $zone=Zone::where("id_wiseconn",$measure->zoneId)->first();
-                            $node=Node::where("id_wiseconn",$measure->nodeId)->first();
-                            if($measure->farmId==$farm->id_wiseconn&&!is_null($zone)&&!is_null($node)){ 
-                                $newmeasure =$this->measureCreate($measure,$farm,$zone,$node,$newPhysicalConnection); 
+                            $farm=Farm::where("id_wiseconn",$measure->farmId)->first();
+                            $zone=Zone::where("id_wiseconn",$measure->zoneId)->first(); 
+                            if($measure->farmId==$farm->id_wiseconn&&!is_null($zone)&&!is_null($farm)){ 
+                                $newmeasure =$this->measureCreate($measure,$farm,$zone,$newPhysicalConnection); 
                             }
                         }else{
-                            $newmeasure =$this->measureCreate($measure,$farm,null,null,$newPhysicalConnection); 
+                            $newmeasure =$this->measureCreate($measure,$farm,null,$newPhysicalConnection); 
                         }
                         
                     }  
