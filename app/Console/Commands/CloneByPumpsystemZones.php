@@ -3,25 +3,22 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-use GuzzleHttp\Client;
-use App\Farm;
-use App\Zone;
-class CloneByFarmZones extends Command
+
+class CloneByPumpsystemZones extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'clonebyfarm:zones:run';
+    protected $signature = 'clonebypumpsystem:zones:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Clone zones data by farm';
+    protected $description = 'Clone zones data by pumpsystem';
 
     /**
      * Create a new command instance.
@@ -40,13 +37,13 @@ class CloneByFarmZones extends Command
             ]
         ]);
     }
-    protected function zoneCreate($zone,$farm){
+    protected function zoneCreate($zone,$pumpSystem){
         return Zone::create([
             'name' => isset($zone->name)?$zone->name:null,
             'description' => isset($zone->description)?$zone->description:null,
             'latitude' => isset($zone->latitude)?$zone->latitude:null,
             'longitude' => isset($zone->longitude)?$zone->longitude:null,
-            'id_farm' => isset($farm->id)?$farm->id:null,
+            'id_farm' => isset($zone->farmId)?$zone->farmId:null,
             'kc' => isset($zone->kc)?$zone->kc:null,
             'theoreticalFlow' => isset($zone->theoreticalFlow)?$zone->theoreticalFlow:null,
             'unitTheoreticalFlow' => isset($zone->unitTheoreticalFlow)?$zone->unitTheoreticalFlow:null,
@@ -56,11 +53,10 @@ class CloneByFarmZones extends Command
             'min' => isset($zone->min)?$zone->min:null,
             'criticalPoint1' => isset($zone->criticalPoint1)?$zone->criticalPoint1:null,
             'criticalPoint2' => isset($zone->criticalPoint2)?$zone->criticalPoint2:null,
-            'id_pump_system' => isset($zone->pumpSystemId)?$zone->pumpSystemId:null,
+            'id_pump_system' => isset($pumpSystem->id)?$pumpSystem->id:null,
             'id_wiseconn' => isset($zone->id)?$zone->id:null
         ]);
     }
-    
     /**
      * Execute the console command.
      *
@@ -73,14 +69,14 @@ class CloneByFarmZones extends Command
             'timeout'  => 100.0,
         ]);
         try { 
-            $farms=Farm::all();
-            foreach ($farms as $key => $farm) {
-                $zonesResponse =  $this->requestWiseconn($client,'GET','/farms/'.$farm->id_wiseconn.'/zones');
+            $pumpSystems=Pump_system::all();
+            foreach ($pumpSystems as $key => $pumpSystem) {
+                $zonesResponse =  $this->requestWiseconn($client,'GET','/pumpSystems/'.$pumpSystem->id_wiseconn.'/zones');
                 $zones=json_decode($zonesResponse->getBody()->getContents());                
                 foreach ($zones as $key => $zone) {
-                    $farm=Farm::where("id_wiseconn",$zone->farmId)->first();
-                    if(is_null(Zone::where("id_wiseconn",$zone->id)->first()) && !is_null($farm)){
-                        $newZone= $this->zoneCreate($zone,$farm);                                                      
+                    $pumpSystem=Pump_system::where("id_wiseconn",$zone->pumpSystemId)->first();
+                    if(is_null(Zone::where("id_wiseconn",$zone->id)->first()) && !is_null($pumpSystem)){
+                        $newZone= $this->zoneCreate($zone,$pumpSystem);                                                      
                     }
                 }
             }

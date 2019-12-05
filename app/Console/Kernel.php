@@ -21,6 +21,7 @@ use App\Console\Commands\CloneByNodeMeasures;
 use App\Console\Commands\CloneByIrrigationRealIrrigations;
 use App\Console\Commands\CloneByPumpsystemIrrigationsVolumes;
 use App\Console\Commands\CloneByPumpsystemRealIrrigationsVolumes;
+use App\Console\Commands\CloneByPumpsystemZones;
 class Kernel extends ConsoleKernel
 {
     /**
@@ -45,7 +46,8 @@ class Kernel extends ConsoleKernel
         CloneByNodeMeasures::class,
         CloneByIrrigationRealIrrigations::class,
         CloneByPumpsystemIrrigationsVolumes::class,
-        CloneByPumpsystemRealIrrigationsVolumes::class
+        CloneByPumpsystemRealIrrigationsVolumes::class,
+        CloneByPumpsystemZones::class
     ];
 
     /**
@@ -90,6 +92,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('clonebypumpsystem:irrigations:volumes:run')->hourly();
         // php artisan clonebypumpsystem:realirrigations:volumes:run
         // $schedule->command('clonebypumpsystem:realirrigations:volumes:run')->hourly();
+        // php artisan clonebypumpsystem:zones:run
+        // $schedule->command('clonebypumpsystem:zones:run')->hourly();
     }
 
     /**
