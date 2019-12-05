@@ -52,7 +52,7 @@ class CloneByZoneRealIrrigationsVolumes extends Command
             'unitAbrev'=> isset($realIrrigation->volume)?$realIrrigation->volume->unitAbrev:null
         ]);
     }
-    protected function realIirrigationCreate($realIrrigation,$farm,$zone,$volume,$pumpSystem){
+    protected function realIrrigationCreate($realIrrigation,$farm,$zone,$volume,$pumpSystem){
         return RealIrrigation::create([
             'initTime' => isset($realIrrigation->initTime)?$realIrrigation->initTime:null,
             'endTime' =>isset($realIrrigation->endTime)?$realIrrigation->endTime:null,
@@ -86,7 +86,7 @@ class CloneByZoneRealIrrigationsVolumes extends Command
                     $pumpSystem=Pump_system::where("id_wiseconn",$realIrrigation->pumpSystemId)->first();
                     if(is_null(RealIrrigation::where("id_wiseconn",$realIrrigation->id)->first())&&!is_null($zone)&&!is_null($pumpSystem)){ 
                         $newVolume =$this->volumeCreate($realIrrigation);
-                        $newRealIrrigation =$this->realIirrigationCreate($realIrrigation,$farm,$zone,$newVolume,$pumpSystem);                                                                 
+                        $newRealIrrigation =$this->realIrrigationCreate($realIrrigation,$farm,$zone,$newVolume,$pumpSystem);                                                                 
                     }
                 }                    
             }

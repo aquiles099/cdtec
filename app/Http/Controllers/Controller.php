@@ -51,18 +51,22 @@ class Controller extends BaseController
             'base_uri' => 'https://apiv2.wiseconn.com',
             'timeout'  => 100.0,
         ]);
+        $initTime=Carbon::now(date_default_timezone_get())->format('Y-m-d');
+        $endTime=Carbon::now(date_default_timezone_get())->addDays(15)->format('Y-m-d');
         try{
-            $nodes=Node::all();
-            foreach ($nodes as $key => $node) {
-                $measuresResponse = $this->requestWiseconn($client,'GET','/nodes/'.$node->id_wiseconn.'/measures');
-                $measures=json_decode($measuresResponse->getBody()->getContents());
-                foreach ($measures as $key => $measure) {
-                    $measure=Farm::where("id_wiseconn",$alarm->farmId)->first();
-                    $realIrrigation=RealIrrigation::where("id_wiseconn",$alarm->realIrrigationId)->first();
-                    if(is_null(Alarm::where("id_wiseconn",$alarm->id)->first())&&!is_null($farm)&&!is_null($realIrrigation)){
-                        $newAlarm= $this->alarmCreate($alarm,$farm,$zone,$realIrrigation);
+            $farms=Farm::all();
+            foreach ($farms as $key => $farm) {
+                $irrigationsResponse = $this->requestWiseconn($client,'GET','/farms/'.$farm->id_wiseconn.'/irrigations/?endTime='.$endTime.'&initTime='.$initTime);
+                $irrigations=json_decode($irrigationsResponse->getBody()->getContents());
+                dd($irrigations);
+                foreach ($realIrrigations as $key => $realIrrigation) {
+                    $zone=Zone::where("id_wiseconn",$realIrrigation->zoneId)->first();
+                    $pumpSystem=Pump_system::where("id_wiseconn",$realIrrigation->pumpSystemId)->first();
+                    if(is_null(RealIrrigation::where("id_wiseconn",$realIrrigation->id)->first())&&!is_null($zone)&&!is_null($pumpSystem)){ 
+                        $newVolume =$this->volumeCreate($realIrrigation);
+                        $newRealIrrigation =$this->realIrrigationCreate($realIrrigation,$farm,$zone,$newVolume,$pumpSystem);                                                                 
                     }
-                }                
+                }                    
             }
             # code...
             return ("Success: Clone real irrigations and volumes data");
