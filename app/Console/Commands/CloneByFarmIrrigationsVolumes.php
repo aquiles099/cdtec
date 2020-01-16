@@ -46,9 +46,9 @@ class CloneByFarmIrrigationsVolumes extends Command
     }
     protected function volumeCreate($irrigation){
         return Volume::create([
-            'value'=> isset($irrigation->volume)?$irrigation->volume->value:null,
-            'unitName'=> isset($irrigation->volume)?$irrigation->volume->unitName:null,
-            'unitAbrev'=> isset($irrigation->volume)?$irrigation->volume->unitAbrev:null
+            'value'=> isset($irrigation->volume->value)?$irrigation->volume->value:null,
+            'unitName'=> isset($irrigation->volume->unitName)?$irrigation->volume->unitName:null,
+            'unitAbrev'=> isset($irrigation->volume->unitAbrev)?$irrigation->volume->unitAbrev:null
         ]);
     }
     protected function irrigationCreate($irrigation,$farm,$zone,$volume,$pumpSystem){
