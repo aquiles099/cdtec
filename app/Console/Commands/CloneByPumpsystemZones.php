@@ -3,7 +3,11 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-
+use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Client;
+use App\Zone;
+use App\Pump_system;
+use Carbon\Carbon;
 class CloneByPumpsystemZones extends Command
 {
     /**

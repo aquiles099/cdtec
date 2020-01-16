@@ -3,6 +3,13 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Client;
+use Carbon\Carbon;
+use App\RealIrrigation;
+use App\Volume;
+use App\Zone;
+use App\Pump_system;
 
 class CloneByPumpsystemRealIrrigationsVolumes extends Command
 {
@@ -71,7 +78,7 @@ class CloneByPumpsystemRealIrrigationsVolumes extends Command
         try{
             $pumpSystems=Pump_system::all();
             foreach ($pumpSystems as $key => $pumpSystem) {
-                $realIrrigationsResponse = $this->requestWiseconn($client,'GET','/pumpSystems/'.$pumpSystem->id_wiseconn.'/realIrrigations/');
+                $realIrrigationsResponse = $this->requestWiseconn($client,'GET','/pumpSystems/'.$pumpSystem->id_wiseconn.'/realIrrigations/?endTime='.$endTime.'&initTime='.$initTime);
                 $realIrrigations=json_decode($realIrrigationsResponse->getBody()->getContents());
                 foreach ($realIrrigations as $key => $realIrrigation) {
                     $zone=Zone::where("id_wiseconn",$realIrrigation->zoneId)->first();

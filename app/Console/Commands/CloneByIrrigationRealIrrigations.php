@@ -79,7 +79,7 @@ class CloneByIrrigationRealIrrigations extends Command
         try{
             $irrigations=Irrigation::all();
             foreach ($irrigations as $key => $irrigation) {
-                $realIrrigationsResponse = $this->requestWiseconn($client,'GET','/irrigations/'.$irrigation->id_wiseconn.'/realIrrigations/');
+                $realIrrigationsResponse = $this->requestWiseconn($client,'GET','/irrigations/'.$irrigation->id_wiseconn.'/realIrrigations/?endTime='.$endTime.'&initTime='.$initTime);
                 $realIrrigations=json_decode($realIrrigationsResponse->getBody()->getContents());
                 foreach ($realIrrigations as $key => $realIrrigation) {
                     $zone=Zone::where("id_wiseconn",$realIrrigation->zoneId)->first();

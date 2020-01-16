@@ -37,13 +37,13 @@ class Kernel extends ConsoleKernel
         CloneByFarmMeasures::class,
         CloneByFarmIrrigationsVolumes::class,
         CloneByFarmRealIrrigationsVolumes::class,
-        CloneByFarmAlarms::class,
+        //CloneByFarmAlarms::class, retorna error: "Error to list of Alarms"
         CloneByZonePumpsystems::class,
         CloneByZoneMeasures::class,
         CloneByZoneIrrigationsVolumes::class,
         CloneByZoneRealIrrigationVolumes::class,
-        CloneByZoneAlarms::class,
-        CloneByNodeMeasures::class,
+        //CloneByZoneAlarms::class, retorna error: "Error to list of Alarms"
+        //CloneByNodeMeasures::class, retorna error: {"message":"User is not authorized to access this resource with an explicit deny"}
         CloneByIrrigationRealIrrigations::class,
         CloneByPumpsystemIrrigationsVolumes::class,
         CloneByPumpsystemRealIrrigationsVolumes::class,
