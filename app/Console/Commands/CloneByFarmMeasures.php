@@ -64,6 +64,7 @@ class CloneByFarmMeasures extends Command
             'readType'=> isset($measure->readType)?($measure->readType):null,
             'id_farm' => isset($farm->id)?$farm->id:null,
             'id_zone' => isset($zone->id)?$zone->id:null,
+            'id_node' => isset($node->id)?$node->id:null,
             'id_physical_connection' => isset($newPhysicalConnection->id)?$newPhysicalConnection->id:null,
             'id_wiseconn' => $measure->id
         ]); 
@@ -87,16 +88,17 @@ class CloneByFarmMeasures extends Command
                 foreach ($measures as $key => $measure) {
                     if(is_null(Measure::where("id_wiseconn",$measure->id)->first())){
                         $newPhysicalConnection =$this->physicalConnectionCreate($measure);
-                        if(isset($measure->farmId)&&isset($measure->nodeId)&&isset($measure->zoneId)){
+                        $farm=null;$node=null;$zone=null;
+                        if(isset($measure->farmId)){
                             $farm=Farm::where("id_wiseconn",$measure->farmId)->first();
-                            $zone=Zone::where("id_wiseconn",$measure->zoneId)->first(); 
-                            if($measure->farmId==$farm->id_wiseconn&&!is_null($zone)&&!is_null($farm)){ 
-                                $newmeasure =$this->measureCreate($measure,$farm,$zone,$newPhysicalConnection); 
-                            }
-                        }else{
-                            $newmeasure =$this->measureCreate($measure,$farm,null,$newPhysicalConnection); 
                         }
-                        
+                        if(isset($measure->nodeId)){
+                            $node=Node::where("id_wiseconn",$measure->nodeId)->first();
+                        }
+                        if(isset($measure->zoneId)){
+                            $zone=Zone::where("id_wiseconn",$measure->zoneId)->first(); 
+                        }
+                        $newmeasure =$this->measureCreate($measure,$farm,$zone,$node,$newPhysicalConnection);
                     }  
                 }                    
             }
