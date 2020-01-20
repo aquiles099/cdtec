@@ -19,8 +19,9 @@
 		"7897ebe0-d035-4a24-bc03-1dcbbf79c826",
 		"483906e9-9b39-44db-a36b-b266945ed146",
 		"77e5b831-c56a-4828-8c22-4cc48cf220c0",
-		"bc6ead83-4946-400d-9e14-29a7e2de65a2",
-		"6aea5625-a3cc-4550-9d54-edc2366502d3"
+		"6aea5625-a3cc-4550-9d54-edc2366502d3",
+		"c8670270-95c2-4e8d-94c9-df8c5f473ce3",
+		"6f331861-e93b-4cee-bb91-286e0ae49e5d"
 	],
 	"folders": [
 		{
@@ -49,6 +50,20 @@
 			"folder": null,
 			"order": [
 				"e969afae-c549-41ee-ace4-88e691350453"
+			],
+			"folders_order": []
+		},
+		{
+			"id": "6f331861-e93b-4cee-bb91-286e0ae49e5d",
+			"name": "bound",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+			"folder": null,
+			"order": [
+				"7f6bb725-cd72-4864-80ea-b10cc474c32d",
+				"a78ac16c-bcb4-47b1-9c38-584c987b4ad6"
 			],
 			"folders_order": []
 		},
@@ -140,6 +155,19 @@
 			"folders_order": []
 		},
 		{
+			"id": "c8670270-95c2-4e8d-94c9-df8c5f473ce3",
+			"name": "path",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+			"folder": null,
+			"order": [
+				"4bcbcd2b-7207-442f-bc1c-7ff0e8e43c71"
+			],
+			"folders_order": []
+		},
+		{
 			"id": "5915d459-49bc-432b-99c3-e7eb0d8bc7d9",
 			"name": "physicalconnection",
 			"description": "",
@@ -149,19 +177,6 @@
 			"folder": null,
 			"order": [
 				"9be7124c-5c93-4c98-8c1b-1ce5478ec71c"
-			],
-			"folders_order": []
-		},
-		{
-			"id": "bc6ead83-4946-400d-9e14-29a7e2de65a2",
-			"name": "polygon",
-			"description": "",
-			"auth": null,
-			"events": null,
-			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
-			"folder": null,
-			"order": [
-				"3f738bb4-7691-4581-b285-c0f01089a6c4"
 			],
 			"folders_order": []
 		},
@@ -713,52 +728,6 @@
 			"pathVariables": {}
 		},
 		{
-			"id": "3f738bb4-7691-4581-b285-c0f01089a6c4",
-			"name": "registrar",
-			"url": "http://localhost:8000/api/polygons/store",
-			"description": "",
-			"data": [
-				{
-					"key": "lat",
-					"value": "lat",
-					"description": "",
-					"type": "text",
-					"enabled": true
-				},
-				{
-					"key": "lng",
-					"value": "lng",
-					"description": "",
-					"type": "text",
-					"enabled": true
-				},
-				{
-					"key": "id_zone",
-					"value": "1",
-					"description": "",
-					"type": "text",
-					"enabled": true
-				},
-				{
-					"key": "type",
-					"value": "type",
-					"description": "",
-					"type": "text",
-					"enabled": true
-				}
-			],
-			"dataMode": "params",
-			"headerData": [],
-			"method": "POST",
-			"pathVariableData": [],
-			"queryParams": [],
-			"auth": null,
-			"events": [],
-			"folder": "bc6ead83-4946-400d-9e14-29a7e2de65a2",
-			"headers": "",
-			"pathVariables": {}
-		},
-		{
 			"id": "40d89136-e777-4f5a-b9ce-387174f4b223",
 			"name": "registrar",
 			"url": "http://localhost:8000/api/deal/create",
@@ -920,6 +889,45 @@
 			"auth": null,
 			"events": [],
 			"folder": "ae7a034e-c575-41df-b8f3-7282265345c3",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "4bcbcd2b-7207-442f-bc1c-7ff0e8e43c71",
+			"name": "registrar",
+			"url": "http://localhost:8000/api/path/store",
+			"description": "",
+			"data": [
+				{
+					"key": "id_zone",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "lat",
+					"value": "400",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "lng",
+					"value": "300",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "c8670270-95c2-4e8d-94c9-df8c5f473ce3",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -1287,6 +1295,13 @@
 					"description": "",
 					"type": "text",
 					"enabled": true
+				},
+				{
+					"key": "id_polygon",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
 				}
 			],
 			"dataMode": "params",
@@ -1297,6 +1312,45 @@
 			"auth": null,
 			"events": [],
 			"folder": "ae7a034e-c575-41df-b8f3-7282265345c3",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "7f6bb725-cd72-4864-80ea-b10cc474c32d",
+			"name": "register southwest",
+			"url": "http://localhost:8000/api/bound/southwest/store",
+			"description": "",
+			"data": [
+				{
+					"key": "id_zone",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "lat",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "lng",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "6f331861-e93b-4cee-bb91-286e0ae49e5d",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -1642,6 +1696,45 @@
 			"auth": null,
 			"events": [],
 			"folder": "5915d459-49bc-432b-99c3-e7eb0d8bc7d9",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "a78ac16c-bcb4-47b1-9c38-584c987b4ad6",
+			"name": "register northeast",
+			"url": "http://localhost:8000/api/bound/northeast/store",
+			"description": "",
+			"data": [
+				{
+					"key": "id_zone",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "lat",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "lng",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "6f331861-e93b-4cee-bb91-286e0ae49e5d",
 			"headers": "",
 			"pathVariables": {}
 		},
