@@ -40,6 +40,11 @@ Route::get('zones/{id}/irrigations', 'ZoneController@irrigations');
 Route::get('zones/{id}/hydraulics', 'ZoneController@hydraulics');
 Route::post('zones/{id}/alarms/triggered', 'ZoneController@alarmsTriggered');
 Route::get('zones/{id}/realirrigations', 'ZoneController@realIrrigations');
+// paths
+Route::post('path/store', 'PathController@store');
+// bounds
+Route::post('bound/southwest/store', 'BoundController@storeSouthWestBound');
+Route::post('bound/northeast/store', 'BoundController@storeNorthEastBound');
 // measures
 Route::post('measures/store', 'MeasureController@store');
 Route::get('measures/{id}', 'MeasureController@get');

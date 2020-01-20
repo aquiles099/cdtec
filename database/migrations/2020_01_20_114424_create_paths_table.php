@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStoppedByUsersTable extends Migration
+class CreatePathsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateStoppedByUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('stopped_by_users', function (Blueprint $table) {
+        Schema::create('paths', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name', 45)->nullable();            
-            $table->unsignedInteger('id_real_irrigation')->nullable();
+            $table->unsignedInteger('id_zone')->nullable(); 
+            $table->float('lat')->nullable();
+            $table->float('lng')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateStoppedByUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stopped_by_users');
+        Schema::dropIfExists('paths');
     }
 }

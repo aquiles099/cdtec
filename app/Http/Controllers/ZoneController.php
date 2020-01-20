@@ -12,6 +12,7 @@ use App\Irrigation;
 use App\Hydraulic;
 use App\Alarm;
 use App\RealIrrigation;
+use App\Polygon;
 class ZoneController extends Controller
 {
     public function store(Request $request){
@@ -31,7 +32,7 @@ class ZoneController extends Controller
             'criticalPoint1'       => 'required|integer',
             'criticalPoint2'       => 'required|integer',
             'id_farm'              => 'required|integer',
-            'id_pump_system'       => 'required|integer'
+            'id_pump_system'       => 'required|integer',
         ],[
             'name.required'                 => 'El name es requerido',
             'name.max'                      => 'El name debe contener como máximo 45 caracteres',

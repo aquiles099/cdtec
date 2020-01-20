@@ -18,7 +18,9 @@
 		"5c290b31-74a2-4582-bc99-058b88d66c65",
 		"7897ebe0-d035-4a24-bc03-1dcbbf79c826",
 		"483906e9-9b39-44db-a36b-b266945ed146",
-		"77e5b831-c56a-4828-8c22-4cc48cf220c0"
+		"77e5b831-c56a-4828-8c22-4cc48cf220c0",
+		"bc6ead83-4946-400d-9e14-29a7e2de65a2",
+		"6aea5625-a3cc-4550-9d54-edc2366502d3"
 	],
 	"folders": [
 		{
@@ -151,6 +153,19 @@
 			"folders_order": []
 		},
 		{
+			"id": "bc6ead83-4946-400d-9e14-29a7e2de65a2",
+			"name": "polygon",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+			"folder": null,
+			"order": [
+				"3f738bb4-7691-4581-b285-c0f01089a6c4"
+			],
+			"folders_order": []
+		},
+		{
 			"id": "5950fe62-8c5c-4949-8c56-a37bed3ad283",
 			"name": "pumpsystems",
 			"description": "",
@@ -177,6 +192,19 @@
 			"order": [
 				"69155b3a-15f4-41d5-868c-5bab92fb4484",
 				"d7180334-e697-47fd-bc0a-101dd85d76f3"
+			],
+			"folders_order": []
+		},
+		{
+			"id": "6aea5625-a3cc-4550-9d54-edc2366502d3",
+			"name": "type",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+			"folder": null,
+			"order": [
+				"9a582479-0182-45d2-8413-effdd07c1a5a"
 			],
 			"folders_order": []
 		},
@@ -685,77 +713,21 @@
 			"pathVariables": {}
 		},
 		{
-			"id": "40d89136-e777-4f5a-b9ce-387174f4b223",
+			"id": "3f738bb4-7691-4581-b285-c0f01089a6c4",
 			"name": "registrar",
-			"url": "http://localhost:8000/api/measures/store",
+			"url": "http://localhost:8000/api/polygons/store",
 			"description": "",
 			"data": [
 				{
-					"key": "name",
-					"value": "name",
+					"key": "lat",
+					"value": "lat",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
-					"key": "unit",
-					"value": "unit",
-					"description": "",
-					"type": "text",
-					"enabled": true
-				},
-				{
-					"key": "lastData",
-					"value": "1",
-					"description": "",
-					"type": "text",
-					"enabled": true
-				},
-				{
-					"key": "lastDataDate",
-					"value": "2019-11-27 13:23:53",
-					"description": "",
-					"type": "text",
-					"enabled": true
-				},
-				{
-					"key": "monitoringTime",
-					"value": "monitoringTime",
-					"description": "",
-					"type": "text",
-					"enabled": true
-				},
-				{
-					"key": "sensorDepth",
-					"value": "sensorDepth",
-					"description": "",
-					"type": "text",
-					"enabled": true
-				},
-				{
-					"key": "depthUnit",
-					"value": "depthUnit",
-					"description": "",
-					"type": "text",
-					"enabled": true
-				},
-				{
-					"key": "sensorType",
-					"value": "sensorType",
-					"description": "",
-					"type": "text",
-					"enabled": true
-				},
-				{
-					"key": "readType",
-					"value": "readType",
-					"description": "",
-					"type": "text",
-					"enabled": true
-				},
-				{
-					"key": "id_node",
-					"value": "1",
+					"key": "lng",
+					"value": "lng",
 					"description": "",
 					"type": "text",
 					"enabled": true
@@ -768,17 +740,158 @@
 					"enabled": true
 				},
 				{
-					"key": "id_farm",
+					"key": "type",
+					"value": "type",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "bc6ead83-4946-400d-9e14-29a7e2de65a2",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "40d89136-e777-4f5a-b9ce-387174f4b223",
+			"name": "registrar",
+			"url": "http://localhost:8000/api/deal/create",
+			"description": "",
+			"data": [
+				{
+					"key": "short_title",
+					"value": "short_title",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "long_title",
+					"value": "long_title",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "effective_date",
+					"value": "2019-11-27 13:23:53",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "short_description",
+					"value": "short_description",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "long_description",
+					"value": "long_description",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "restrictions",
+					"value": "restrictions",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "commerce_id",
 					"value": "1",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
-					"key": "id_physical_connection",
+					"key": "category_id",
 					"value": "1",
 					"description": "",
 					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "closing_date",
+					"value": "2019-11-27 13:23:53",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "is_public",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "available_until",
+					"value": "2019-11-27 13:23:53",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "gift_title",
+					"value": "gift_title",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "payment_type",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "deal_type_id",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "commission",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "company_id",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "main_image",
+					"description": "",
+					"type": "file",
+					"enabled": true
+				},
+				{
+					"key": "images[0]",
+					"description": "",
+					"type": "file",
+					"enabled": true
+				},
+				{
+					"key": "images[1]",
+					"description": "",
+					"type": "file",
 					"enabled": true
 				}
 			],
@@ -1079,14 +1192,14 @@
 				},
 				{
 					"key": "latitude",
-					"value": "latitude",
+					"value": "1",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
 					"key": "longitude",
-					"value": "longitude",
+					"value": "1",
 					"description": "",
 					"type": "text",
 					"enabled": true
@@ -1428,6 +1541,45 @@
 			"events": [],
 			"folder": "00003817-e872-41d6-a94e-75dd109cf644",
 			"headers": "Content-Type: application/x-www-form-urlencoded\n",
+			"pathVariables": {}
+		},
+		{
+			"id": "9a582479-0182-45d2-8413-effdd07c1a5a",
+			"name": "registrar",
+			"url": "http://localhost:8000/api/types/store",
+			"description": "",
+			"data": [
+				{
+					"key": "description",
+					"value": "description",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_real_irrigation",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_zone",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "6aea5625-a3cc-4550-9d54-edc2366502d3",
+			"headers": "",
 			"pathVariables": {}
 		},
 		{

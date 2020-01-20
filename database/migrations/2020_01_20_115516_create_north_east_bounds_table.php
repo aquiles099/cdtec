@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePolygonsTable extends Migration
+class CreateNorthEastBoundsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreatePolygonsTable extends Migration
      */
     public function up()
     {
-        Schema::create('polygons', function (Blueprint $table) {
+        Schema::create('north_east_bounds', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('lat', 45)->nullable();
-            $table->string('lng', 45)->nullable();
-            $table->string('type', 45)->nullable();
             $table->unsignedInteger('id_zone')->nullable();
+            $table->float('lat')->nullable();
+            $table->float('lng')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreatePolygonsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('polygons');
+        Schema::dropIfExists('north_east_bounds');
     }
 }
