@@ -73,7 +73,7 @@ class Kernel extends ConsoleKernel
         // php artisan clonebyfarm:realirrigations:volumes:run
         $schedule->command('clonebyfarm:realirrigations:volumes:run')->everyFifteenMinutes();
         // php artisan clonebyfarm:alarms:run
-        $schedule->command('clonebyfarm:alarms:run')->everyFifteenMinutes();
+        // $schedule->command('clonebyfarm:alarms:run')->everyFifteenMinutes();
         // php artisan clonebyzone:pumpsystems:run
         $schedule->command('clonebyzone:pumpsystems:run')->everyFifteenMinutes();
         // php artisan clonebyzone:measures:run
@@ -83,9 +83,9 @@ class Kernel extends ConsoleKernel
         // php artisan clonebyzone:realirrigations:volumes:run
         $schedule->command('clonebyzone:realirrigations:volumes:run')->everyFifteenMinutes();
         // php artisan clonebyzone:alarms:run
-        $schedule->command('clonebyzone:alarms:run')->everyFifteenMinutes();
+        // $schedule->command('clonebyzone:alarms:run')->everyFifteenMinutes();
         // php artisan clonebynode:measures:run
-        $schedule->command('clonebynode:measures:run')->everyFifteenMinutes();
+        // $schedule->command('clonebynode:measures:run')->everyFifteenMinutes();
         // php artisan clonebyirrigation:realirrigations:run
         $schedule->command('clonebyirrigation:realirrigations:run')->everyFifteenMinutes();
         // php artisan clonebypumpsystem:irrigations:volumes:run

@@ -18,7 +18,10 @@
 		"5c290b31-74a2-4582-bc99-058b88d66c65",
 		"7897ebe0-d035-4a24-bc03-1dcbbf79c826",
 		"483906e9-9b39-44db-a36b-b266945ed146",
-		"77e5b831-c56a-4828-8c22-4cc48cf220c0"
+		"77e5b831-c56a-4828-8c22-4cc48cf220c0",
+		"6aea5625-a3cc-4550-9d54-edc2366502d3",
+		"c8670270-95c2-4e8d-94c9-df8c5f473ce3",
+		"6f331861-e93b-4cee-bb91-286e0ae49e5d"
 	],
 	"folders": [
 		{
@@ -47,6 +50,20 @@
 			"folder": null,
 			"order": [
 				"e969afae-c549-41ee-ace4-88e691350453"
+			],
+			"folders_order": []
+		},
+		{
+			"id": "6f331861-e93b-4cee-bb91-286e0ae49e5d",
+			"name": "bound",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+			"folder": null,
+			"order": [
+				"7f6bb725-cd72-4864-80ea-b10cc474c32d",
+				"a78ac16c-bcb4-47b1-9c38-584c987b4ad6"
 			],
 			"folders_order": []
 		},
@@ -138,6 +155,19 @@
 			"folders_order": []
 		},
 		{
+			"id": "c8670270-95c2-4e8d-94c9-df8c5f473ce3",
+			"name": "path",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+			"folder": null,
+			"order": [
+				"4bcbcd2b-7207-442f-bc1c-7ff0e8e43c71"
+			],
+			"folders_order": []
+		},
+		{
 			"id": "5915d459-49bc-432b-99c3-e7eb0d8bc7d9",
 			"name": "physicalconnection",
 			"description": "",
@@ -177,6 +207,19 @@
 			"order": [
 				"69155b3a-15f4-41d5-868c-5bab92fb4484",
 				"d7180334-e697-47fd-bc0a-101dd85d76f3"
+			],
+			"folders_order": []
+		},
+		{
+			"id": "6aea5625-a3cc-4550-9d54-edc2366502d3",
+			"name": "type",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+			"folder": null,
+			"order": [
+				"9a582479-0182-45d2-8413-effdd07c1a5a"
 			],
 			"folders_order": []
 		},
@@ -687,98 +730,137 @@
 		{
 			"id": "40d89136-e777-4f5a-b9ce-387174f4b223",
 			"name": "registrar",
-			"url": "http://localhost:8000/api/measures/store",
+			"url": "http://localhost:8000/api/deal/create",
 			"description": "",
 			"data": [
 				{
-					"key": "name",
-					"value": "name",
+					"key": "short_title",
+					"value": "short_title",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
-					"key": "unit",
-					"value": "unit",
+					"key": "long_title",
+					"value": "long_title",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
-					"key": "lastData",
-					"value": "1",
-					"description": "",
-					"type": "text",
-					"enabled": true
-				},
-				{
-					"key": "lastDataDate",
+					"key": "effective_date",
 					"value": "2019-11-27 13:23:53",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
-					"key": "monitoringTime",
-					"value": "monitoringTime",
+					"key": "short_description",
+					"value": "short_description",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
-					"key": "sensorDepth",
-					"value": "sensorDepth",
+					"key": "long_description",
+					"value": "long_description",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
-					"key": "depthUnit",
-					"value": "depthUnit",
+					"key": "restrictions",
+					"value": "restrictions",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
-					"key": "sensorType",
-					"value": "sensorType",
-					"description": "",
-					"type": "text",
-					"enabled": true
-				},
-				{
-					"key": "readType",
-					"value": "readType",
-					"description": "",
-					"type": "text",
-					"enabled": true
-				},
-				{
-					"key": "id_node",
+					"key": "commerce_id",
 					"value": "1",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
-					"key": "id_zone",
+					"key": "category_id",
 					"value": "1",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
-					"key": "id_farm",
+					"key": "closing_date",
+					"value": "2019-11-27 13:23:53",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "is_public",
 					"value": "1",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
-					"key": "id_physical_connection",
+					"key": "available_until",
+					"value": "2019-11-27 13:23:53",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "gift_title",
+					"value": "gift_title",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "payment_type",
 					"value": "1",
 					"description": "",
 					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "deal_type_id",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "commission",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "company_id",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "main_image",
+					"description": "",
+					"type": "file",
+					"enabled": true
+				},
+				{
+					"key": "images[0]",
+					"description": "",
+					"type": "file",
+					"enabled": true
+				},
+				{
+					"key": "images[1]",
+					"description": "",
+					"type": "file",
 					"enabled": true
 				}
 			],
@@ -807,6 +889,45 @@
 			"auth": null,
 			"events": [],
 			"folder": "ae7a034e-c575-41df-b8f3-7282265345c3",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "4bcbcd2b-7207-442f-bc1c-7ff0e8e43c71",
+			"name": "registrar",
+			"url": "http://localhost:8000/api/path/store",
+			"description": "",
+			"data": [
+				{
+					"key": "id_zone",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "lat",
+					"value": "400",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "lng",
+					"value": "300",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "c8670270-95c2-4e8d-94c9-df8c5f473ce3",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -1079,14 +1200,14 @@
 				},
 				{
 					"key": "latitude",
-					"value": "latitude",
+					"value": "1",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
 					"key": "longitude",
-					"value": "longitude",
+					"value": "1",
 					"description": "",
 					"type": "text",
 					"enabled": true
@@ -1174,6 +1295,13 @@
 					"description": "",
 					"type": "text",
 					"enabled": true
+				},
+				{
+					"key": "id_polygon",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
 				}
 			],
 			"dataMode": "params",
@@ -1184,6 +1312,45 @@
 			"auth": null,
 			"events": [],
 			"folder": "ae7a034e-c575-41df-b8f3-7282265345c3",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "7f6bb725-cd72-4864-80ea-b10cc474c32d",
+			"name": "register southwest",
+			"url": "http://localhost:8000/api/bound/southwest/store",
+			"description": "",
+			"data": [
+				{
+					"key": "id_zone",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "lat",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "lng",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "6f331861-e93b-4cee-bb91-286e0ae49e5d",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -1431,6 +1598,45 @@
 			"pathVariables": {}
 		},
 		{
+			"id": "9a582479-0182-45d2-8413-effdd07c1a5a",
+			"name": "registrar",
+			"url": "http://localhost:8000/api/types/store",
+			"description": "",
+			"data": [
+				{
+					"key": "description",
+					"value": "description",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_real_irrigation",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_zone",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "6aea5625-a3cc-4550-9d54-edc2366502d3",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
 			"id": "9acac286-0e2e-4dfd-82c7-3bbadff885f8",
 			"name": "listar",
 			"url": "http://localhost:8000/api/farms",
@@ -1490,6 +1696,45 @@
 			"auth": null,
 			"events": [],
 			"folder": "5915d459-49bc-432b-99c3-e7eb0d8bc7d9",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "a78ac16c-bcb4-47b1-9c38-584c987b4ad6",
+			"name": "register northeast",
+			"url": "http://localhost:8000/api/bound/northeast/store",
+			"description": "",
+			"data": [
+				{
+					"key": "id_zone",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "lat",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "lng",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "6f331861-e93b-4cee-bb91-286e0ae49e5d",
 			"headers": "",
 			"pathVariables": {}
 		},

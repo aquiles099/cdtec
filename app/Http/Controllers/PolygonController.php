@@ -5,38 +5,25 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Polygon;
-use App\Zone;
+use App\Bound;
 class PolygonController extends Controller
 {
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
-            'lat'            => 'required|string|max:45',
-            'lng'            => 'required|string|max:45',
-            'type'           => 'required|string|max:45',
-            'id_zone'        => 'required|integer',
+            'id_bound'            => 'required'
         ],[
-            'lat.required'            => 'El lat es requerido',
-            'lat.max'                 => 'El lat debe contener como máximo 45 caracteres',
-            'lng.required'            => 'El lng es requerido',
-            'lng.max'                 => 'El lng debe contener como máximo 45 caracteres',
-            'type.required'           => 'El type es requerido',
-            'type.max'                => 'El type debe contener como máximo 45 caracteres',
-            'id_zone.required'        => 'El id_zone es requerido',
-            'id_zone.integer'         => 'El id_zone debe ser un número entero',   
+            'id_bound.required'   => 'El lat es requerido', 
         ]);
         if($validator->fails()){
             return response()->json($validator->errors(), 400);
         }
         try{
-            $zone = Zone::find($request->get('id_zone'));
-            if(is_null($zone)){
-                return response()->json(["message"=>"non-existent zone"],404);
-            }
+            // $bound = Bound::find($request->get('id_bound'));
+            // if(is_null($bound)){
+            //     return response()->json(["message"=>"non-existent bound"],404);
+            // }
             $element = Polygon::create([
-                'lat' => $request->get('lat'),
-                'lng' => $request->get('lng'),
-                'type' => $request->get('type'),
-                'id_zone' => $request->get('id_zone'),
+                'id_bound' => $request->get('id_bound'),
             ]);
             $response = [
                 'message'=> 'item successfully registered',
