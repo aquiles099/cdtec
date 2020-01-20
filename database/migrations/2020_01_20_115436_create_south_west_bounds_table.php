@@ -16,8 +16,8 @@ class CreateSouthWestBoundsTable extends Migration
         Schema::create('south_west_bounds', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('id_zone')->nullable();
-            $table->float('lat')->nullable();
-            $table->float('lng')->nullable();
+            $table->double('lat', 15, 10)->nullable();
+            $table->double('lng', 15, 10)->nullable();
             $table->timestamps();
         });
     }

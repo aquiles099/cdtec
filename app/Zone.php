@@ -14,7 +14,7 @@ class Zone extends Model
         'longitude','type', 'kc','theoreticalFlow',
         'unitTheoreticalFlow','efficiency',
         'humidityRetention','max','min','criticalPoint1','criticalPoint2',
-        'id_farm','id_polygon','id_pump_system','id_wiseconn',
+        'id_farm','id_pump_system','id_wiseconn',
     ];
     protected $with = ['path','southWest','northEast'];
     protected $hidden   = [

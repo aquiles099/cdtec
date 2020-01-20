@@ -32,7 +32,6 @@ class CreateZonesTable extends Migration
             $table->unsignedInteger('id_farm')->nullable();
             $table->unsignedInteger('id_pump_system')->nullable();
             $table->unsignedInteger('id_wiseconn')->nullable();
-            $table->unsignedInteger('id_polygon')->nullable();
             $table->timestamps();
         });
     }
