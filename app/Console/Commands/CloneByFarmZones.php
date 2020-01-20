@@ -76,13 +76,15 @@ class CloneByFarmZones extends Command
             $farms=Farm::all();
             foreach ($farms as $key => $farm) {
                 $zonesResponse =  $this->requestWiseconn($client,'GET','/farms/'.$farm->id_wiseconn.'/zones');
-                $zones=json_decode($zonesResponse->getBody()->getContents());                
-                foreach ($zones as $key => $zone) {
-                    $farm=Farm::where("id_wiseconn",$zone->farmId)->first();
-                    if(is_null(Zone::where("id_wiseconn",$zone->id)->first()) && !is_null($farm)){
-                        $newZone= $this->zoneCreate($zone,$farm);                                                      
-                    }
-                }
+                $zones=json_decode($zonesResponse->getBody()->getContents()); 
+                $this->info("Success: Clone pumpsystems data by farm");
+                $this->info("zones: ".$zones);
+                // foreach ($zones as $key => $zone) {
+                //     $farm=Farm::where("id_wiseconn",$zone->farmId)->first();
+                //     if(is_null(Zone::where("id_wiseconn",$zone->id)->first()) && !is_null($farm)){
+                //         $newZone= $this->zoneCreate($zone,$farm);                                                      
+                //     }
+                // }
             }
             $this->info("Success: Clone pumpsystems data by farm");
         } catch (\Exception $e) {
