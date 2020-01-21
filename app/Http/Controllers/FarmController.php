@@ -141,7 +141,7 @@ class FarmController extends Controller
     }
     public function zones($id){
         try {            
-            $elements = Zone::where("id_farm",$id)->with("polygons")->with("types")->get();
+            $elements = Zone::where("id_farm",$id)->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,
