@@ -82,7 +82,7 @@ class PumpSystemController extends Controller
     }
     public function zones($id){
         try {
-            $elements = Zone::where("id_pump_system",$id)->with("polygons")->with("types")->get();
+            $elements = Zone::where("id_pump_system",$id)->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,
