@@ -18,7 +18,7 @@ class Zone extends Model
     ];
     protected $with = ['path','southWest','northEast'];
     protected $hidden   = [
-        'id','id_zone',
+        'id_zone',
         'id_bound',
         'created_at',
         'updated_at',
