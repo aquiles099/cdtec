@@ -86,14 +86,17 @@ class CloneByFarmFarmsAccountsNodes extends Command
             $farms=json_decode($farmsResponse->getBody()->getContents());
             foreach ($farms as $key => $farm) {
                 if(is_null(Farm::where("id_wiseconn",$farm->id)->first())){
-                    $newFarm= $this->farmCreate($farm);   
+                    $newFarm= $this->farmCreate($farm);
+                    $this->info("New farm, id:".$newFarm->id);
                     $newAccount= $this->accountCreate($farm,$newFarm);
+                    $this->info("New account, id:".$newAccount->id);
                     try {
                         $nodesResponse = $this->requestWiseconn($client,'GET','/farms/'.$farm->id.'/nodes');
                         $nodes=json_decode($nodesResponse->getBody()->getContents());
                         foreach ($nodes as $key => $node) {
                             if(is_null(Node::where("id_wiseconn",$node->id)->first())){
                                 $newNode= $this->nodeCreate($node,$newFarm);
+                                $this->info("New node, id:".$newNode->id);
                             }
                         }
                     } catch (\Exception $e) {

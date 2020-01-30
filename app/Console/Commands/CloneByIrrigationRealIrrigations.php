@@ -47,9 +47,9 @@ class CloneByIrrigationRealIrrigations extends Command
     }
     protected function volumeCreate($realIrrigation){
         return Volume::create([
-            'value'=> isset($realIrrigation->volume)?$realIrrigation->volume->value:null,
-            'unitName'=> isset($realIrrigation->volume)?$realIrrigation->volume->unitName:null,
-            'unitAbrev'=> isset($realIrrigation->volume)?$realIrrigation->volume->unitAbrev:null
+            'value'=> isset($realIrrigation->volume->value)?$realIrrigation->volume->value:null,
+            'unitName'=> isset($realIrrigation->volume->unitName)?$realIrrigation->volume->unitName:null,
+            'unitAbrev'=> isset($realIrrigation->volume->unitAbrev)?$realIrrigation->volume->unitAbrev:null
         ]);
     }
     protected function realIrrigationCreate($realIrrigation,$farm,$zone,$volume,$pumpSystem){
@@ -86,7 +86,9 @@ class CloneByIrrigationRealIrrigations extends Command
                     $pumpSystem=Pump_system::where("id_wiseconn",$realIrrigation->pumpSystemId)->first();
                     if(is_null(RealIrrigation::where("id_wiseconn",$realIrrigation->id)->first())&&!is_null($zone)&&!is_null($pumpSystem)){ 
                         $newVolume =$this->volumeCreate($realIrrigation);
-                        $newRealIrrigation =$this->realIrrigationCreate($realIrrigation,$farm,$zone,$newVolume,$pumpSystem);                                                                 
+                        $this->info("New Volume, id:".$newVolume->id);
+                        $newRealIrrigation =$this->realIrrigationCreate($realIrrigation,$farm,$zone,$newVolume,$pumpSystem);
+                        $this->info("New RealIrrigation, id:".$newRealIrrigation->id);
                     }
                 }
             }

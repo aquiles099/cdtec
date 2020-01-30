@@ -89,14 +89,17 @@ protected function requestWiseconn($client,$method,$uri){
                 foreach ($measures as $key => $measure) {
                     if(is_null(Measure::where("id_wiseconn",$measure->id)->first())){
                         $newPhysicalConnection =$this->physicalConnectionCreate($measure);
-                        if(isset($measure->farmId)&&isset($measure->nodeId)&&isset($measure->zoneId)){
+                        $this->info("New PhysicalConnectio, id:".$newPhysicalConnection->id);
+                        if(isset($measure->farmId)&&isset($measure->zoneId)){
                             $farm=Farm::where("id_wiseconn",$measure->farmId)->first();
                             $zone=Zone::where("id_wiseconn",$measure->zoneId)->first(); 
                             if($measure->farmId==$farm->id_wiseconn&&!is_null($farm)&&!is_null($zone)){ 
                                 $newmeasure =$this->measureCreate($measure,$farm,$zone,$newPhysicalConnection); 
+                                $this->info("New Measure, id:".$newmeasure->id);
                             }
                         }else{
                             $newmeasure =$this->measureCreate($measure,$farm,null,$newPhysicalConnection); 
+                            $this->info("New Measure, id:".$newmeasure->id);
                         }
                         
                     }  

@@ -79,7 +79,9 @@ class CloneByZoneHydraulics extends Command
                     $farm=Node::where("id_wiseconn",$hydraulic->farmId)->first();
                     if(is_null(Hydraulic::where("id_wiseconn",$hydraulic->id)->first())&&!is_null($node)){ 
                         $newPhysicalConnection =$this->physicalConnectionCreate($hydraulic);
-                        $newHydraulic =$this->hydraulicCreate($hydraulic,$farm,$node,$newPhysicalConnection);                                                                 
+                        $this->info("New PhysicalConnection, id:".$newPhysicalConnection->id);
+                        $newHydraulic =$this->hydraulicCreate($hydraulic,$farm,$node,$newPhysicalConnection);
+                        $this->info("New Hydraulic, id:".$newHydraulic->id);                                                                 
                     }
                 }
             }

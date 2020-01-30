@@ -45,9 +45,9 @@ class CloneByPumpsystemIrrigationsVolumes extends Command
     }
     protected function volumeCreate($irrigation){
         return Volume::create([
-            'value'=> isset($irrigation->volume)?$irrigation->volume->value:null,
-            'unitName'=> isset($irrigation->volume)?$irrigation->volume->unitName:null,
-            'unitAbrev'=> isset($irrigation->volume)?$irrigation->volume->unitAbrev:null
+            'value'=> isset($irrigation->volume->value)?$irrigation->volume->value:null,
+            'unitName'=> isset($irrigation->volume->unitName)?$irrigation->volume->unitName:null,
+            'unitAbrev'=> isset($irrigation->volume->unitAbrev)?$irrigation->volume->unitAbrev:null
         ]);
     }
     protected function irrigationCreate($irrigation,$zone,$volume,$pumpSystem){
@@ -89,7 +89,9 @@ class CloneByPumpsystemIrrigationsVolumes extends Command
                     $pumpSystem=Pump_system::where("id_wiseconn",$irrigation->pumpSystemId)->first();
                     if(is_null(Irrigation::where("id_wiseconn",$irrigation->id)->first())&&!is_null($zone)&&!is_null($pumpSystem)){ 
                         $newVolume =$this->volumeCreate($irrigation);
-                        $newIrrigation =$this->irrigationCreate($irrigation,$zone,$newVolume,$pumpSystem);                                                                 
+                        $this->info("New Volume, id:".$newVolume->id);
+                        $newIrrigation =$this->irrigationCreate($irrigation,$zone,$newVolume,$pumpSystem);
+                        $this->info("New Irrigation, id:".$newIrrigation->id);                                                                 
                     }
                 }                    
             }
