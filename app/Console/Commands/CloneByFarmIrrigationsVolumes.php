@@ -91,7 +91,9 @@ class CloneByFarmIrrigationsVolumes extends Command
                     $pumpSystem=Pump_system::where("id_wiseconn",$irrigation->pumpSystemId)->first();
                     if(is_null(Irrigation::where("id_wiseconn",$irrigation->id)->first())&&!is_null($zone)&&!is_null($pumpSystem)){ 
                         $newVolume =$this->volumeCreate($irrigation);
-                        $newIrrigation =$this->irrigationCreate($irrigation,$farm,$zone,$newVolume,$pumpSystem);                                                                 
+                        $this->info("New Volume, id:".$newVolume->id);
+                        $newIrrigation =$this->irrigationCreate($irrigation,$farm,$zone,$newVolume,$pumpSystem);
+                        $this->info("New Irrigation, id:".$newIrrigation->id);
                     }
                 }                    
             }

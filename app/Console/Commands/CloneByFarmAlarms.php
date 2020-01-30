@@ -78,6 +78,7 @@ class CloneByFarmAlarms extends Command
                     $realIrrigation=RealIrrigation::where("id_wiseconn",$alarm->realIrrigationId)->first();
                     if(is_null(Alarm::where("id_wiseconn",$alarm->id)->first())&&!is_null($zone)&&!is_null($realIrrigation)){
                         $newAlarm= $this->alarmCreate($alarm,$farm,$zone,$realIrrigation);
+                        $this->info("New alarm, id:".$newAlarm->id);
                     }
                 }                
             }

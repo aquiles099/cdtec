@@ -47,12 +47,12 @@ class CloneByZoneMeasures extends Command
     }
     protected function physicalConnectionCreate($measure){
         return PhysicalConnection::create([
-            'expansionPort'=> isset($measure->physicalConnection)?$measure->physicalConnection->expansionPort:null,
-            'expansionBoard'=> isset($measure->physicalConnection)?$measure->physicalConnection->expansionBoard:null,
-            'nodePort'=> isset($measure->physicalConnection)?$measure->physicalConnection->nodePort:null
+            'expansionPort'=> isset($measure->physicalConnection->expansionPort)?$measure->physicalConnection->expansionPort:null,
+            'expansionBoard'=> isset($measure->physicalConnection->expansionBoard)?$measure->physicalConnection->expansionBoard:null,
+            'nodePort'=> isset($measure->physicalConnection->nodePort)?$measure->physicalConnection->nodePort:null
         ]);
     }
-    protected function measureCreate($measure,$farm,$zone,$newPhysicalConnection){
+    protected function measureCreate($measure,$farm,$zone,$node,$newPhysicalConnection){
         return Measure::create([
             'name' => $measure->name,
             'unit' => isset($measure->unit)?($measure->unit):null,
@@ -64,7 +64,8 @@ class CloneByZoneMeasures extends Command
             'sensorType'=> isset($measure->sensorType)?($measure->sensorType):null,
             'readType'=> isset($measure->readType)?($measure->readType):null,
             'id_farm' => isset($farm->id)?$farm->id:null,
-            'id_zone' => isset($zone->id)?$farm->id:null,
+            'id_zone' => isset($zone->id)?$zone->id:null,
+            'id_node' => isset($node->id)?$node->id:null,
             'id_physical_connection' => isset($newPhysicalConnection->id)?$newPhysicalConnection->id:null,
             'id_wiseconn' => $measure->id
         ]); 
@@ -85,19 +86,21 @@ class CloneByZoneMeasures extends Command
             foreach ($zones as $key => $zone) {
                 $measuresResponse = $this->requestWiseconn($client,'GET','/zones/'.$zone->id_wiseconn.'/measures');
                 $measures=json_decode($measuresResponse->getBody()->getContents());
-                foreach ($measures as $key => $measure) {
-                    if(is_null(Measure::where("id_wiseconn",$measure->id)->first())){
+                foreach ($measures as $key => $measure) {                    
+                    $farm=null;$node=null;$zone=null;
+                    if(isset($measure->farmId)){
+                        $farm=Farm::where("id_wiseconn",$measure->farmId)->first();
+                    }
+                    if(isset($measure->nodeId)){
+                        $node=Node::where("id_wiseconn",$measure->nodeId)->first();
+                    }
+                    if(isset($measure->zoneId)){
+                        $zone=Zone::where("id_wiseconn",$measure->zoneId)->first(); 
+                    }
+                    if(is_null(Measure::where("id_wiseconn",$measure->id)->where("id_zone",$zone->id)->first())){
                         $newPhysicalConnection =$this->physicalConnectionCreate($measure);
-                        if(isset($measure->farmId)&&isset($measure->nodeId)&&isset($measure->zoneId)){
-                            $farm=Farm::where("id_wiseconn",$measure->farmId)->first();
-                            $zone=Zone::where("id_wiseconn",$measure->zoneId)->first();                            
-                            if($measure->farmId==$farm->id_wiseconn&&!is_null($farm)&&!is_null($zone)){ 
-                                $newmeasure =$this->measureCreate($measure,$farm,$zone,$newPhysicalConnection); 
-                            }
-                        }else{
-                            $newmeasure =$this->measureCreate($measure,$farm,null,$newPhysicalConnection); 
-                        }
-                        
+                        $newmeasure =$this->measureCreate($measure,$farm,$zone,$node,$newPhysicalConnection);
+                        $this->info("New Measure, id:".$newmeasure->id." New PhysicalConnection, id:".$newPhysicalConnection->id);
                     }  
                 }
             }

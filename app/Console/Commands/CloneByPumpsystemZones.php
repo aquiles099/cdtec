@@ -80,7 +80,8 @@ class CloneByPumpsystemZones extends Command
                 foreach ($zones as $key => $zone) {
                     $pumpSystem=Pump_system::where("id_wiseconn",$zone->pumpSystemId)->first();
                     if(is_null(Zone::where("id_wiseconn",$zone->id)->first()) && !is_null($pumpSystem)){
-                        $newZone= $this->zoneCreate($zone,$pumpSystem);                                                      
+                        $newZone= $this->zoneCreate($zone,$pumpSystem);
+                        $this->info("New Zone, id:".$newZone->id);                                                      
                     }
                 }
             }

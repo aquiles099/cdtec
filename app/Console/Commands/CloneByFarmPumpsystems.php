@@ -67,6 +67,7 @@ class CloneByFarmPumpsystems extends Command
                 foreach ($pumpSystems as $key => $pumpSystem) {
                     if(is_null(Pump_system::where("id_wiseconn",$pumpSystem->id)->first()) && $pumpSystem->farmId==$farm->id_wiseconn){
                         $newPumpSystem= $this->pumpSystemCreate($pumpSystem,$farm);
+                        $this->info("New PumpSystem, id:".$newPumpSystem->id);
                     }
                 }
             }
