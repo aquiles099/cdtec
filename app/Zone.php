@@ -11,12 +11,12 @@ class Zone extends Model
 {
     protected $fillable = [
         'name', 'description','latitude', 
-        'longitude','type', 'kc','theoreticalFlow',
+        'longitude', 'kc','theoreticalFlow',
         'unitTheoreticalFlow','efficiency',
         'humidityRetention','max','min','criticalPoint1','criticalPoint2',
         'id_farm','id_pump_system','id_wiseconn',
     ];
-    protected $with = ['path','southWest','northEast'];
+    protected $with = ['path','southWest','northEast','type'];
     protected $hidden   = [
         'id_zone',
         'id_bound',
@@ -36,5 +36,9 @@ class Zone extends Model
     }
     public function northEast() {
         return $this->hasOne(NorthEastBound::class,'id_zone','id');
+    }
+    public function type()
+    {
+        return $this->hasMany(Type::class,'id_zone');
     }
 }

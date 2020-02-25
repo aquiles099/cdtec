@@ -79,8 +79,8 @@ class CloneByZoneIrrigationsVolumes extends Command
             'base_uri' => 'https://apiv2.wiseconn.com',
             'timeout'  => 100.0,
         ]);
-        $initTime=Carbon::now(date_default_timezone_get())->format('Y-m-d');
-        $endTime=Carbon::now(date_default_timezone_get())->addDays(15)->format('Y-m-d');
+        $initTime=Carbon::now(date_default_timezone_get())->subDays(15)->format('Y-m-d');
+        $endTime=Carbon::now(date_default_timezone_get())->format('Y-m-d');
         try{
             $farms=Farm::all();
             foreach ($farms as $key => $farm) {
@@ -91,9 +91,8 @@ class CloneByZoneIrrigationsVolumes extends Command
                     $pumpSystem=Pump_system::where("id_wiseconn",$irrigation->pumpSystemId)->first();
                     if(is_null(Irrigation::where("id_wiseconn",$irrigation->id)->first())&&!is_null($zone)&&!is_null($pumpSystem)){ 
                         $newVolume =$this->volumeCreate($irrigation);
-                        $this->info("New Volume, id:".$newVolume->id);
                         $newIrrigation =$this->irrigationCreate($irrigation,$farm,$zone,$newVolume,$pumpSystem);                        
-                        $this->info("New Irrigation, id:".$newIrrigation->id);
+                        $this->info("New Volume, id:".$newVolume->id." / New Irrigation, id:".$newIrrigation->id);
                     }
                 }                    
             }

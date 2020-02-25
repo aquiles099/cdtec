@@ -8,6 +8,7 @@ use GuzzleHttp\Client;
 use App\Farm;
 use App\Zone;
 use App\Path;
+use App\Type;
 use App\NorthEastBound;
 use App\SouthWestBound;
 class CloneByFarmZones extends Command
@@ -62,6 +63,14 @@ class CloneByFarmZones extends Command
             'id_pump_system' => isset($zone->pumpSystemId)?$zone->pumpSystemId:null,
             'id_wiseconn' => isset($zone->id)?$zone->id:null
         ]);
+        if(isset($zone->type)){
+            foreach ($zone->type as $key => $type) {
+                Type::create([
+                    'description'=>$type,
+                    'id_zone'=>$newZone->id,
+                ]);
+            }
+        }
         if(isset($zone->polygon->path)){
             foreach ($zone->polygon->path as $key => $path) {
                 Path::create([
@@ -109,7 +118,7 @@ class CloneByFarmZones extends Command
                         $farm=Farm::where("id_wiseconn",$zone->farmId)->first();
                         if(is_null(Zone::where("id_wiseconn",$zone->id)->first()) && !is_null($farm)){
                             $newZone= $this->zoneCreate($zone,$farm); 
-                            $this->info("New Zone, id:".$newZone->id);
+                            $this->info("New Zone id:".$newZone->id);
                         }
                     }                    
                 }

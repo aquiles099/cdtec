@@ -100,7 +100,7 @@ class CloneByZoneMeasures extends Command
                     if(is_null(Measure::where("id_wiseconn",$measure->id)->where("id_zone",$zone->id)->first())){
                         $newPhysicalConnection =$this->physicalConnectionCreate($measure);
                         $newmeasure =$this->measureCreate($measure,$farm,$zone,$node,$newPhysicalConnection);
-                        $this->info("New Measure, id:".$newmeasure->id." New PhysicalConnection, id:".$newPhysicalConnection->id);
+                        $this->info("New Measure id:".$newmeasure->id." / New PhysicalConnection id:".$newPhysicalConnection->id);
                     }  
                 }
             }

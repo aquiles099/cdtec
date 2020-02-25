@@ -39,7 +39,7 @@ Route::get('zones/{id}/measures', 'ZoneController@measures');
 Route::get('zones/{id}/irrigations', 'ZoneController@irrigations');
 Route::get('zones/{id}/hydraulics', 'ZoneController@hydraulics');
 Route::post('zones/{id}/alarms/triggered', 'ZoneController@alarmsTriggered');
-Route::get('zones/{id}/realirrigations', 'ZoneController@realIrrigations');
+Route::get('zones/{id}/realIrrigations', 'ZoneController@realIrrigations');
 // paths
 Route::post('path/store', 'PathController@store');
 // bounds

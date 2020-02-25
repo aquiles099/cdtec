@@ -9,8 +9,8 @@ class Farm extends Model
     protected $fillable = [
         'name', 'description','latitude', 'longitude','postalAddress', 'timeZone','webhook','id_wiseconn'
     ];
-    public function accounts()
+    public function account()
     {
-        return $this->hasMany(Account::class,'id_farm','id');
+        return $this->hasOne(Account::class,'id_farm','id');
     }
 }

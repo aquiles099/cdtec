@@ -19,7 +19,7 @@ class FarmController extends Controller
         try {
             $response = [
                 'message'=> 'Farm list',
-                'data' => Farm::with("accounts")->get(),
+                'data' => Farm::with("account")->get(),
             ];
             return response()->json($response, 200);
         } catch (\Exception $e) {
@@ -32,7 +32,7 @@ class FarmController extends Controller
     }
     public function get($id){
         try {            
-            $element = Farm::with("accounts")->find($id);
+            $element = Farm::with("account")->find($id);
             if(is_null($element)){
                 return response()->json([
                     "message"=>"non-existent item",

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 use App\Zone;
 use App\Farm;
 use App\Pump_system;
@@ -21,7 +22,7 @@ class ZoneController extends Controller
             'description'          => 'required|string|max:45',
             'latitude'             => 'required|string|max:45',
             'longitude'            => 'required|string|max:45',
-            'type'                 => 'required|string|max:45',
+            'type'                 => 'required',
             'kc'                   => 'required|integer',
             'theoreticalFlow'      => 'required|integer',
             'unitTheoreticalFlow'  => 'required|string|max:45',
@@ -43,7 +44,6 @@ class ZoneController extends Controller
             'longitude.required'            => 'El longitude es requerido',
             'longitude.max'                 => 'El longitude debe contener como máximo 45 caracteres',
             'type.required'                 => 'El type es requerido',
-            'type.max'                      => 'El type debe contener como máximo 45 caracteres',
             'kc.required'                   => 'El kc es requerido',
             'kc.integer'                    => 'El kc debe ser un número entero',
             'theoreticalFlow.required'      => 'El theoreticalFlow es requerido',
@@ -82,6 +82,14 @@ class ZoneController extends Controller
                 array_push($messages,"non-existent Pump System");
                 }
                 return response()->json(["message"=>$messages],404);
+            }
+            if($request->get('type')){
+                foreach ($request->get('type') as $key => $type) {
+                    Type::create([
+                        'description'=>$type,
+                        'id_zone'=>$newZone->id,
+                    ]);
+                }
             }
             $element = Zone::create([
                 'name' => $request->get('name'),
@@ -276,9 +284,14 @@ class ZoneController extends Controller
             ], 500);
         }
     }
-    public function realIrrigations($id){
+    public function realIrrigations(Request $request,$id){
         try {
-            $elements = RealIrrigation::where("id_zone",$id)->with("pumpSystem")->with("irrigations")->with("farm")->get();
+            $initTime=(Carbon::parse($request->input("initTime"))->subDay())->format('Y-m-d');
+            $endTime=(Carbon::parse($request->input("endTime"))->subDay())->format('Y-m-d');
+            $elements = RealIrrigation::where("id_zone",$id)
+                // ->where("initTime",">",$initTime)
+                // ->where("endTime","<",$endTime)
+                ->with("pumpSystem")->with("irrigations")->with("farm")->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,

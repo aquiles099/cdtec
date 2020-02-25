@@ -9,6 +9,7 @@ use App\Node;
 use App\Farm;
 use App\PhysicalConnection;
 use App\Measure;
+use App\MeasureData;
 class MeasureController extends Controller{    
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
@@ -125,18 +126,13 @@ class MeasureController extends Controller{
             ], 500);
         }
     }
-    public function data($id){
+    public function data(Request $request,$id){
+        
         try {            
-            $element = Measure::find($id);
-            if(is_null($element)){
-                return response()->json([
-                    "message"=>"non-existent item",
-                    "data"=>$element
-                ],404);
-            }
+            $measuresData = MeasureData::where("id_measure",$id)->whereBetween("time",[$request->input('initTime'),$request->input('endTime')])->get();
             $response = [
                 'message'=> 'item found successfully',
-                'data' => $element->lastDataDate,
+                'data' => $measuresData,
             ];
             return response()->json($response, 200);
         } catch (\Exception $e) {
