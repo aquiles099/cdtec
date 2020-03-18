@@ -63,8 +63,8 @@ class CloneByMeasureData extends Command
         try{
             $zonesId=Zone::whereIn("name",["Estación Meteorológica","Estación Metereológica"])->pluck("id");
             $measures=Measure::whereIn("id_zone",$zonesId)->get();
-            $initTime=Carbon::now(date_default_timezone_get())->subDays(2)->format('Y-m-d');
-            $endTime=Carbon::now(date_default_timezone_get())->format('Y-m-d');
+            $initTime=Carbon::now(date_default_timezone_get())->subDays(25)->format('Y-m-d');
+            $endTime=Carbon::now(date_default_timezone_get())->addDays(5)->format('Y-m-d');
             foreach ($measures as $mKey => $measure) {
                 $measuresResponse = $this->requestWiseconn($client,'GET','/measures/'.$measure->id_wiseconn.'/data?initTime='.$initTime.'T00:00&endTime='.$endTime.'T00:00');
                 $measuresData=json_decode($measuresResponse->getBody()->getContents());

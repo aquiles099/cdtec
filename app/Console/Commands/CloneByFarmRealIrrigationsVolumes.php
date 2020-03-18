@@ -74,8 +74,8 @@ class CloneByFarmRealIrrigationsVolumes extends Command
             'base_uri' => 'https://apiv2.wiseconn.com',
             'timeout'  => 100.0,
         ]);
-        $initTime=Carbon::now(date_default_timezone_get())->subDays(15)->format('Y-m-d');
-        $endTime=Carbon::now(date_default_timezone_get())->format('Y-m-d');
+        $initTime=Carbon::now(date_default_timezone_get())->subDays(25)->format('Y-m-d');
+        $endTime=Carbon::now(date_default_timezone_get())->addDays(5)->format('Y-m-d');
         try{
             $farms=Farm::all();
             foreach ($farms as $key => $farm) {

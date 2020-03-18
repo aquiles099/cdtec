@@ -148,8 +148,8 @@ class ZoneController extends Controller
         $validator = Validator::make($request->all(), [
             'name'                 => 'required|string|max:45',
             'description'          => 'required|string|max:45',
-            'latitude'             => 'required|integer|max:45',
-            'longitude'            => 'required|integer|max:45',
+            'latitude'             => 'required|numeric|max:45',
+            'longitude'            => 'required|numeric|max:45',
             'type'                 => 'required|string|max:45',
             'kc'                   => 'required|integer',
             'theoreticalFlow'      => 'required|integer',
@@ -169,9 +169,9 @@ class ZoneController extends Controller
             'description.max'               => 'El description debe contener como máximo 45 caracteres',
             'latitude.required'             => 'El latitude es requerido',
             'latitude.max'                  => 'El latitude debe contener como máximo 45 caracteres',
-            'latitude.integer'              => 'El latitude debe ser un número entero',
+            'latitude.numeric'              => 'El latitude debe ser un número real',
             'longitude.required'            => 'El longitude es requerido',
-            'longitude.integer'             => 'El longitude debe ser un número entero',
+            'longitude.numeric'             => 'El longitude debe ser un número real',
             'type.required'                 => 'El type es requerido',
             'type.max'                      => 'El type debe contener como máximo 45 caracteres',
             'kc.required'                   => 'El kc es requerido',
@@ -286,15 +286,18 @@ class ZoneController extends Controller
     }
     public function realIrrigations(Request $request,$id){
         try {
-            $initTime=(Carbon::parse($request->input("initTime"))->subDay())->format('Y-m-d');
-            $endTime=(Carbon::parse($request->input("endTime"))->subDay())->format('Y-m-d');
+            $initTime=(Carbon::parse($request->input("initTime")))->format('Y-m-d');
+            $endTime=(Carbon::parse($request->input("endTime")))->format('Y-m-d');
             $elements = RealIrrigation::where("id_zone",$id)
-                // ->where("initTime",">",$initTime)
-                // ->where("endTime","<",$endTime)
-                ->with("pumpSystem")->with("irrigations")->with("farm")->get();
+                ->where("initTime",">",$initTime)
+                ->where(function ($q) use ($endTime) {
+                    $q->where('endTime',"<",$endTime)->orWhere("status", "Running");
+                })->with("pumpSystem")->with("irrigations")->with("farm")->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,
+                'initTime'=>$initTime,
+                'endTime'=>$endTime
             ];
             return response()->json($response, 200);
         } catch (\Exception $e) {

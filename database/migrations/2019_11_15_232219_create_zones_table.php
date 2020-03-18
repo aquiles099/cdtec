@@ -17,8 +17,8 @@ class CreateZonesTable extends Migration
             $table->bigIncrements('id');
             $table->string('name', 45);
             $table->string('description')->nullable();
-            $table->integer('latitude')->nullable();
-            $table->integer('longitude')->nullable();
+            $table->double('latitude', 15,10)->nullable();
+            $table->double('longitude', 15,10)->nullable();
             $table->integer('kc')->nullable();
             $table->integer('theoreticalFlow')->nullable();
             $table->string('unitTheoreticalFlow', 45)->nullable();
