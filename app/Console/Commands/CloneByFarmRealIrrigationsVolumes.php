@@ -63,6 +63,16 @@ class CloneByFarmRealIrrigationsVolumes extends Command
             'id_wiseconn' => $realIrrigation->id
         ]); 
     }
+    protected function realIrrigationUpdate($realIrrigation,$realIrrigationRegistered,$farm,$zone,$pumpSystem){
+        $realIrrigationRegistered->initTime=isset($realIrrigation->initTime)?$realIrrigation->initTime:null;
+        $realIrrigationRegistered->endTime=isset($realIrrigation->endTime)?$realIrrigation->endTime:null;
+        $realIrrigationRegistered->status=isset($realIrrigation->status)?$realIrrigation->status:null;
+        $realIrrigationRegistered->id_farm=isset($farm->id)?$farm->id:null;
+        $realIrrigationRegistered->id_pump_system=isset($pumpSystem->id)?$pumpSystem->id:null;
+        $realIrrigationRegistered->id_zone=isset($zone->id)?$zone->id:null;
+        $realIrrigationRegistered->update();
+        return $realIrrigationRegistered; 
+    }
     /**
      * Execute the console command.
      *
@@ -84,11 +94,18 @@ class CloneByFarmRealIrrigationsVolumes extends Command
                 foreach ($realIrrigations as $key => $realIrrigation) {
                     $zone=Zone::where("id_wiseconn",$realIrrigation->zoneId)->first();
                     $pumpSystem=Pump_system::where("id_wiseconn",$realIrrigation->pumpSystemId)->first();
-                    if(is_null(RealIrrigation::where("id_wiseconn",$realIrrigation->id)->first())&&!is_null($zone)&&!is_null($pumpSystem)){ 
-                        $newVolume =$this->volumeCreate($realIrrigation);
-                        $newRealIrrigation =$this->realIirrigationCreate($realIrrigation,$farm,$zone,$newVolume,$pumpSystem);
-                        $this->info("New Volume id:".$newVolume->id." / New RealIrrigation id:".$newRealIrrigation->id);                                                                 
+                    if(!is_null($zone)&&!is_null($pumpSystem)){
+                        $realIrrigationRegistered=RealIrrigation::where("id_wiseconn",$realIrrigation->id)->first();
+                        if(is_null($realIrrigationRegistered)){ 
+                            $newVolume =$this->volumeCreate($realIrrigation);
+                            $newRealIrrigation =$this->realIirrigationCreate($realIrrigation,$farm,$zone,$newVolume,$pumpSystem);
+                            $this->info("New Volume id:".$newVolume->id." / New RealIrrigation id:".$newRealIrrigation->id);                                                                 
+                        }else{
+                            $realIrrigationUpdated=$this->realIrrigationUpdate($realIrrigation,$realIrrigationRegistered,$farm,$zone,$pumpSystem);
+                            $this->info("Real Irrigation updated:".$realIrrigationUpdated->id);
+                        }  
                     }
+                    
                 }                    
             }
             $this->info("Success: Clone real irrigations and volumes data by farm");

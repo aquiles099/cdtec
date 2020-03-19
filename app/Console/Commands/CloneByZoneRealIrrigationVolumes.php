@@ -52,16 +52,24 @@ class CloneByZoneRealIrrigationVolumes extends Command
             'unitAbrev'=> isset($realIrrigation->volume->unitAbrev)?$realIrrigation->volume->unitAbrev:null
         ]);
     }
-    protected function realIrrigationCreate($realIrrigation,$farm,$zone,$volume,$pumpSystem){
+    protected function realIrrigationCreate($realIrrigation,$zone,$volume,$pumpSystem){
         return RealIrrigation::create([
             'initTime' => isset($realIrrigation->initTime)?$realIrrigation->initTime:null,
             'endTime' =>isset($realIrrigation->endTime)?$realIrrigation->endTime:null,
             'status'=> isset($realIrrigation->status)?$realIrrigation->status:null,
-            'id_farm'=> isset($farm->id)?$farm->id:null,
             'id_pump_system'=> isset($pumpSystem->id)?$pumpSystem->id:null,
             'id_zone'=> isset($zone->id)?$zone->id:null,
             'id_wiseconn' => $realIrrigation->id
         ]); 
+    }
+    protected function realIrrigationUpdate($realIrrigation,$realIrrigationRegistered,$zone,$pumpSystem){
+        $realIrrigationRegistered->initTime=isset($realIrrigation->initTime)?$realIrrigation->initTime:null;
+        $realIrrigationRegistered->endTime=isset($realIrrigation->endTime)?$realIrrigation->endTime:null;
+        $realIrrigationRegistered->status=isset($realIrrigation->status)?$realIrrigation->status:null;
+        $realIrrigationRegistered->id_pump_system=isset($pumpSystem->id)?$pumpSystem->id:null;
+        $realIrrigationRegistered->id_zone=isset($zone->id)?$zone->id):null;
+        $realIrrigationRegistered->update();
+        return $realIrrigationRegistered; 
     }
     /**
      * Execute the console command.
@@ -77,18 +85,24 @@ class CloneByZoneRealIrrigationVolumes extends Command
         $initTime=Carbon::now(date_default_timezone_get())->subDays(25)->format('Y-m-d');
         $endTime=Carbon::now(date_default_timezone_get())->addDays(5)->format('Y-m-d');
         try{
-            $farms=Farm::all();
-            foreach ($farms as $key => $farm) {
-                $realIrrigationsResponse = $this->requestWiseconn($client,'GET','/farms/'.$farm->id_wiseconn.'/realIrrigations/?endTime='.$endTime.'&initTime='.$initTime);
+            $zones=Zone::all();
+            foreach ($zones as $key => $zone) {
+                $realIrrigationsResponse = $this->requestWiseconn($client,'GET','/zones/'.$zone->id_wiseconn.'/realIrrigations/?endTime='.$endTime.'&initTime='.$initTime);
                 $realIrrigations=json_decode($realIrrigationsResponse->getBody()->getContents());
                 foreach ($realIrrigations as $key => $realIrrigation) {
-                    $zone=Zone::where("id_wiseconn",$realIrrigation->zoneId)->first();
                     $pumpSystem=Pump_system::where("id_wiseconn",$realIrrigation->pumpSystemId)->first();
-                    if(is_null(RealIrrigation::where("id_wiseconn",$realIrrigation->id)->first())&&!is_null($zone)&&!is_null($pumpSystem)){ 
-                        $newVolume =$this->volumeCreate($realIrrigation);
-                        $newRealIrrigation =$this->realIrrigationCreate($realIrrigation,$farm,$zone,$newVolume,$pumpSystem);                        
-                        $this->info("New Volume, id:".$newVolume->id." / New RealIrrigation, id:".$newRealIrrigation->id);
+                    if(!is_null($pumpSystem)){
+                        $realIrrigationRegistered=RealIrrigation::where("id_wiseconn",$realIrrigation->id)->where("id_zone",$zone->id)->first();
+                        if(is_null($realIrrigationRegistered)){ 
+                            $newVolume =$this->volumeCreate($realIrrigation);
+                            $newRealIrrigation =$this->realIrrigationCreate($realIrrigation,$zone,$newVolume,$pumpSystem);
+                            $this->info("New Volume, id:".$newVolume->id." / New RealIrrigation, id:".$newRealIrrigation->id);
+                        }else{
+                            $realIrrigationUpdated =$this->realIrrigationUpdate($realIrrigation,$realIrrigationRegistered,$zone,$pumpSystem);
+                            $this->info("Real Irrigation updated:".$realIrrigationUpdated->id);
+                        }   
                     }
+                    
                 }                    
             }
             $this->info("Success: Clone real irrigations and volumes data by zone");
