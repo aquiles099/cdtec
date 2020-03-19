@@ -70,7 +70,7 @@ class CloneByZoneMeasures extends Command
             'id_wiseconn' => $measure->id
         ]); 
     }
-    protected function measureUpdate($measure,$measureRegistered){
+    protected function measureUpdate($measure,$measureRegistered,$farm,$zone,$node){
         $measureRegistered->name=isset($measure->name)?$measure->name:null;
         $measureRegistered->unit=isset($measure->unit)?$measure->unit:null;
         $measureRegistered->lastData=isset($measure->lastData)?$measure->lastData:null;
@@ -79,6 +79,9 @@ class CloneByZoneMeasures extends Command
         $measureRegistered->sensorDepth=isset($measure->sensorDepth)?$measure->sensorDepth:null;
         $measureRegistered->depthUnit=isset($measure->depthUnit)?$measure->depthUnit:null;
         $measureRegistered->sensorType=isset($measure->sensorType)?$measure->sensorType:null;
+        $measureRegistered->id_farm=isset($farm->id)?$farm->id:null;
+        $measureRegistered->id_zone=isset($zone->id)?$zone->id:null;
+        $measureRegistered->id_node=isset($node->id)?$node->id:null;
         $measureRegistered->update();
         return $measureRegistered; 
     }
@@ -109,14 +112,16 @@ class CloneByZoneMeasures extends Command
                     if(isset($measure->zoneId)){
                         $zone=Zone::where("id_wiseconn",$measure->zoneId)->first(); 
                     }
-                    $measureRegistered=Measure::where("id_wiseconn",$measure->id)->where("id_zone",$zone->id)->first();
-                    if(is_null($measureRegistered)){
-                        $newPhysicalConnection =$this->physicalConnectionCreate($measure);
-                        $newmeasure =$this->measureCreate($measure,$farm,$zone,$node,$newPhysicalConnection);
-                        $this->info("New Measure id:".$newmeasure->id." / New PhysicalConnection id:".$newPhysicalConnection->id);
-                    }else{
-                        $measureUpdated =$this->measureUpdate($measure,$measureRegistered);
-                        $this->info("Measure updated:".$measureUpdated->id);
+                    if(!is_null($farm)&&!is_null($zone)){
+                        $measureRegistered=Measure::where("id_wiseconn",$measure->id)->where("id_farm",$farm->id)->where("id_zone",$zone->id)->first();
+                        if(is_null($measureRegistered)){
+                            $newPhysicalConnection =$this->physicalConnectionCreate($measure);
+                            $newmeasure =$this->measureCreate($measure,$farm,$zone,$node,$newPhysicalConnection);
+                            $this->info("New Measure id:".$newmeasure->id." / New PhysicalConnection id:".$newPhysicalConnection->id);
+                        }else{
+                            $measureUpdated =$this->measureUpdate($measure,$measureRegistered,$farm,$zone,$node);
+                            $this->info("Measure updated:".$measureUpdated->id);
+                        }
                     }
                 }
             }
