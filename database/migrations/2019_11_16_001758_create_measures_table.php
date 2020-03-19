@@ -16,8 +16,8 @@ class CreateMeasuresTable extends Migration
         Schema::create('measures', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->text('name');
-            $table->string('unit', 45)->nullable();
-            $table->integer('lastData')->nullable();
+            $table->string('unit', 45)->nullable(); 
+            $table->double('lastData', 15,10)->nullable();
             $table->timestamp('lastDataDate')->nullable();
             $table->string('monitoringTime', 45)->nullable();
             $table->string('sensorDepth', 45)->nullable();

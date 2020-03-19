@@ -70,6 +70,18 @@ class CloneByZoneMeasures extends Command
             'id_wiseconn' => $measure->id
         ]); 
     }
+    protected function measureUpdate($measure,$measureRegistered){
+        $measureRegistered->name=isset($measure->name)?$measure->name:null;
+        $measureRegistered->unit=isset($measure->unit)?$measure->unit:null;
+        $measureRegistered->lastData=isset($measure->lastData)?$measure->lastData:null;
+        $measureRegistered->lastDataDate=isset($measure->lastDataDate)?(Carbon::parse($measure->lastDataDate)):null;
+        $measureRegistered->monitoringTime=isset($measure->monitoringTime)?$measure->monitoringTime:null;
+        $measureRegistered->sensorDepth=isset($measure->sensorDepth)?$measure->sensorDepth:null;
+        $measureRegistered->depthUnit=isset($measure->depthUnit)?$measure->depthUnit:null;
+        $measureRegistered->sensorType=isset($measure->sensorType)?$measure->sensorType:null;
+        $measureRegistered->update();
+        return $measureRegistered; 
+    }
     /**
      * Execute the console command.
      *
@@ -97,11 +109,15 @@ class CloneByZoneMeasures extends Command
                     if(isset($measure->zoneId)){
                         $zone=Zone::where("id_wiseconn",$measure->zoneId)->first(); 
                     }
-                    if(is_null(Measure::where("id_wiseconn",$measure->id)->where("id_zone",$zone->id)->first())){
+                    $measureRegistered=Measure::where("id_wiseconn",$measure->id)->where("id_zone",$zone->id)->first();
+                    if(is_null($measureRegistered)){
                         $newPhysicalConnection =$this->physicalConnectionCreate($measure);
                         $newmeasure =$this->measureCreate($measure,$farm,$zone,$node,$newPhysicalConnection);
                         $this->info("New Measure id:".$newmeasure->id." / New PhysicalConnection id:".$newPhysicalConnection->id);
-                    }  
+                    }else{
+                        $measureUpdated =$this->measureUpdate($measure,$measureRegistered);
+                        $this->info("Measure updated:".$measureUpdated->id);
+                    }
                 }
             }
             $this->info("Success: Clone measures data by zone by zone");
