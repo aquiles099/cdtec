@@ -67,7 +67,7 @@ class CloneByZoneRealIrrigationVolumes extends Command
         $realIrrigationRegistered->endTime=isset($realIrrigation->endTime)?$realIrrigation->endTime:null;
         $realIrrigationRegistered->status=isset($realIrrigation->status)?$realIrrigation->status:null;
         $realIrrigationRegistered->id_pump_system=isset($pumpSystem->id)?$pumpSystem->id:null;
-        $realIrrigationRegistered->id_zone=isset($zone->id)?$zone->id):null;
+        $realIrrigationRegistered->id_zone=isset($zone->id)?($zone->id):null;
         $realIrrigationRegistered->update();
         return $realIrrigationRegistered; 
     }
