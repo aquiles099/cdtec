@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use GuzzleHttp\Client;
 use Carbon\Carbon;
 use App\Zone;
 use App\Farm;
@@ -286,20 +287,42 @@ class ZoneController extends Controller
             ], 500);
         }
     }
+    protected function getWiseconnElements($zone,$initTime,$endTime){
+        $client = new Client([
+            'base_uri' => 'https://apiv2.wiseconn.com',
+            'timeout'  => 100.0,
+        ]);
+        $realIrrigationsResponse = $client->request('GET','/zones/'.$zone->id_wiseconn.'/realIrrigations/?endTime='.$endTime.'&initTime='.$initTime, [
+            'headers' => [
+                'api_key' => '9Ev6ftyEbHhylMoKFaok',
+                'Accept'     => 'application/json'
+            ]
+        ]);
+        return json_decode($realIrrigationsResponse->getBody()->getContents());
+    }
     public function realIrrigations(Request $request,$id){
         try {
             $initTime=(Carbon::parse($request->input("initTime")))->format('Y-m-d');
             $endTime=(Carbon::parse($request->input("endTime")))->format('Y-m-d');
-            $elements = RealIrrigation::where("id_zone",$id)
+            $zone=Zone::findOrFail($id);
+            $wiseconnElements = $this->getWiseconnElements($zone,$initTime,$endTime);
+            foreach ($wiseconnElements as $key => $element) {
+                $realIrrigation=RealIrrigation::where("id_wiseconn",$element->id)->where("id_zone",$zone->id)->first();
+                if($realIrrigation){
+                    if($realIrrigation->status!=$element->status){
+                        $realIrrigation->status=$element->status;
+                        $realIrrigation->update();
+                    }
+                }
+            }
+            $localElements = RealIrrigation::where("id_zone",$zone->id)
                 ->where("initTime",">=",$initTime)
                 ->where(function ($q) use ($endTime) {
                     $q->where("endTime","<=",$endTime)->orWhere("status", "Running");
                 })->with("pumpSystem")->with("irrigations")->with("farm")->get();
             $response = [
                 'message'=> 'items found successfully',
-                'data' => $elements,
-                'initTime'=>$initTime,
-                'endTime'=>$endTime
+                'data' => $localElements
             ];
             return response()->json($response, 200);
         } catch (\Exception $e) {
