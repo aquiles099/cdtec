@@ -313,6 +313,16 @@ class ZoneController extends Controller
                         $realIrrigation->status=$element->status;
                         $realIrrigation->update();
                     }
+                }else{
+                    $pumpSystem=Pump_system::where("id_wiseconn",$element->pumpSystemId)->first();
+                    RealIrrigation::create([
+                        'initTime' => isset($element->initTime)?$element->initTime:null,
+                        'endTime' =>isset($element->endTime)?$element->endTime:null,
+                        'status'=> isset($element->status)?$element->status:null,
+                        'id_pump_system'=> isset($pumpSystem->id)?$pumpSystem->id:null,
+                        'id_zone'=> isset($zone->id)?$zone->id:null,
+                        'id_wiseconn' => $element->id
+                    ]);  
                 }
             }
             $localElements = RealIrrigation::where("id_zone",$zone->id)
