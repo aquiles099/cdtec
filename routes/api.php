@@ -85,6 +85,7 @@ Route::group(['middleware' => ['cors'] ], function() {
 	Route::post('polygons/store', 'PolygonController@store');
 	// users
 	Route::post('users/store', 'UserController@store');
+	Route::post('users/update/{id}', 'UserController@update');
 });
 
 // types

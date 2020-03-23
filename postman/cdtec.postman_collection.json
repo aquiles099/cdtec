@@ -998,7 +998,7 @@
 				},
 				{
 					"key": "email",
-					"value": "email@test.com",
+					"value": "email1@test.com",
 					"description": "",
 					"type": "text",
 					"enabled": true
@@ -1033,7 +1033,7 @@
 				},
 				{
 					"key": "id_role",
-					"value": "1",
+					"value": "2",
 					"description": "",
 					"type": "text",
 					"enabled": true
