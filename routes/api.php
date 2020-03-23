@@ -83,11 +83,10 @@ Route::group(['middleware' => ['cors'] ], function() {
 	Route::post('volumes/store', 'VolumeController@store');
 	// polygons
 	Route::post('polygons/store', 'PolygonController@store');
-
+	// users
+	Route::post('users/store', 'UserController@store');
 });
 
-// test
-Route::get('test', 'Controller@test');
 // types
 Route::post('types/store', 'TypeController@store');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
