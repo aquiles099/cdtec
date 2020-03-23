@@ -233,7 +233,8 @@
 			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
 			"folder": null,
 			"order": [
-				"61965cec-ffbe-4898-ba98-0ac9de194185"
+				"61965cec-ffbe-4898-ba98-0ac9de194185",
+				"59acf808-facd-436a-9a7a-176128a3aeff"
 			],
 			"folders_order": []
 		},
@@ -959,6 +960,94 @@
 			"auth": null,
 			"events": [],
 			"folder": "ae7a034e-c575-41df-b8f3-7282265345c3",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "59acf808-facd-436a-9a7a-176128a3aeff",
+			"name": "http://localhost:8000/api/users/update/1",
+			"url": "http://localhost:8000/api/users/update/1",
+			"description": "",
+			"data": [
+				{
+					"key": "name",
+					"value": "admin1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "last_name",
+					"value": "admin1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "business",
+					"value": "business",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "office",
+					"value": "office",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "email",
+					"value": "email1@test.com",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "password",
+					"value": "password",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "region",
+					"value": "region",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "city",
+					"value": "city",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "phone",
+					"value": "phone",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_role",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "f3c1edad-3375-437d-a5e0-44aa8861829f",
 			"headers": "",
 			"pathVariables": {}
 		},
