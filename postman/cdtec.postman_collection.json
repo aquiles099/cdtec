@@ -22,7 +22,8 @@
 		"6aea5625-a3cc-4550-9d54-edc2366502d3",
 		"c8670270-95c2-4e8d-94c9-df8c5f473ce3",
 		"6f331861-e93b-4cee-bb91-286e0ae49e5d",
-		"f3c1edad-3375-437d-a5e0-44aa8861829f"
+		"f3c1edad-3375-437d-a5e0-44aa8861829f",
+		"e34344bf-28f4-4bd8-ad36-70687c22cfb8"
 	],
 	"folders": [
 		{
@@ -90,6 +91,23 @@
 				"98f7afe0-8fc3-45e5-86a8-0b1080d32302",
 				"2bc2ab25-0e98-401c-a396-ed7474c2819e",
 				"69036407-ba43-4580-9dba-00e186e2293f"
+			],
+			"folders_order": []
+		},
+		{
+			"id": "e34344bf-28f4-4bd8-ad36-70687c22cfb8",
+			"name": "farmscamps",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+			"folder": null,
+			"order": [
+				"166e7671-0cb7-4a2c-95e1-43e1f93602b4",
+				"b3d15a4a-f747-49dc-9cae-fe6fa666aa58",
+				"6cb1e8ed-2ebe-41e0-8b0c-b4d8f28bd1f7",
+				"20b48012-ead1-4422-9b12-9b5b009dd1dc",
+				"5ef17df9-bf27-40ea-8d7d-313eac589cd9"
 			],
 			"folders_order": []
 		},
@@ -333,6 +351,23 @@
 			"pathVariables": {}
 		},
 		{
+			"id": "166e7671-0cb7-4a2c-95e1-43e1f93602b4",
+			"name": "http://localhost:8000/api/users",
+			"url": "http://localhost:8000/api/farmscamps",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "e34344bf-28f4-4bd8-ad36-70687c22cfb8",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
 			"id": "1b768820-d632-46ce-a037-0ac61ac44682",
 			"name": "hydraulics por id_farm",
 			"url": "http://localhost:8000/api/farms/1/hydraulics",
@@ -346,6 +381,38 @@
 			"auth": null,
 			"events": [],
 			"folder": "00003817-e872-41d6-a94e-75dd109cf644",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "20b48012-ead1-4422-9b12-9b5b009dd1dc",
+			"name": "http://localhost:8000/api/farmscamps/update/1",
+			"url": "http://localhost:8000/api/farmscamps/update/2",
+			"description": "",
+			"data": [
+				{
+					"key": "id_farm",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_user",
+					"value": "2",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "e34344bf-28f4-4bd8-ad36-70687c22cfb8",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -1072,6 +1139,23 @@
 			"pathVariables": {}
 		},
 		{
+			"id": "5ef17df9-bf27-40ea-8d7d-313eac589cd9",
+			"name": "http://localhost:8000/api/farmscamps/delete/2",
+			"url": "http://localhost:8000/api/farmscamps/delete/2",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "DELETE",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "e34344bf-28f4-4bd8-ad36-70687c22cfb8",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
 			"id": "61965cec-ffbe-4898-ba98-0ac9de194185",
 			"name": "http://localhost:8000/api/user/create",
 			"url": "http://localhost:8000/api/users/store",
@@ -1107,7 +1191,7 @@
 				},
 				{
 					"key": "email",
-					"value": "email1@test.com",
+					"value": "email2@test.com",
 					"description": "",
 					"type": "text",
 					"enabled": true
@@ -1142,7 +1226,7 @@
 				},
 				{
 					"key": "id_role",
-					"value": "2",
+					"value": "1",
 					"description": "",
 					"type": "text",
 					"enabled": true
@@ -1215,6 +1299,38 @@
 			"auth": null,
 			"events": [],
 			"folder": "5950fe62-8c5c-4949-8c56-a37bed3ad283",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "6cb1e8ed-2ebe-41e0-8b0c-b4d8f28bd1f7",
+			"name": "http://localhost:8000/api/farmscamps/store",
+			"url": "http://localhost:8000/api/farmscamps/store",
+			"description": "",
+			"data": [
+				{
+					"key": "id_farm",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "id_user",
+					"value": "1",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "e34344bf-28f4-4bd8-ad36-70687c22cfb8",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -2096,6 +2212,23 @@
 			"auth": null,
 			"events": [],
 			"folder": "77e5b831-c56a-4828-8c22-4cc48cf220c0",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "b3d15a4a-f747-49dc-9cae-fe6fa666aa58",
+			"name": "http://localhost:8000/api/farmscamps/get/1",
+			"url": "http://localhost:8000/api/farmscamps/get/1",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "e34344bf-28f4-4bd8-ad36-70687c22cfb8",
 			"headers": "",
 			"pathVariables": {}
 		},

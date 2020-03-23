@@ -199,11 +199,11 @@ class UserController extends Controller
             if(is_null($element)){
                 return response()->json(["message"=>"non-existent User"],404);
             }
-            $element->delete();
             $response = [
                 'message'=> 'item successfully deleted',
                 'data' => $element,
             ];
+            $element->delete();
             return response()->json($response, 200);
         } catch (\Exception $e) {
             return response()->json([
