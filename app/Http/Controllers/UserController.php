@@ -8,6 +8,43 @@ use App\User;
 use App\Role;
 class UserController extends Controller
 {
+    public function all(){
+        try {
+            $response = [
+                'message'=> 'User list',
+                'data' => User::all(),
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
+    public function get($id){
+        try {            
+            $element = User::find($id);
+            if(is_null($element)){
+                return response()->json([
+                    "message"=>"non-existent item",
+                    "data"=>$element
+                ],404);
+            }
+            $response = [
+                'message'=> 'item found successfully',
+                'data' => $element,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
             'name'             => 'required|string|max:45',
@@ -151,6 +188,26 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Ha ocurrido un error al tratar de guardar los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
+    public function delete($id){
+        try {
+            $element = User::find($id);
+            if(is_null($element)){
+                return response()->json(["message"=>"non-existent User"],404);
+            }
+            $element->delete();
+            $response = [
+                'message'=> 'item successfully deleted',
+                'data' => $element,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de eliminar los datos.',
                 'error' => $e->getMessage(),
                 'linea' => $e->getLine()
             ], 500);

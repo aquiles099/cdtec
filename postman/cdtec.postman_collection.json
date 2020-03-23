@@ -234,7 +234,10 @@
 			"folder": null,
 			"order": [
 				"61965cec-ffbe-4898-ba98-0ac9de194185",
-				"59acf808-facd-436a-9a7a-176128a3aeff"
+				"59acf808-facd-436a-9a7a-176128a3aeff",
+				"02b8f69b-4f43-482b-af39-484b11263118",
+				"9ba2a942-8e95-4194-a505-b6a36484285e",
+				"bb0d1257-e223-4f13-abce-c4138a3908b0"
 			],
 			"folders_order": []
 		},
@@ -309,6 +312,23 @@
 			"auth": null,
 			"events": [],
 			"folder": "5950fe62-8c5c-4949-8c56-a37bed3ad283",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "02b8f69b-4f43-482b-af39-484b11263118",
+			"name": "http://localhost:8000/api/users",
+			"url": "http://localhost:8000/api/users",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "f3c1edad-3375-437d-a5e0-44aa8861829f",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -1867,6 +1887,23 @@
 			"pathVariables": {}
 		},
 		{
+			"id": "9ba2a942-8e95-4194-a505-b6a36484285e",
+			"name": "http://localhost:8000/api/users/get/1",
+			"url": "http://localhost:8000/api/users/get/1",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "f3c1edad-3375-437d-a5e0-44aa8861829f",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
 			"id": "9be7124c-5c93-4c98-8c1b-1ce5478ec71c",
 			"name": "registrar",
 			"url": "http://localhost:8000/api/physicalconnection/store ",
@@ -2059,6 +2096,23 @@
 			"auth": null,
 			"events": [],
 			"folder": "77e5b831-c56a-4828-8c22-4cc48cf220c0",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "bb0d1257-e223-4f13-abce-c4138a3908b0",
+			"name": "http://localhost:8000/api/users/delete/1",
+			"url": "http://localhost:8000/api/users/delete/1",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "DELETE",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "f3c1edad-3375-437d-a5e0-44aa8861829f",
 			"headers": "",
 			"pathVariables": {}
 		},
