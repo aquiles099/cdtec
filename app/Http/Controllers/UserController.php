@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\User;
+use App\Role;
 class UserController extends Controller
 {
     public function store(Request $request){
@@ -53,6 +54,10 @@ class UserController extends Controller
             return response()->json($validator->errors(), 400);
         }
         try{
+        	$role = Role::find($request->get('id_role'));
+	        if(is_null($role)){
+	            return response()->json(["message"=>"non-existent role"],404);
+	        }
             $element = User::create([
                 'name'      => $request->get('name'),
                 'last_name' => $request->get('last_name'),
