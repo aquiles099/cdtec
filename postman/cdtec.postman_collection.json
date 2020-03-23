@@ -23,7 +23,8 @@
 		"c8670270-95c2-4e8d-94c9-df8c5f473ce3",
 		"6f331861-e93b-4cee-bb91-286e0ae49e5d",
 		"f3c1edad-3375-437d-a5e0-44aa8861829f",
-		"e34344bf-28f4-4bd8-ad36-70687c22cfb8"
+		"e34344bf-28f4-4bd8-ad36-70687c22cfb8",
+		"672af1a3-733b-4fbf-8dae-a36b5276fa4d"
 	],
 	"folders": [
 		{
@@ -226,6 +227,22 @@
 			"order": [
 				"69155b3a-15f4-41d5-868c-5bab92fb4484",
 				"d7180334-e697-47fd-bc0a-101dd85d76f3"
+			],
+			"folders_order": []
+		},
+		{
+			"id": "672af1a3-733b-4fbf-8dae-a36b5276fa4d",
+			"name": "role",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"collection": "a39ee5a6-442b-4be6-b07f-5be5783865eb",
+			"folder": null,
+			"order": [
+				"7c02f4ff-793e-462c-a9b1-224e722a68ea",
+				"55e79393-5350-445b-b679-eca75a9b451f",
+				"a7edb316-da94-4733-bbf6-13b6a9d9a413",
+				"3fd1dfbb-023a-4cbf-99b7-5c24f2fc86b1"
 			],
 			"folders_order": []
 		},
@@ -830,6 +847,23 @@
 			"pathVariables": {}
 		},
 		{
+			"id": "3fd1dfbb-023a-4cbf-99b7-5c24f2fc86b1",
+			"name": "http://localhost:8000/api/roles/delete/1",
+			"url": "http://localhost:8000/api/roles/delete/1",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "DELETE",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "672af1a3-733b-4fbf-8dae-a36b5276fa4d",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
 			"id": "40d89136-e777-4f5a-b9ce-387174f4b223",
 			"name": "registrar",
 			"url": "http://localhost:8000/api/deal/create",
@@ -1030,6 +1064,38 @@
 			"auth": null,
 			"events": [],
 			"folder": "c8670270-95c2-4e8d-94c9-df8c5f473ce3",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "55e79393-5350-445b-b679-eca75a9b451f",
+			"name": "http://localhost:8000/api/roles/store",
+			"url": "http://localhost:8000/api/roles/store",
+			"description": "",
+			"data": [
+				{
+					"key": "code",
+					"value": "code",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "description",
+					"value": "client",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "672af1a3-733b-4fbf-8dae-a36b5276fa4d",
 			"headers": "",
 			"pathVariables": {}
 		},
@@ -1643,6 +1709,23 @@
 			"pathVariables": {}
 		},
 		{
+			"id": "7c02f4ff-793e-462c-a9b1-224e722a68ea",
+			"name": "http://localhost:8000/api/roles",
+			"url": "http://localhost:8000/api/roles",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "672af1a3-733b-4fbf-8dae-a36b5276fa4d",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
 			"id": "7f6bb725-cd72-4864-80ea-b10cc474c32d",
 			"name": "register southwest",
 			"url": "http://localhost:8000/api/bound/southwest/store",
@@ -2101,6 +2184,38 @@
 			"auth": null,
 			"events": [],
 			"folder": "6f331861-e93b-4cee-bb91-286e0ae49e5d",
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "a7edb316-da94-4733-bbf6-13b6a9d9a413",
+			"name": "http://localhost:8000/api/roles/update/2",
+			"url": "http://localhost:8000/api/roles/update/1",
+			"description": "",
+			"data": [
+				{
+					"key": "code",
+					"value": "client",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "description",
+					"value": "client",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "672af1a3-733b-4fbf-8dae-a36b5276fa4d",
 			"headers": "",
 			"pathVariables": {}
 		},
