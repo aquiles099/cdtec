@@ -5,7 +5,8 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
+use App\FarmsUsers;
+use App\Role;
 class User extends Authenticatable
 {
     use Notifiable;
@@ -45,4 +46,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function role()
+    {
+        return $this->hasOne(Role::class,'id','id_role');
+    }
 }
