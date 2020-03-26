@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\User;
 use App\Role;
@@ -108,7 +109,7 @@ class UserController extends Controller
             $user->email=$request->get('email');
             $user->business=$request->get('business');
             $user->office=$request->get('office');
-            $user->password=$request->get('password');
+            $user->password= Hash::make($request->get('password'));
             $user->region=$request->get('region');
             $user->city=$request->get('city');
             $user->phone=$request->get('phone');
@@ -221,6 +222,7 @@ class UserController extends Controller
                 return response()->json(["message"=>$messages],404);
             }
             $user->fill($request->all());
+            $user->password= Hash::make($request->get('password'));
             $response = [
                 'message'=> 'item updated successfully',
                 'data' => $user,
@@ -257,7 +259,9 @@ class UserController extends Controller
     }
     public function getFarms($id){
         try {
-            $elements = FarmsUsers::where("id_user",$id)->get();
+            $elements = FarmsUsers::where("id_user",$id)->select('farms.*','farms_users.*')
+                ->join('farms', 'farms_users.id_farm', '=', 'farms.id')
+                ->get();
             $response = [
                 'message'=> 'items found successfully',
                 'data' => $elements,

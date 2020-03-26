@@ -103,11 +103,11 @@ Route::group(['middleware' => ['cors'] ], function() {
 	Route::get('roles/get/{id}', 'RoleController@get');
 	Route::post('roles/store', 'RoleController@store');
 	Route::post('roles/update/{id}', 'RoleController@update');
-	Route::delete('roles/delete/{id}', 'RoleController@delete');		
+	Route::delete('roles/delete/{id}', 'RoleController@delete');
+	// types
+	Route::post('types/store', 'TypeController@store');	
 });
-
-// types
-Route::post('types/store', 'TypeController@store');
+Route::post('auth/login', 'Api\AuthController@login');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Role;
-class RolesTableSeeders extends Seeder
+class RolesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +14,10 @@ class RolesTableSeeders extends Seeder
         $role= new Role();
         $role->code="admin";
         $role->description="admin";
+        $role->save();
+        $role= new Role();
+        $role->code="client";
+        $role->description="client";
         $role->save();
     }
 }
