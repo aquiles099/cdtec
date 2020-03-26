@@ -25,7 +25,7 @@ class UserController extends Controller
         }
     }
     public function get($id){
-        try {            
+        try {
             $element = User::with("role")->find($id);
             if(is_null($element)){
                 return response()->json([
@@ -47,9 +47,7 @@ class UserController extends Controller
         }
     }
     public function store(Request $request){
-        $userData=$request->get("user_data");
-        $farmsData=$request->get("farms_data");
-        $validator = Validator::make($userData, [
+        $validator = Validator::make($request->all(), [
             'name'                  => 'required|string|max:45',
             'last_name'             => 'required|string|max:45',
             'email'                 => 'required|email|max:45|unique:users,email',
@@ -100,28 +98,26 @@ class UserController extends Controller
             return response()->json($validator->errors(), 400);
         }
         try{
-        	$role = Role::find($userData['id_role']);
+        	$role = Role::find($request->get('id_role'));
 	        if(is_null($role)){
 	            return response()->json(["message"=>"non-existent role"],404);
 	        }
             $user= new User();
-            $user->name=isset($userData['name'])?$userData['name']:null;
-            $user->last_name=isset($userData['last_name'])?$userData['last_name']:null;
-            $user->email=isset($userData['email'])?$userData['email']:null;
-            $user->business=isset($userData['business'])?$userData['business']:null;
-            $user->office=isset($userData['office'])?$userData['office']:null;
-            $user->password=isset($userData['password'])?$userData['password']:null;
-            $user->region=isset($userData['region'])?$userData['region']:null;
-            $user->city=isset($userData['city'])?$userData['city']:null;
-            $user->phone=isset($userData['phone'])?$userData['phone']:null;
-            $user->id_role=isset($userData['id_role'])?$userData['id_role']:null;
+            $user->name=$request->get('name');
+            $user->last_name=$request->get('last_name');
+            $user->email=$request->get('email');
+            $user->business=$request->get('business');
+            $user->office=$request->get('office');
+            $user->password=$request->get('password');
+            $user->region=$request->get('region');
+            $user->city=$request->get('city');
+            $user->phone=$request->get('phone');
+            $user->id_role=$request->get('id_role');
             $user->save();
             $response = [
                 'message'=> 'item successfully registered',
                 'data' => $user,
-                'farmsData' => $farmsData,
-            ];
-            $this->registerFarmsUsers($farmsData,$user);            
+            ];          
             return response()->json($response, 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -131,20 +127,37 @@ class UserController extends Controller
             ], 500);
         }
     }
-    protected function registerFarmsUsers($farmsData,$user){
-        if(isset($farmsData)){
-            foreach ($farmsData as $key => $value) {
+    protected function registerFarms(Request $request,$id){
+        try{            
+            $user = User::with("role")->find($id);
+            FarmsUsers::where("id_user",$user->id)->delete();
+            if(is_null($user)){
+                return response()->json([
+                    "message"=>"non-existent item",
+                    "data"=>$user
+                ],404);
+            }
+            foreach ($request->all() as $key => $value) {
                 $farmUser= new FarmsUsers();
                 $farmUser["id_user"]=$user["id"];
                 $farmUser["id_farm"]=$value["id"];
                 $farmUser->save();
             }
+            $response = [
+                'message'=> 'items registered successfully',
+                'data' => $user,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de guardar los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
         }
     }
     public function update(Request $request,$id){
-        $userData=$request->get("user_data");
-        $farmsData=$request->get("farms_data");
-        $validator = Validator::make($userData, [
+        $validator = Validator::make($request->all(), [
             'name'                  => 'required|string|max:45',
             'last_name'             => 'required|string|max:45',
             'email'                 => 'required|email|max:45|unique:users,email,'.$id,
@@ -195,7 +208,7 @@ class UserController extends Controller
             return response()->json($validator->errors(), 400);
         }
         try {
-            $role = Role::find($userData['id_role']);
+            $role = Role::find($request->get('id_role'));
 	        $user= User::find($id);
 	        $messages=[];
             if(is_null($role)||is_null($user)){
@@ -207,14 +220,12 @@ class UserController extends Controller
                 }
                 return response()->json(["message"=>$messages],404);
             }
-            $user->fill($userData);
+            $user->fill($request->all());
             $response = [
                 'message'=> 'item updated successfully',
                 'data' => $user,
             ];
             $user->update();
-            FarmsUsers::where("id_user",$user->id)->delete();
-            $this->registerFarmsUsers($farmsData,$user);  
             return response()->json($response, 200);
         } catch (\Exception $e) {
             return response()->json([
