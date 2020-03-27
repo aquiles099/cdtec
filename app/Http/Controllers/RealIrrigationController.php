@@ -44,16 +44,16 @@ class RealIrrigationController extends Controller
             $messages=[];
             if(is_null($farm)||is_null($irrigation)||is_null($zone)||is_null($pumpSystem)){
                 if(is_null($farm)){
-                array_push($messages,"non-existent farm");
+                array_push($messages,'Campo no existente');
                 }
                 if(is_null($zone)){
-                array_push($messages,"non-existent zone");
+                array_push($messages,'Zona no existente');
                 }
                 if(is_null($irrigation)){
-                array_push($messages,"non-existent irrigation");
+                array_push($messages,'Irrigation no existente');
                 }
                 if(is_null($pumpSystem)){
-                array_push($messages,"non-existent Pump System");
+                array_push($messages,'Pump System no existente');
                 }
                 return response()->json(["message"=>$messages],404);
             }
@@ -67,7 +67,7 @@ class RealIrrigationController extends Controller
                 'id_pump_system' => $request->get('id_pump_system'),                                
             ]);
             $response = [
-                'message'=> 'item successfully registered',
+                'message'=> 'RealIrrigation registrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);
@@ -84,12 +84,12 @@ class RealIrrigationController extends Controller
             $element = RealIrrigation::find($id);
             if(is_null($element)){
                 return response()->json([
-                    "message"=>"non-existent item",
+                    "message"=>"RealIrrigation no existente",
                     "data"=>$element
                 ],404);
             }
             $response = [
-                'message'=> 'item found successfully',
+                'message'=> 'RealIrrigation encontrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);

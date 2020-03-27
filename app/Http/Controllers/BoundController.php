@@ -30,7 +30,7 @@ class BoundController extends Controller
                 'lng' => $request->get('lng'),
             ]);
             $response = [
-                'message'=> 'item successfully registered',
+                'message'=> 'SouthWestBound registrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);
@@ -63,7 +63,7 @@ class BoundController extends Controller
                 'lng' => $request->get('lng'),
             ]);
             $response = [
-                'message'=> 'item successfully registered',
+                'message'=> 'NorthEastBound registrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);

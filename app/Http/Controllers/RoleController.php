@@ -10,7 +10,7 @@ class RoleController extends Controller
     public function all(){
         try {
             $response = [
-                'message'=> 'Role list',
+                'message'=> 'Lista de roles',
                 'data' => Role::all(),
             ];
             return response()->json($response, 200);
@@ -27,12 +27,12 @@ class RoleController extends Controller
             $element = Role::find($id);
             if(is_null($element)){
                 return response()->json([
-                    "message"=>"non-existent item",
-                    "data"=>$element
+                    'message'=>'Role no existente',
+                    'data'=>$element
                 ],404);
             }
             $response = [
-                'message'=> 'item found successfully',
+                'message'=> 'Role encontrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);
@@ -64,7 +64,7 @@ class RoleController extends Controller
 	            'description' => $request->get('description'),         
 	        ]);
 	        $response = [
-	            'message'=> 'item successfully registered',
+	            'message'=> 'Role registrado satisfactoriamente',
 	            'data' => $element,
 	        ];
 	        return response()->json($response, 200);            
@@ -93,11 +93,11 @@ class RoleController extends Controller
         try {
         	$role= Role::find($id);
             if(is_null($role)){
-                return response()->json(["message"=>"non-existent role"],404);
+                return response()->json(['message'=>'Role no existente'],404);
             }
             $role->fill($request->all());
            	$response = [
-           	    'message'=> 'item updated successfully',
+           	    'message'=> 'Role actualizado satisfactoriamente',
            	    'data' => $role,
            	];
            	$role->update();
@@ -114,10 +114,10 @@ class RoleController extends Controller
         try {
             $element = Role::find($id);
             if(is_null($element)){
-                return response()->json(["message"=>"non-existent role"],404);
+                return response()->json(['message'=>'Role no existente'],404);
             }
             $response = [
-                'message'=> 'item successfully deleted',
+                'message'=> 'Role eliminado satisfactoriamente',
                 'data' => $element,
             ];
             $element->delete();

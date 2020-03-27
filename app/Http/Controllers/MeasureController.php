@@ -63,16 +63,16 @@ class MeasureController extends Controller{
             $messages=[];
             if(is_null($node)||is_null($zone)||is_null($farm)||is_null($physicalConnection)){                
                 if(is_null($node)){
-                array_push($messages,"non-existent node");
+                array_push($messages,'Node no existente');
                 }
                 if(is_null($zone)){
-                array_push($messages,"non-existent zone");
+                array_push($messages,'Zona no existente');
                 }
                 if(is_null($farm)){
-                array_push($messages,"non-existent farm");
+                array_push($messages,'Campo no existente');
                 }
                 if(is_null($physicalConnection)){
-                array_push($messages,"non-existent Physical Connection");
+                array_push($messages,'Physical Connection no existente');
                 }
                 return response()->json(["message"=>$messages],404);
             }
@@ -92,7 +92,7 @@ class MeasureController extends Controller{
                 'id_physical_connection' => $request->get('id_physical_connection')
             ]);
             $response = [
-                'message'=> 'item successfully registered',
+                'message'=> 'Measure registrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);
@@ -131,7 +131,7 @@ class MeasureController extends Controller{
         try {            
             $measuresData = MeasureData::where("id_measure",$id)->whereBetween("time",[$request->input('initTime'),$request->input('endTime')])->get();
             $response = [
-                'message'=> 'item found successfully',
+                'message'=> 'MeasureData encontrado satisfactoriamente',
                 'data' => $measuresData,
             ];
             return response()->json($response, 200);

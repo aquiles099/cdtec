@@ -13,7 +13,7 @@ class UserController extends Controller
     public function all(){
         try {
             $response = [
-                'message'=> 'User list',
+                'message'=> 'Lista de usuarios',
                 'data' => User::all(),
             ];
             return response()->json($response, 200);
@@ -30,12 +30,12 @@ class UserController extends Controller
             $element = User::with("role")->find($id);
             if(is_null($element)){
                 return response()->json([
-                    "message"=>"non-existent item",
-                    "data"=>$element
+                    'message'=>'Usuario no existente',
+                    'data'=>$element
                 ],404);
             }
             $response = [
-                'message'=> 'item found successfully',
+                'message'=> 'Usuario encontrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);
@@ -101,7 +101,7 @@ class UserController extends Controller
         try{
         	$role = Role::find($request->get('id_role'));
 	        if(is_null($role)){
-	            return response()->json(["message"=>"non-existent role"],404);
+	            return response()->json(['message'=>'Role no existente'],404);
 	        }
             $user= new User();
             $user->name=$request->get('name');
@@ -116,7 +116,7 @@ class UserController extends Controller
             $user->id_role=$request->get('id_role');
             $user->save();
             $response = [
-                'message'=> 'item successfully registered',
+                'message'=> 'Usuario registrado satisfactoriamente',
                 'data' => $user,
             ];          
             return response()->json($response, 200);
@@ -134,8 +134,8 @@ class UserController extends Controller
             FarmsUsers::where("id_user",$user->id)->delete();
             if(is_null($user)){
                 return response()->json([
-                    "message"=>"non-existent item",
-                    "data"=>$user
+                    'message'=>'Usuario no existente',
+                    'data'=>$user
                 ],404);
             }
             foreach ($request->all() as $key => $value) {
@@ -145,7 +145,7 @@ class UserController extends Controller
                 $farmUser->save();
             }
             $response = [
-                'message'=> 'items registered successfully',
+                'message'=> 'Campos del usuario registrados satisfactoriamente',
                 'data' => $user,
             ];
             return response()->json($response, 200);
@@ -214,17 +214,17 @@ class UserController extends Controller
 	        $messages=[];
             if(is_null($role)||is_null($user)){
                 if(is_null($role)){
-                array_push($messages,"non-existent role");
+                array_push($messages,'Role no existente');
                 }
                 if(is_null($user)){
-                array_push($messages,"non-existent user");
+                array_push($messages,'Usuario no existente');
                 }
-                return response()->json(["message"=>$messages],404);
+                return response()->json(['message'=>$messages],404);
             }
             $user->fill($request->all());
             $user->password= Hash::make($request->get('password'));
             $response = [
-                'message'=> 'item updated successfully',
+                'message'=> 'Usuario actualizado satisfactoriamente',
                 'data' => $user,
             ];
             $user->update();
@@ -241,10 +241,10 @@ class UserController extends Controller
         try {
             $element = User::find($id);
             if(is_null($element)){
-                return response()->json(["message"=>"non-existent User"],404);
+                return response()->json(['message'=>'Usuario no existente'],404);
             }
             $response = [
-                'message'=> 'item successfully deleted',
+                'message'=> 'Usuario eliminado satisfactoriamente',
                 'data' => $element,
             ];
             $element->delete();
@@ -263,7 +263,7 @@ class UserController extends Controller
                 ->join('farms', 'farms_users.id_farm', '=', 'farms.id')
                 ->get();
             $response = [
-                'message'=> 'items found successfully',
+                'message'=> 'Lista de campos de usuario',
                 'data' => $elements,
             ];
             return response()->json($response, 200);

@@ -18,15 +18,11 @@ class PolygonController extends Controller
             return response()->json($validator->errors(), 400);
         }
         try{
-            // $bound = Bound::find($request->get('id_bound'));
-            // if(is_null($bound)){
-            //     return response()->json(["message"=>"non-existent bound"],404);
-            // }
             $element = Polygon::create([
                 'id_bound' => $request->get('id_bound'),
             ]);
             $response = [
-                'message'=> 'item successfully registered',
+                'message'=> 'Polygon registrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);

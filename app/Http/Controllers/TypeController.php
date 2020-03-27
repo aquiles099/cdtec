@@ -31,12 +31,12 @@ class TypeController extends Controller
             $messages=[];
             if(is_null($realIrrigation)||is_null($zone)){                
                 if(is_null($realIrrigation)){
-                array_push($messages,"non-existent real irrigation");
+                array_push($messages,'RealIrrigation no existente');
                 }
                 if(is_null($zone)){
-                array_push($messages,"non-existent zone");
+                array_push($messages,'Zona no existente');
                 }
-                return response()->json(["message"=>$messages],404);
+                return response()->json(['message'=>$messages],404);
             }
             $element = Type::create([
                 'description' => $request->get('description'),
@@ -44,7 +44,7 @@ class TypeController extends Controller
                 'id_zone' => $request->get('id_zone')
             ]);
             $response = [
-                'message'=> 'item successfully registered',
+                'message'=> 'Type registrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);

@@ -34,7 +34,7 @@ class VolumeController extends Controller
                 'type' => $request->get('type'),               
             ]);
             $response = [
-                'message'=> 'item successfully registered',
+                'message'=> 'Volume registrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);

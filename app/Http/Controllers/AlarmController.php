@@ -41,13 +41,13 @@ class AlarmController extends Controller
             $messages=[];
             if(is_null($irrigation)||is_null($zone)||is_null($farm)){                
                 if(is_null($irrigation)){
-                array_push($messages,"non-existent irrigation");
+                array_push($messages,"Irrigation no existente");
                 }
                 if(is_null($zone)){
-                array_push($messages,"non-existent zone");
+                array_push($messages,"Zona no existente");
                 }
                 if(is_null($farm)){
-                array_push($messages,"non-existent farm");
+                array_push($messages,"Campo no existente");
                 }
                 return response()->json(["message"=>$messages],404);
             }
@@ -59,7 +59,7 @@ class AlarmController extends Controller
                 'id_irrigation' => $request->get('id_irrigation'),
             ]);
             $response = [
-                'message'=> 'item successfully registered',
+                'message'=> 'Alarma no existente',
                 'data' => $element,
             ];
             return response()->json($response, 200);

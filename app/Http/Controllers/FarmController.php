@@ -18,7 +18,7 @@ class FarmController extends Controller
     public function all(){
         try {
             $response = [
-                'message'=> 'Farm list',
+                'message'=> 'Lista de campos',
                 'data' => Farm::with("account")->get(),
             ];
             return response()->json($response, 200);
@@ -35,12 +35,12 @@ class FarmController extends Controller
             $element = Farm::with("account")->find($id);
             if(is_null($element)){
                 return response()->json([
-                    "message"=>"non-existent item",
-                    "data"=>$element
+                    'message'=>'Campo no exitente',
+                    'data'=>$element
                 ],404);
             }
             $response = [
-                'message'=> 'item found successfully',
+                'message'=> 'Campo encontrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);
@@ -91,7 +91,7 @@ class FarmController extends Controller
                 'webhook' => $request->get('webhook'),
             ]);
             $response = [
-                'message'=> 'item successfully registered',
+                'message'=> 'Campo registrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);
@@ -122,11 +122,11 @@ class FarmController extends Controller
         try{
             $element = Farm::find($id);
             if(is_null($element)){
-                return response()->json(["message"=>"non-existent farm"],404);
+                return response()->json(["message"=>"Campo no existente"],404);
             }
             $element->fill($request->all());
             $response = [
-                'message'=> 'item successfully updated',
+                'message'=> 'Campo actualizado satisfactoriamente',
                 'data' => $element,
             ];
             $element->update();
@@ -143,7 +143,7 @@ class FarmController extends Controller
         try {            
             $elements = Zone::where("id_farm",$id)->get();
             $response = [
-                'message'=> 'items found successfully',
+                'message'=> 'Lista de zonas',
                 'data' => $elements,
             ];
             return response()->json($response, 200);
@@ -164,7 +164,7 @@ class FarmController extends Controller
                 ->with("physicalConnection")
                 ->get();
             $response = [
-                'message'=> 'items found successfully',
+                'message'=> 'Lista de Hydraulic',
                 'data' => $elements,
             ];
             return response()->json($response, 200);
@@ -180,7 +180,7 @@ class FarmController extends Controller
         try {            
             $elements = Pump_system::where("id_farm",$id)->with("farm")->get();
             $response = [
-                'message'=> 'items found successfully',
+                'message'=> 'Lista de PumpSystem',
                 'data' => $elements,
             ];
             return response()->json($response, 200);
@@ -196,7 +196,7 @@ class FarmController extends Controller
         try {            
             $elements = Measure::where("id_farm",$id)->get();
             $response = [
-                'message'=> 'items found successfully',
+                'message'=> 'Lista de Measure',
                 'data' => $elements,
             ];
             return response()->json($response, 200);
@@ -212,7 +212,7 @@ class FarmController extends Controller
         try {            
             $elements = Node::where("id_farm",$id)->with("farm")->get();
             $response = [
-                'message'=> 'items found successfully',
+                'message'=> 'Lista de Node',
                 'data' => $elements,
             ];
             return response()->json($response, 200);
@@ -228,7 +228,7 @@ class FarmController extends Controller
         try {            
             $elements = Irrigation::where("id_farm",$id)->with("zone")->with("volume")->with("pumpSystem")->get();
             $response = [
-                'message'=> 'items found successfully',
+                'message'=> 'Lista de Irrigation',
                 'data' => $elements,
             ];
             return response()->json($response, 200);
@@ -244,7 +244,7 @@ class FarmController extends Controller
         try {            
             $elements = RealIrrigation::where("id_farm",$id)->with("zone")->with("pumpSystem")->with("irrigations")->get();
             $response = [
-                'message'=> 'items found successfully',
+                'message'=> 'Lista de RealIrrigations',
                 'data' => $elements,
             ];
             return response()->json($response, 200);
@@ -260,7 +260,7 @@ class FarmController extends Controller
         try {
             $elements = Alarm::where("id_farm",$id)->whereBetween('date', [$request->get('initTime'), $request->get('endTime')])->get();
             $response = [
-                'message'=> 'items found successfully',
+                'message'=> 'Lista de Alarm',
                 'data' => $elements,
             ];
             return response()->json($response, 200);
@@ -276,12 +276,12 @@ class FarmController extends Controller
         try {
             $element = Farm::find($id);
             if(is_null($element)){
-                return response()->json(["message"=>"non-existent farm"],404);
+                return response()->json(['message'=>'Campo no existente'],404);
             }
             $element->webhook=$request->get("webhook");
             $element->update();
             $response = [
-                'message'=> 'item successfully updated',
+                'message'=> 'Campo actualizado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);

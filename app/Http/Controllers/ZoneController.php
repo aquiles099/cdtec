@@ -79,12 +79,12 @@ class ZoneController extends Controller
             $messages=[];
             if(is_null($farm)||is_null($pumpSystem)){
                 if(is_null($farm)){
-                array_push($messages,"non-existent farm");
+                array_push($messages,'Campo no existente');
                 }
                 if(is_null($pumpSystem)){
-                array_push($messages,"non-existent Pump System");
+                array_push($messages,'Pump System no existente');
                 }
-                return response()->json(["message"=>$messages],404);
+                return response()->json(['message'=>$messages],404);
             }
             if($request->get('type')){
                 foreach ($request->get('type') as $key => $type) {
@@ -113,7 +113,7 @@ class ZoneController extends Controller
                 'id_pump_system' => $request->get('id_pump_system'),
             ]);
             $response = [
-                'message'=> 'item successfully registered',
+                'message'=> 'Zona registrada satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);
@@ -130,12 +130,12 @@ class ZoneController extends Controller
             $element = Zone::find($id);
             if(is_null($element)){
                 return response()->json([
-                    "message"=>"non-existent item",
-                    "data"=>$element
+                    'message'=>'Zona no existente',
+                    'data'=>$element
                 ],404);
             }
             $response = [
-                'message'=> 'item found successfully',
+                'message'=> 'Zona encontrada satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);
@@ -206,11 +206,11 @@ class ZoneController extends Controller
         try{
             $element = Zone::find($id);
             if(is_null($element)){
-                return response()->json(["message"=>"non-existent zone"],404);
+                return response()->json(['message'=>'Zona no existente'],404);
             }
             $element->fill($request->all());
             $response = [
-                'message'=> 'item successfully updated',
+                'message'=> 'Zona actualizada satisfactoriamente',
                 'data' => $element,
             ];
             $element->update();
@@ -227,7 +227,7 @@ class ZoneController extends Controller
         try {            
             $elements = Measure::where("id_zone",$id)->get();
             $response = [
-                'message'=> 'items found successfully',
+                'message'=> 'Measure encontrado satisfactoriamente',
                 'data' => $elements,
             ];
             return response()->json($response, 200);
@@ -243,7 +243,7 @@ class ZoneController extends Controller
         try {            
             $elements = Irrigation::where("id_zone",$id)->with("farm")->with("volume")->with("pumpSystem")->get();
             $response = [
-                'message'=> 'items found successfully',
+                'message'=> 'Irrigation encontrado satisfactoriamente',
                 'data' => $elements,
             ];
             return response()->json($response, 200);
@@ -259,7 +259,7 @@ class ZoneController extends Controller
         try {            
             $elements = Hydraulic::where("id_zone",$id)->get();
             $response = [
-                'message'=> 'items found successfully',
+                'message'=> 'Lista de Hydraulic',
                 'data' => $elements,
             ];
             return response()->json($response, 200);
@@ -275,7 +275,7 @@ class ZoneController extends Controller
         try {
             $elements = Alarm::where("id_zone",$id)->whereBetween('date', [$request->get('initTime'), $request->get('endTime')])->get();
             $response = [
-                'message'=> 'items found successfully',
+                'message'=> 'Lista de Alarm',
                 'data' => $elements,
             ];
             return response()->json($response, 200);
@@ -331,7 +331,7 @@ class ZoneController extends Controller
                     $q->where("endTime","<=",$endTime)->orWhere("status", "Running");
                 })->with("pumpSystem")->with("irrigations")->with("farm")->get();
             $response = [
-                'message'=> 'items found successfully',
+                'message'=> 'Lista de RealIrrigation',
                 'data' => $localElements
             ];
             return response()->json($response, 200);

@@ -34,7 +34,7 @@ class PhysicalConnectionController extends Controller
                 'type' => $request->get('type'),
             ]);
             $response = [
-                'message'=> 'item successfully registered',
+                'message'=> 'PhysicalConnection registrado satisfactoriamnete',
                 'data' => $element,
             ];
             return response()->json($response, 200);

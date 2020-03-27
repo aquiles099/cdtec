@@ -29,7 +29,7 @@ class PathController extends Controller
             $messages=[];
             if(is_null($zone)){
                 if(is_null($zone)){
-                array_push($messages,"non-existent zone");
+                array_push($messages,'Zona no existente');
                 }
                 return response()->json(["message"=>$messages],404);
             }
@@ -39,7 +39,7 @@ class PathController extends Controller
                 'lng' => $request->get('lng'),
             ]);
             $response = [
-                'message'=> 'item successfully registered',
+                'message'=> 'Path registrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);

@@ -12,7 +12,7 @@ class FarmsUsersController extends Controller
     public function all(){
         try {
             $response = [
-                'message'=> 'FarmsUsers  list',
+                'message'=> 'Lista de campos por usuarios',
                 'data' => FarmsUsers::with('farm')->with('user')->get(),
             ];
             return response()->json($response, 200);
@@ -29,12 +29,12 @@ class FarmsUsersController extends Controller
             $element = FarmsUsers::find($id);
             if(is_null($element)){
                 return response()->json([
-                    "message"=>"non-existent item",
-                    "data"=>$element
+                    'message'=>'No existe el campo del usuario',
+                    'data'=>$element
                 ],404);
             }
             $response = [
-                'message'=> 'item found successfully',
+                'message'=> 'Campo del usuario encontrado',
                 'data' => $element,
             ];
             return response()->json($response, 200);
@@ -65,12 +65,12 @@ class FarmsUsersController extends Controller
 	        $messages=[];
             if(is_null($farm)||is_null($user)){
                 if(is_null($farm)){
-                	array_push($messages,"non-existent farm");
+                	array_push($messages,'Campo no existente');
                 }
                 if(is_null($user)){
-                	array_push($messages,"non-existent user");
+                	array_push($messages,'Usuario no existente');
                 }
-                return response()->json(["message"=>$messages],404);
+                return response()->json(['message'=>$messages],404);
             }
 			if(is_null(FarmsUsers::where('id_farm',$request->get('id_farm'))
         		->where('id_user',$request->get('id_user'))
@@ -80,12 +80,12 @@ class FarmsUsersController extends Controller
 	                'id_user' => $request->get('id_user'),         
 	            ]);
 	            $response = [
-	                'message'=> 'item successfully registered',
+	                'message'=> 'Campo de usuario registrado',
 	                'data' => $element,
 	            ];
 	            return response()->json($response, 200);
             }
-            return response()->json(["message"=>["The field already belongs to the user"]],404);
+            return response()->json(['message'=>['El campo ya pertenece a la usuario']],404);
             
         } catch (\Exception $e) {
             return response()->json([
@@ -115,28 +115,28 @@ class FarmsUsersController extends Controller
 	        $messages=[];
             if(is_null($farm)||is_null($user)||is_null($farmUser)){
                 if(is_null($farm)){
-                	array_push($messages,"non-existent farm");
+                	array_push($messages,'Campo no existente');
                 }
                 if(is_null($user)){
-                	array_push($messages,"non-existent user");
+                	array_push($messages,'Usuario no existente');
                 }
                 if(is_null($farmUser)){
-                	array_push($messages,"non-existent FarmUser");
+                	array_push($messages,'Campo de usuario no existente');
                 }
-                return response()->json(["message"=>$messages],404);
+                return response()->json(['message'=>$messages],404);
             }
 			if(is_null(FarmsUsers::where('id_farm',$request->get('id_farm'))
         		->where('id_user',$request->get('id_user'))
         		->first())){
                 $farmUser->fill($request->all());
             	$response = [
-            	    'message'=> 'item updated successfully',
+            	    'message'=> 'Campo de usuario actualizado',
             	    'data' => $farmUser,
             	];
             	$farmUser->update();
             	return response()->json($response, 200);
             }
-            return response()->json(["message"=>["The field already belongs to the user"]],404);            
+            return response()->json(['message'=>['El campo ya pertenece a la usuario']],404);            
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Ha ocurrido un error al tratar de guardar los datos.',
@@ -149,10 +149,10 @@ class FarmsUsersController extends Controller
         try {
             $element = FarmsUsers::find($id);
             if(is_null($element)){
-                return response()->json(["message"=>"non-existent FarmsUsers"],404);
+                return response()->json(['message'=>'Campo de usuario no existente'],404);
             }
             $response = [
-                'message'=> 'item successfully deleted',
+                'message'=> 'Campo de usuario eliminado satisfactoriamente',
                 'data' => $element,
             ];
             $element->delete();

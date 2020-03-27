@@ -35,7 +35,7 @@ class NodeController extends Controller
         try {
             $farm = Farm::find($request->get('id_farm'));
             if(is_null($farm)){
-                return response()->json(["message"=>"non-existent farm"],404);
+                return response()->json(['message'=>'Campo no existente'],404);
             }
             $element = Node::create([
                 'name' => $request->get('name'),
@@ -45,7 +45,7 @@ class NodeController extends Controller
                 'id_farm' => $request->get('id_farm'),                
             ]);
             $response = [
-                'message'=> 'item successfully registered',
+                'message'=> 'Node registrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);
@@ -61,7 +61,7 @@ class NodeController extends Controller
         try {            
             $elements = Measure::where("id_node",$id)->get();
             $response = [
-                'message'=> 'items found successfully',
+                'message'=> 'Measure encontrado satisfactoriamente',
                 'data' => $elements,
             ];
             return response()->json($response, 200);
@@ -78,12 +78,12 @@ class NodeController extends Controller
             $element = Node::with("farm")->find($id);
             if(is_null($element)){
                 return response()->json([
-                    "message"=>"non-existent item",
-                    "data"=>$element
+                    'message'=>'Node no existente',
+                    'data'=>$element
                 ],404);
             }
             $response = [
-                'message'=> 'item found successfully',
+                'message'=> 'Node enconrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);

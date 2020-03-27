@@ -63,18 +63,18 @@ class IrrigationController extends Controller
             $messages=[];
             if(is_null($farm)||is_null($pumpSystem)||is_null($zone)||is_null($volume)){
                 if(is_null($farm)){
-                array_push($messages,"non-existent farm");
+                array_push($messages,'Campo no existente');
                 }
                 if(is_null($volume)){
-                array_push($messages,"non-existent Volume");
+                array_push($messages,'Volume no existente');
                 }
                 if(is_null($zone)){
-                array_push($messages,"non-existent zone");
+                array_push($messages,'Zona no existente');
                 }
                 if(is_null($pumpSystem)){
-                array_push($messages,"non-existent Pump System");
+                array_push($messages,'PumpSystem no existente');
                 }
-                return response()->json(["message"=>$messages],404);
+                return response()->json(['message'=>$messages],404);
             }
             $element = Irrigation::create([
                 'value' => $request->get('value'),
@@ -91,7 +91,7 @@ class IrrigationController extends Controller
                 'id_farm' => $request->get('id_farm'), 
             ]);
             $response = [
-                'message'=> 'item successfully registered',
+                'message'=> 'Irrigation registrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);
@@ -155,26 +155,26 @@ class IrrigationController extends Controller
             $messages=[];
             if(is_null($farm)||is_null($pumpSystem)||is_null($zone)||is_null($volume)||is_null($element)){
                 if(is_null($farm)){
-                array_push($messages,"non-existent farm");
+                array_push($messages,'Campo no existente');
                 }
                 if(is_null($volume)){
-                array_push($messages,"non-existent Volume");
+                array_push($messages,'Volume no existente');
                 }
                 if(is_null($zone)){
-                array_push($messages,"non-existent zone");
+                array_push($messages,'Zona no existente');
                 }
                 if(is_null($pumpSystem)){
-                array_push($messages,"non-existent Pump System");
+                array_push($messages,'Pump System no existente');
                 }
                 if(is_null($element)){
-                array_push($messages,"non-existent Irrigation");
+                array_push($messages,'Irrigation no existente');
                 }
-                return response()->json(["message"=>$messages],404);
+                return response()->json(['message'=>$messages],404);
             }
             // 
             $element->fill($request->all());
             $response = [
-                'message'=> 'item successfully updated',
+                'message'=> 'Irrigation actualizado satisfactoriamente',
                 'data' => $element,
             ];
             $element->update();
@@ -192,12 +192,12 @@ class IrrigationController extends Controller
             $element = Irrigation::find($id);
             if(is_null($element)){
                 return response()->json([
-                    "message"=>"non-existent item",
-                    "data"=>$element
+                    'message'=>'Irrigation no existente',
+                    'data'=>$element
                 ],404);
             }
             $response = [
-                'message'=> 'item found successfully',
+                'message'=> 'Irrigation encontrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);
@@ -223,12 +223,12 @@ class IrrigationController extends Controller
             $element = Irrigation::find($id);
             // 
             if(is_null($element)){                
-                return response()->json(["message"=>"non-existent irrigation"],404);
+                return response()->json(['message'=>'Irrigation no existente'],404);
             }
             $element->action=$request->get('action');
             $element->update();
             $response = [
-                'message'=> 'item successfully updated',
+                'message'=> 'Irrigation actualizado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);
@@ -244,10 +244,10 @@ class IrrigationController extends Controller
         try {
             $element = Irrigation::find($id);
             if(is_null($element)){
-                return response()->json(["message"=>"non-existent Irrigation"],404);
+                return response()->json(['message'=>'Irrigation no existente'],404);
             }
             $response = [
-                'message'=> 'item successfully deleted',
+                'message'=> 'Irrigation eliminado satisfactoriamente',
                 'data' => $element,
             ];
             $element->delete();
@@ -264,7 +264,7 @@ class IrrigationController extends Controller
         try {            
             $elements = RealIrrigation::where("id_irrigation",$id)->with("zone")->with("pumpSystem")->with("farm")->get();
             $response = [
-                'message'=> 'items found successfully',
+                'message'=> 'RealIrrigation encontrado satisfactoriamente',
                 'data' => $elements,
             ];
             return response()->json($response, 200);

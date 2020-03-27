@@ -44,18 +44,18 @@ class HydraulicController extends Controller
             $messages=[];
             if(is_null($farm)||is_null($physicalConnection)||is_null($zone)||is_null($node)){
                 if(is_null($farm)){
-                array_push($messages,"non-existent farm");
+                array_push($messages,'Campo no existente');
                 }
                 if(is_null($node)){
-                array_push($messages,"non-existent node");
+                array_push($messages,'Node no existente');
                 }
                 if(is_null($zone)){
-                array_push($messages,"non-existent zone");
+                array_push($messages,'Zona no existente');
                 }
                 if(is_null($physicalConnection)){
-                array_push($messages,"non-existent Physical Connection");
+                array_push($messages,'Physical Connection no existente');
                 }
-                return response()->json(["message"=>$messages],404);
+                return response()->json(['message'=>$messages],404);
             }
             $element = Hydraulic::create([
                 'name' => $request->get('name'),
@@ -66,7 +66,7 @@ class HydraulicController extends Controller
                 'id_node' => $request->get('id_node'),
             ]);
             $response = [
-                'message'=> 'item successfully registered',
+                'message'=> 'Hydraulic registrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);
@@ -83,12 +83,12 @@ class HydraulicController extends Controller
             $element = Hydraulic::find($id);
             if(is_null($element)){
                 return response()->json([
-                    "message"=>"non-existent item",
-                    "data"=>$element
+                    'message'=>'Hydraulic no existente',
+                    'data'=>$element
                 ],404);
             }
             $response = [
-                'message'=> 'item found successfully',
+                'message'=> 'Hydraulic encontrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);

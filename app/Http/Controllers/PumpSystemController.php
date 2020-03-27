@@ -28,7 +28,7 @@ class PumpSystemController extends Controller
         try {
             $farm = Farm::find($request->get('id_farm'));
             if(is_null($farm)){
-                return response()->json(["message"=>"non-existent farm"],404);
+                return response()->json(['message'=>'Campo no existente'],404);
             }
             switch ($request->get('allowPumpSelection')) {
                 case '1':
@@ -46,7 +46,7 @@ class PumpSystemController extends Controller
                 'id_farm' => $request->get('id_farm'),
             ]);
             $response = [
-                'message'=> 'item successfully registered',
+                'message'=> 'Pump_system registrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);
@@ -63,12 +63,12 @@ class PumpSystemController extends Controller
             $element = Pump_system::with("farm")->find($id);
             if(is_null($element)){
                 return response()->json([
-                    "message"=>"non-existent item",
-                    "data"=>$element
+                    'message'=>'Pump_system no existente',
+                    'data'=>$element
                 ],404);
             }
             $response = [
-                'message'=> 'item found successfully',
+                'message'=> 'Pump_system encontrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);
@@ -84,7 +84,7 @@ class PumpSystemController extends Controller
         try {
             $elements = Zone::where("id_pump_system",$id)->get();
             $response = [
-                'message'=> 'items found successfully',
+                'message'=> 'Lista de Zonas',
                 'data' => $elements,
             ];
             return response()->json($response, 200);
@@ -100,7 +100,7 @@ class PumpSystemController extends Controller
         try {            
             $elements = Irrigation::where("id_pump_system",$id)->with("zone")->with("volume")->with("farm")->get();
             $response = [
-                'message'=> 'items found successfully',
+                'message'=> 'Lista de Irrigation',
                 'data' => $elements,
             ];
             return response()->json($response, 200);
@@ -116,7 +116,7 @@ class PumpSystemController extends Controller
         try {            
             $elements = RealIrrigation::where("id_pump_system",$id)->with("zone")->with("irrigations")->with("farm")->get();
             $response = [
-                'message'=> 'items found successfully',
+                'message'=> 'Lista de RealIrrigation',
                 'data' => $elements,
             ];
             return response()->json($response, 200);
@@ -133,12 +133,12 @@ class PumpSystemController extends Controller
             $element = Pump_system::find($id);
             if(is_null($element)){
                 return response()->json([
-                    "message"=>"non-existent item",
-                    "data"=>$element->name
+                    'message'=>'Pump_system no existente',
+                    'data'=>$element->name
                 ],404);
             }
             $response = [
-                'message'=> 'item found successfully',
+                'message'=> 'Pump_system encontrado satisfactoriamente',
                 'data' => $element,
             ];
             return response()->json($response, 200);

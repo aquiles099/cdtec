@@ -11,7 +11,7 @@ class AccountController extends Controller
     public function all(){
         try {
             $response = [
-                'message'=> 'Account list',
+                'message'=> 'Lista de cuentas',
                 'data' => Account::with("farm")->get(),
             ];
             return response()->json($response, 200);
@@ -25,16 +25,16 @@ class AccountController extends Controller
     }
     public function get($id){
         try {            
-            $element = Account::find($id);
-            if(is_null($element)){
+            $account = Account::find($id);
+            if(is_null($account)){
                 return response()->json([
-                    "message"=>"non-existent item",
-                    "data"=>$element
+                    'message'=>'Cuenta no existente',
+                    'data'=>$account
                 ],404);
             }
             $response = [
-                'message'=> 'item found successfully',
-                'data' => $element,
+                'message'=> 'Cuenta encontrada',
+                'data' => $account,
             ];
             return response()->json($response, 200);
         } catch (\Exception $e) {
@@ -85,7 +85,7 @@ class AccountController extends Controller
         }
         $farm = Farm::find($request->get('id_farm'));
         if(is_null($farm)){
-            return response()->json(["message"=>"non-existent farm"],404);
+            return response()->json(['message'=>'Campo no existente'],404);
         }
         $element = Account::create([
             'name' => $request->get('name'),
@@ -100,7 +100,7 @@ class AccountController extends Controller
             'id_farm' => $request->get('id_farm'),
         ]);
         $response = [
-            'message'=> 'item successfully registered',
+            'message'=> 'Cuenta registrada satisfactoriamente',
             'data' => $element->with("farm")->first(),
         ];
         return response()->json($response, 200);
@@ -147,16 +147,16 @@ class AccountController extends Controller
             $messages=[];
             if(is_null($farm)||is_null($account)){
                 if(is_null($farm)){
-                array_push($messages,"non-existent farm");
+                array_push($messages,'Campo no existente');
                 }
                 if(is_null($account)){
-                array_push($messages,"non-existent account");
+                array_push($messages,'Cuenta no existente');
                 }
                 return response()->json(["message"=>$messages],404);
             }
             $account->fill($request->all());
             $response = [
-                'message'=> 'item updated successfully',
+                'message'=> 'Campo actualizado satisfactoriamente',
                 'data' => $account->with("farm")->first(),
             ];
             $account->update();
