@@ -259,7 +259,7 @@ class UserController extends Controller
     }
     public function getFarms($id){
         try {
-            $elements = FarmsUsers::where("id_user",$id)->select('farms.*','farms_users.*')
+            $elements = FarmsUsers::where("id_user",$id)->select('farms.*')
                 ->join('farms', 'farms_users.id_farm', '=', 'farms.id')
                 ->get();
             $response = [
