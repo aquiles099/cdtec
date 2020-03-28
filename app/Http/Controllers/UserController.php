@@ -164,8 +164,8 @@ class UserController extends Controller
             'email'                 => 'required|email|max:45|unique:users,email,'.$id,
             'business'              => 'required|string|max:45',
             'office'                => 'required|string|max:45',
-            'password'              => 'required|string|min:8|confirmed',
-            'password_confirmation' => 'required|string',
+            'password'              => 'string|min:8|confirmed',
+            'password_confirmation' => 'string',
             'region'                => 'required|string|max:45',
             'city'                  => 'required|string|max:45',
             'phone'                 => 'required|string|max:45',
@@ -222,7 +222,9 @@ class UserController extends Controller
                 return response()->json(['message'=>$messages],404);
             }
             $user->fill($request->all());
-            $user->password= Hash::make($request->get('password'));
+            if($request->get('password')){
+                $user->password=Hash::make($request->get('password'));
+            }
             $response = [
                 'message'=> 'Usuario actualizado satisfactoriamente',
                 'data' => $user,

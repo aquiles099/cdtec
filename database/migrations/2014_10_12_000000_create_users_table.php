@@ -31,6 +31,9 @@ class CreateUsersTable extends Migration
                 ->on('roles')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+            $table->boolean('new_msj_notification')->default(false);
+            $table->boolean('new_alert_notification')->default(false);            
+            $table->boolean('new_zone_notification')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });
