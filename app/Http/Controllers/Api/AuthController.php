@@ -17,6 +17,9 @@ class AuthController extends Controller
 			if (!$token=JWTAuth::attempt($credentials)) {
 				return response()->json(['error' => 'Usuario o contraseña Incorrectos'], 400);
 			}
+            if (!JWTAuth::user()->active) {
+                return response()->json(['error' => 'Su cuenta no esta activa'], 400);
+            }
         } catch (JWTException $e) {
             return response()->json(['error' => 'could_not_create_token'], 500);
         }
