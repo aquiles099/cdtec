@@ -41,7 +41,7 @@ class CloneByFarmFarmsAccountsNodes extends Command
             ]
         ]);
     }
-    protected function farmCreate($farm){
+    protected function farmCreate($farm,$account){
         return Farm::create([
             'name' => $farm->name,
             'description' => $farm->description,
@@ -50,14 +50,14 @@ class CloneByFarmFarmsAccountsNodes extends Command
             'postalAddress' => $farm->postalAddress,
             'timeZone' => $farm->timeZone,
             'webhook' => $farm->webhook,
+            'id_account' => $account->id,
             'id_wiseconn' => $farm->id,
         ]);
     }
-    protected function accountCreate($farm,$newFarm){
+    protected function accountCreate($farm){
         return Account::create([
             'name' => $farm->account->name,
-            'id_wiseconn' => $farm->account->id,
-            'id_farm' => $newFarm->id
+            'id_wiseconn' => $farm->account->id
         ]);
     }
     protected function nodeCreate($node,$newFarm){
@@ -86,21 +86,27 @@ class CloneByFarmFarmsAccountsNodes extends Command
             $farms=json_decode($farmsResponse->getBody()->getContents());
             foreach ($farms as $key => $farm) {
                 if(is_null(Farm::where("id_wiseconn",$farm->id)->first())){
-                    $newFarm= $this->farmCreate($farm);
-                    $newAccount= $this->accountCreate($farm,$newFarm);
-                    $this->info("New farm id:".$newFarm->id." / New account id:".$newAccount->id);
-                    try {
-                        $nodesResponse = $this->requestWiseconn($client,'GET','/farms/'.$farm->id.'/nodes');
-                        $nodes=json_decode($nodesResponse->getBody()->getContents());
-                        foreach ($nodes as $key => $node) {
-                            if(is_null(Node::where("id_wiseconn",$node->id)->first())){
-                                $newNode= $this->nodeCreate($node,$newFarm);
-                                $this->info("New node id:".$newNode->id);
-                            }
+                    if(isset($farm->account)){
+                        $account=Account::where("id_wiseconn",$farm->account->id)->first();
+                        if(is_null($account)){
+                            $account= $this->accountCreate($farm);
+                            $this->info("New account id:".$account->id);
                         }
-                    } catch (\Exception $e) {
-                        $this->error("Error:" . $e->getMessage());
-                        $this->error("Linea:" . $e->getLine());
+                        $newFarm= $this->farmCreate($farm,$account);
+                        $this->info("New farm id:".$newFarm->id);
+                        try {
+                            $nodesResponse = $this->requestWiseconn($client,'GET','/farms/'.$farm->id.'/nodes');
+                            $nodes=json_decode($nodesResponse->getBody()->getContents());
+                            foreach ($nodes as $key => $node) {
+                                if(is_null(Node::where("id_wiseconn",$node->id)->first())){
+                                    $newNode= $this->nodeCreate($node,$newFarm);
+                                    $this->info("New node id:".$newNode->id);
+                                }
+                            }
+                        } catch (\Exception $e) {
+                            $this->error("Error:" . $e->getMessage());
+                            $this->error("Linea:" . $e->getLine());
+                        }
                     }
                 }
             }

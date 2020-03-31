@@ -126,8 +126,7 @@ class MeasureController extends Controller{
             ], 500);
         }
     }
-    public function data(Request $request,$id){
-        
+    public function data(Request $request,$id){        
         try {            
             $measuresData = MeasureData::where("id_measure",$id)->whereBetween("time",[$request->input('initTime'),$request->input('endTime')])->get();
             $response = [

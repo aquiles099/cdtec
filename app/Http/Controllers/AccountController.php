@@ -12,7 +12,7 @@ class AccountController extends Controller
         try {
             $response = [
                 'message'=> 'Lista de cuentas',
-                'data' => Account::with("farm")->get(),
+                'data' => Account::with("farms")->get(),
             ];
             return response()->json($response, 200);
         } catch (\Exception $e) {
@@ -101,7 +101,7 @@ class AccountController extends Controller
         ]);
         $response = [
             'message'=> 'Cuenta registrada satisfactoriamente',
-            'data' => $element->with("farm")->first(),
+            'data' => $element->with("farms")->first(),
         ];
         return response()->json($response, 200);
     }
@@ -157,7 +157,7 @@ class AccountController extends Controller
             $account->fill($request->all());
             $response = [
                 'message'=> 'Campo actualizado satisfactoriamente',
-                'data' => $account->with("farm")->first(),
+                'data' => $account->with("farms")->first(),
             ];
             $account->update();
             return response()->json($response, 200);

@@ -22,6 +22,12 @@ class CreateFarmsTable extends Migration
             $table->string('postalAddress', 45)->nullable();
             $table->string('timeZone', 45)->nullable();
             $table->string('webhook', 45)->nullable();
+            $table->unsignedBigInteger('id_account')->unsigned();
+            $table->foreign('id_account')
+                ->references('id')
+                ->on('accounts')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->unsignedInteger('id_wiseconn')->nullable();
             $table->timestamps();
         });

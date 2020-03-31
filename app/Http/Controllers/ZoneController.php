@@ -291,50 +291,63 @@ class ZoneController extends Controller
         $client = new Client([
             'base_uri' => 'https://apiv2.wiseconn.com',
             'timeout'  => 100.0,
-        ]);
-        $realIrrigationsResponse = $client->request('GET','/zones/'.$zone->id_wiseconn.'/realIrrigations/?endTime='.$endTime.'&initTime='.$initTime, [
-            'headers' => [
-                'api_key' => '9Ev6ftyEbHhylMoKFaok',
-                'Accept'     => 'application/json'
-            ]
-        ]);
+        ]);        
+        try {
+            $realIrrigationsResponse = $client->request('GET','/zones/'.$zone->id_wiseconn.'/realIrrigations/?endTime='.$endTime.'&initTime='.$initTime, [
+                'headers' => [
+                    'api_key' => '9Ev6ftyEbHhylMoKFaok',
+                    'Accept'     => 'application/json'
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
         return json_decode($realIrrigationsResponse->getBody()->getContents());
     }
     public function realIrrigations(Request $request,$id){
         try {
             $initTime=(Carbon::parse($request->input("initTime")))->format('Y-m-d');
             $endTime=(Carbon::parse($request->input("endTime")))->format('Y-m-d');
-            $zone=Zone::findOrFail($id);
-            $wiseconnElements = $this->getWiseconnElements($zone,$initTime,$endTime);
-            foreach ($wiseconnElements as $key => $element) {
-                $realIrrigation=RealIrrigation::where("id_wiseconn",$element->id)->where("id_zone",$zone->id)->first();
-                if($realIrrigation){
-                    if($realIrrigation->status!=$element->status){
-                        $realIrrigation->status=$element->status;
-                        $realIrrigation->update();
+            $zone=Zone::find($id);
+            if($zone){
+                $wiseconnElements = $this->getWiseconnElements($zone,$initTime,$endTime);
+                foreach ($wiseconnElements as $key => $element) {
+                    $realIrrigation=RealIrrigation::where("id_wiseconn",$element->id)->where("id_zone",$zone->id)->first();
+                    if($realIrrigation){
+                        if($realIrrigation->status!=$element->status){
+                            $realIrrigation->status=$element->status;
+                            $realIrrigation->update();
+                        }
+                    }else{
+                        $pumpSystem=Pump_system::where("id_wiseconn",$element->pumpSystemId)->first();
+                        RealIrrigation::create([
+                            'initTime' => isset($element->initTime)?$element->initTime:null,
+                            'endTime' =>isset($element->endTime)?$element->endTime:null,
+                            'status'=> isset($element->status)?$element->status:null,
+                            'id_pump_system'=> isset($pumpSystem->id)?$pumpSystem->id:null,
+                            'id_zone'=> isset($zone->id)?$zone->id:null,
+                            'id_wiseconn' => $element->id
+                        ]);  
                     }
-                }else{
-                    $pumpSystem=Pump_system::where("id_wiseconn",$element->pumpSystemId)->first();
-                    RealIrrigation::create([
-                        'initTime' => isset($element->initTime)?$element->initTime:null,
-                        'endTime' =>isset($element->endTime)?$element->endTime:null,
-                        'status'=> isset($element->status)?$element->status:null,
-                        'id_pump_system'=> isset($pumpSystem->id)?$pumpSystem->id:null,
-                        'id_zone'=> isset($zone->id)?$zone->id:null,
-                        'id_wiseconn' => $element->id
-                    ]);  
                 }
+                $localElements = RealIrrigation::where("id_zone",$zone->id)
+                    ->where("initTime",">=",$initTime)
+                    ->where(function ($q) use ($endTime) {
+                        $q->where("endTime","<=",$endTime)->orWhere("status", "Running");
+                    })->with("pumpSystem")->with("irrigations")->with("farm")->get();
+                $response = [
+                    'message'=> 'Lista de RealIrrigation',
+                    'data' => $localElements
+                ];
+                return response()->json($response, 200);
+            }else{                
+                return response()->json(['message'=>'Zona no existente'],404);
             }
-            $localElements = RealIrrigation::where("id_zone",$zone->id)
-                ->where("initTime",">=",$initTime)
-                ->where(function ($q) use ($endTime) {
-                    $q->where("endTime","<=",$endTime)->orWhere("status", "Running");
-                })->with("pumpSystem")->with("irrigations")->with("farm")->get();
-            $response = [
-                'message'=> 'Lista de RealIrrigation',
-                'data' => $localElements
-            ];
-            return response()->json($response, 200);
+            
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Ha ocurrido un error al tratar de obtener los datos.',

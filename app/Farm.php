@@ -7,10 +7,10 @@ use App\Account;
 class Farm extends Model
 {
     protected $fillable = [
-        'name', 'description','latitude', 'longitude','postalAddress', 'timeZone','webhook','id_wiseconn'
+        'name', 'description','latitude', 'longitude','postalAddress', 'timeZone','webhook','id_account','id_wiseconn'
     ];
     public function account()
     {
-        return $this->hasOne(Account::class,'id_farm','id');
+        return $this->hasOne(Account::class,'id','id_account');
     }
 }

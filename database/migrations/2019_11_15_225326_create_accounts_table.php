@@ -25,7 +25,6 @@ class CreateAccountsTable extends Migration
             $table->string('comentario', 45)->nullable();
             $table->string('habilitar', 45)->nullable();
             $table->unsignedInteger('id_wiseconn')->nullable();
-            $table->unsignedInteger('id_farm')->nullable();
             $table->timestamps();
         });
     }
