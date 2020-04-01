@@ -23,7 +23,19 @@ class UsersTableSeeder extends Seeder
     	$user->phone="0000-000-00-00";
     	$user->email="admin@cdtec.com";
     	$user->password=Hash::make("12345678");
-    	$user->id_role=1;
+    	$user->id_role=1;//admin
     	$user->save();
+        $user=new User();
+        $user->name="consultor";
+        $user->last_name="test";
+        $user->office="test";
+        $user->business="test";
+        $user->region="test";
+        $user->city="test";
+        $user->phone="0000-000-00-00";
+        $user->email="consultor@cdtec.com";
+        $user->password=Hash::make("12345678");
+        $user->id_role=2;//consultor
+        $user->save();
     }
 }
