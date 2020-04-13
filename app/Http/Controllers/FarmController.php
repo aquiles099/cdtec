@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use GuzzleHttp\Client;
+use Carbon\Carbon;
 use App\Farm;
 use App\Zone;
 use App\Node;
@@ -139,14 +141,61 @@ class FarmController extends Controller
             ], 500);
         }
     }
+    protected function getWiseconnElements($zone,$initTime,$endTime){
+        $client = new Client([
+            'base_uri' => 'https://apiv2.wiseconn.com',
+            'timeout'  => 100.0,
+        ]);        
+        try {
+            $realIrrigationsResponse = $client->request('GET','/zones/'.$zone->id_wiseconn.'/realIrrigations/?endTime='.$endTime.'&initTime='.$initTime, [
+                'headers' => [
+                    'api_key' => '9Ev6ftyEbHhylMoKFaok',
+                    'Accept'     => 'application/json'
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+        return json_decode($realIrrigationsResponse->getBody()->getContents());
+    }
     public function zones($id){
         try {            
-            $elements = Zone::where("id_farm",$id)->get();
+            $initTime=Carbon::now(date_default_timezone_get())->subDays(2)->format('Y-m-d');
+            $endTime=Carbon::now(date_default_timezone_get())->format('Y-m-d');
+            $zones = Zone::where("id_farm",$id)->get();
+            /*foreach ($zones as $key => $zone) {
+                    # code...
+                $wiseconnElements = $this->getWiseconnElements($zone,$initTime,$endTime);
+                foreach ($wiseconnElements as $key => $element) {
+                    $realIrrigation=RealIrrigation::where("id_wiseconn",$element->id)->where("id_zone",$zone->id)->first();
+                    if($realIrrigation){
+                        if($realIrrigation->status!=$element->status){
+                            $realIrrigation->status=$element->status;
+                            $realIrrigation->update();
+                        }
+                    }else{
+                        $pumpSystem=Pump_system::where("id_wiseconn",$element->pumpSystemId)->first();
+                        RealIrrigation::create([
+                            'initTime' => isset($element->initTime)?$element->initTime:null,
+                            'endTime' =>isset($element->endTime)?$element->endTime:null,
+                            'status'=> isset($element->status)?$element->status:null,
+                            'id_pump_system'=> isset($pumpSystem->id)?$pumpSystem->id:null,
+                            'id_zone'=> isset($zone->id)?$zone->id:null,
+                            'id_wiseconn' => $element->id
+                        ]);  
+                    }
+                }
+            }*/
             $response = [
                 'message'=> 'Lista de zonas',
-                'data' => $elements,
+                'data' => $zones,
             ];
             return response()->json($response, 200);
+            
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
@@ -158,11 +207,11 @@ class FarmController extends Controller
     public function hydraulics($id){
         try {            
             $elements = Hydraulic::where("id_farm",$id)
-                ->with("farm")
-                ->with("zone")
-                ->with("node")
-                ->with("physicalConnection")
-                ->get();
+            ->with("farm")
+            ->with("zone")
+            ->with("node")
+            ->with("physicalConnection")
+            ->get();
             $response = [
                 'message'=> 'Lista de Hydraulic',
                 'data' => $elements,
