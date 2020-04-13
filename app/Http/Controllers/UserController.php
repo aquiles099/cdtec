@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\User;
 use App\Role;
 use App\FarmsUsers;
+use App\Account;
 class UserController extends Controller
 {
     public function all(){
@@ -261,12 +262,43 @@ class UserController extends Controller
     }
     public function getFarms($id){
         try {
-            $elements = FarmsUsers::where("id_user",$id)->select('farms.*')
-                ->join('farms', 'farms_users.id_farm', '=', 'farms.id')
-                ->get();
+            $farmsUsers=FarmsUsers::where('id_user',$id)->get();
+            $farms=[];
+            foreach ($farmsUsers as $key => $farmUser) {
+                array_push($farms, $farmUser->farm);
+            }
             $response = [
                 'message'=> 'Lista de campos de usuario',
-                'data' => $elements,
+                'data' => $farms,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de eliminar los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
+    public function getAccounts($id){
+        try {
+            $farmsUsers=FarmsUsers::where('id_user',$id)->get();
+            $accounts=[];
+            foreach ($farmsUsers as $key => $farmUser) {
+                if(count($accounts)==0){
+                   array_push($accounts, $farmUser->farm->account); 
+               }else{
+                    foreach($accounts as $account) {
+                        if(!in_array($account, $accounts)) {
+                            array_push($accounts, $farmUser->farm->account);
+                        }
+                    }
+               }
+                
+            }
+            $response = [
+                'message'=> 'Lista de cuentas de usuario',
+                'data' => $accounts,
             ];
             return response()->json($response, 200);
         } catch (\Exception $e) {

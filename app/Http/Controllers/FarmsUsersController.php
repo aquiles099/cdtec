@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use App\FarmsUsers;
 use App\Farm;
 use App\User;
+use App\Account;
 class FarmsUsersController extends Controller
 {
     public function all(){

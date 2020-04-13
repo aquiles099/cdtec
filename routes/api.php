@@ -87,6 +87,7 @@ Route::group(['middleware' => ['cors'] ], function() {
 	Route::get('users', 'UserController@all');
 	Route::get('users/get/{id}', 'UserController@get');
 	Route::get('users/{id}/getfarms', 'UserController@getFarms');
+	Route::get('users/{id}/getaccounts', 'UserController@getAccounts');	
 	Route::post('users/{id}/registerfarms', 'UserController@registerFarms');
 	Route::post('users/store', 'UserController@store');
 	Route::post('users/update/{id}', 'UserController@update');
