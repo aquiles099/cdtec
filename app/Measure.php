@@ -18,4 +18,8 @@ class Measure extends Model
     {
         return $this->hasOne(PhysicalConnection::class,'id','id_physical_connection');
     }
+    public function zone()
+    {
+        return $this->hasOne(Zone::class,'id','id_zone');
+    }
 }

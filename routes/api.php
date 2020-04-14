@@ -32,6 +32,7 @@ Route::group(['middleware' => ['cors'] ], function() {
 	Route::post('farms/{id}/alarms/triggered', 'FarmController@alarmsTriggered');
 	Route::get('farms/{id}/realirrigations', 'FarmController@realIrrigations');
 	Route::get('farms/{id}/measures', 'FarmController@measures');
+	Route::get('farms/{id}/sensortypes', 'FarmController@sensorTypes');	
 	Route::post('farms/{id}/webhook', 'FarmController@webhookUpdate');
 	// zones
 	Route::post('zones/store', 'ZoneController@store');

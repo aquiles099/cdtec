@@ -15,6 +15,7 @@ use App\Measure;
 use App\Irrigation;
 use App\RealIrrigation;
 use App\Alarm;
+use App\SensorType;
 class FarmController extends Controller
 {
     public function all(){
@@ -242,8 +243,8 @@ class FarmController extends Controller
         }
     }
     public function measures($id){
-        try {            
-            $elements = Measure::where("id_farm",$id)->get();
+        try {
+            $elements = Measure::where("id_farm",$id)->with("zone")->get();
             $response = [
                 'message'=> 'Lista de Measure',
                 'data' => $elements,
@@ -332,6 +333,22 @@ class FarmController extends Controller
             $response = [
                 'message'=> 'Campo actualizado satisfactoriamente',
                 'data' => $element,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
+    public function sensorTypes($id){
+        try {            
+            $elements = SensorType::where("id_farm",$id)->with("zones")->get();
+            $response = [
+                'message'=> 'Lista de SensorTypes',
+                'data' => $elements,
             ];
             return response()->json($response, 200);
         } catch (\Exception $e) {

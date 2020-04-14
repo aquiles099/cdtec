@@ -7,6 +7,7 @@ use App\Farm;
 use App\Type;
 use App\SouthWestBound;
 use App\NorthEastBound;
+use App\Measure;
 class Zone extends Model
 {
     protected $fillable = [
@@ -16,7 +17,7 @@ class Zone extends Model
         'humidityRetention','max','min','criticalPoint1','criticalPoint2',
         'id_farm','id_pump_system','id_wiseconn',
     ];
-    protected $with = ['path','southWest','northEast','type'];
+    protected $with = ['path','southWest','northEast','type','measures'];
     protected $hidden   = [
         'id_zone',
         'id_bound',
@@ -40,5 +41,9 @@ class Zone extends Model
     public function type()
     {
         return $this->hasMany(Type::class,'id_zone');
+    }
+    public function measures()
+    {
+        return $this->hasMany(Measure::class,'id_zone');
     }
 }

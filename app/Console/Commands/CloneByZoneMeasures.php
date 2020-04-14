@@ -11,6 +11,8 @@ use App\Node;
 use App\Zone;
 use App\Measure;
 use App\PhysicalConnection;
+use App\SensorType;
+use App\SensorTypeZones;
 
 class CloneByZoneMeasures extends Command
 {
@@ -51,6 +53,29 @@ class CloneByZoneMeasures extends Command
             'expansionBoard'=> isset($measure->physicalConnection->expansionBoard)?$measure->physicalConnection->expansionBoard:null,
             'nodePort'=> isset($measure->physicalConnection->nodePort)?$measure->physicalConnection->nodePort:null
         ]);
+    }
+    protected function sensorTypeZoneCreate($sensorType,$zone){
+        $sensorTypeZone=SensorTypeZones::where("id_sensor_type",$sensorType->id)->where("id_zone",$zone->id)->first();
+        if(is_null($sensorTypeZone)){
+            SensorTypeZones::create([
+                "id_sensor_type"=>$sensorType->id,
+                "id_zone" => isset($zone->id)?$zone->id:null,
+            ]);
+        }        
+    }
+    protected function sensorTypeCreate($measure,$farm,$zone){
+        $sensorType=SensorType::where("name",$measure->sensorType)->first();
+        if(is_null($sensorType)){
+            $newSensorType=SensorType::create([
+                "name"=>$measure->sensorType,
+                "id_farm" => isset($farm->id)?$farm->id:null,
+            ]);
+            $this->sensorTypeZoneCreate($newSensorType,$zone);
+            return $newSensorType;
+        }else{
+            $this->sensorTypeZoneCreate($sensorType,$zone);
+        }
+        return null;
     }
     protected function measureCreate($measure,$farm,$zone,$node,$newPhysicalConnection){
         return Measure::create([
@@ -117,6 +142,12 @@ class CloneByZoneMeasures extends Command
                         if(is_null($measureRegistered)){
                             $newPhysicalConnection =$this->physicalConnectionCreate($measure);
                             $newmeasure =$this->measureCreate($measure,$farm,$zone,$node,$newPhysicalConnection);
+                            if(isset($measure->sensorType)){
+                                $newSensorType=$this->sensorTypeCreate($measure,$farm,$zone);
+                                if(!is_null($newSensorType)){
+                                    $this->info("New SensorType id:".$newSensorType->id);
+                                }
+                            }
                             $this->info("New Measure id:".$newmeasure->id." / New PhysicalConnection id:".$newPhysicalConnection->id);
                         }else{
                             $measureUpdated =$this->measureUpdate($measure,$measureRegistered,$farm,$zone,$node);
