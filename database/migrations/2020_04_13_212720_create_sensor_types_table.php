@@ -14,8 +14,9 @@ class CreateSensorTypesTable extends Migration
     public function up()
     {
         Schema::create('sensor_types', function (Blueprint $table) {
-            $table->bigIncrements('id');            
+            $table->bigIncrements('id');
             $table->string('name', 45)->nullable();
+            $table->string('group', 45)->nullable();
             $table->unsignedBigInteger('id_farm')->unsigned();
             $table->foreign('id_farm')
                 ->references('id')

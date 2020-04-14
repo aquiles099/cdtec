@@ -9,7 +9,7 @@ use App\SensorTypeZones;
 class SensorType extends Model
 {
     protected $fillable = [        
-        'name', 'id_farm'
+        'name', 'id_farm', 'group'
     ];
     protected $with = ['farm','zones'];
     public function farm()

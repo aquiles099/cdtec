@@ -63,11 +63,96 @@ class CloneByZoneMeasures extends Command
             ]);
         }        
     }
+    protected function getNameAndGroup($sensorType){
+        switch (strtolower($sensorType)) {
+            //clima
+            case 'temperature':
+                return ['name'=>'Temperatura','group'=>'Clima'];
+                break;
+            case 'humidity':
+                return ['name'=>'Humedad Relativa','group'=>'Clima'];
+                break;
+            case 'wind velocity':
+                return ['name'=>'Velocidad Viento','group'=>'Clima'];
+                break;
+            case 'solar radiation':
+                return ['name'=>'Radiación Solar','group'=>'Clima'];
+                break;
+            case 'wind direction':
+                return ['name'=>'Dirección Viento','group'=>'Clima'];
+                break;
+            case 'atmospheric preassure':
+                return ['name'=>'Presión Atmosférica','group'=>'Clima'];
+                break;
+            case 'wind gust':
+                return ['name'=>'Ráfaga Viento','group'=>'Clima'];
+                break;
+            case 'chill hours':
+                return ['name'=>'Horas Frío','group'=>'Clima'];
+                break;
+            case 'chill portion':
+                return ['name'=>'Porción Frío','group'=>'Clima'];
+                break;
+            case 'daily etp':
+                return ['name'=>'Etp Diaria','group'=>'Clima'];
+                break;
+            case 'daily et0':
+                return ['name'=>'Et0 Diaria','group'=>'Clima'];
+                break;
+            //humedad
+            case 'salinity':
+                return ['name'=>'Salinidad','group'=>'Humedad'];
+                break;
+            case 'soil temperature':
+                return ['name'=>'Temperatura Suelo','group'=>'Humedad'];
+                break;
+            case 'soil moisture':
+                return ['name'=>'Humedad Suelo','group'=>'Humedad'];
+                break;
+            case 'soil humidity':
+                return ['name'=>'Humedad de Tubo','group'=>'Humedad'];
+                break;
+            case 'added soild moisture':
+                return ['name'=>'Suma Humedades','group'=>'Humedad'];
+                break;
+            //Riego
+            case 'irrigation':
+                return ['name'=>'Riego','group'=>'Riego'];
+                break;
+            case 'irrigation volume':
+                return ['name'=>'Volumen Riego','group'=>'Riego'];
+                break;
+            case 'daily irrigation time':
+                return ['name'=>'Tiempo de Riego Diario','group'=>'Riego'];
+                break;
+            case 'flow':
+                return ['name'=>'Caudal','group'=>'Riego'];
+                break;
+            case 'daily irrigation volume by pump system':
+                return ['name'=>'Volumen de Riego Diario por Equipo','group'=>'Riego'];
+                break;
+            case 'daily irrigation time by pump system':
+                return ['name'=>'Tiempo de Riego Diario por Equipo','group'=>'Riego'];
+                break;
+            case 'irrigation by pump system':
+                return ['name'=>'Riego por Equipo','group'=>'Riego'];
+                break;
+            case 'flow by zone':
+                return ['name'=>'Caudal por Sector','group'=>'Riego'];
+                break;
+            default:
+                return ['name'=>$sensorType,'group'=>'Otros'];
+                break;
+        }
+    }
     protected function sensorTypeCreate($measure,$farm,$zone){
-        $sensorType=SensorType::where("name",$measure->sensorType)->first();
+        $name=$this->getNameAndGroup($measure->sensorType)['name'];
+        $group=$this->getNameAndGroup($measure->sensorType)['group'];
+        $sensorType=SensorType::where("name",$name)->first();
         if(is_null($sensorType)){
             $newSensorType=SensorType::create([
-                "name"=>$measure->sensorType,
+                "name"=>$name,
+                "group"=>$group,
                 "id_farm" => isset($farm->id)?$farm->id:null,
             ]);
             $this->sensorTypeZoneCreate($newSensorType,$zone);
