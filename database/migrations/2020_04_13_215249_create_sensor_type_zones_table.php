@@ -21,6 +21,12 @@ class CreateSensorTypeZonesTable extends Migration
                 ->on('sensor_types')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+            $table->unsignedBigInteger('id_farm')->unsigned();
+            $table->foreign('id_farm')
+                ->references('id')
+                ->on('farms')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->unsignedBigInteger('id_zone')->unsigned();
             $table->foreign('id_zone')
                 ->references('id')

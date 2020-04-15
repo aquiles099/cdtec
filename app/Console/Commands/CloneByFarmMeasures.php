@@ -53,11 +53,12 @@ class CloneByFarmMeasures extends Command
             'nodePort'=> isset($measure->physicalConnection)?$measure->physicalConnection->nodePort:null
         ]);
     }
-    protected function sensorTypeZoneCreate($sensorType,$zone){
-        $sensorTypeZone=SensorTypeZones::where("id_sensor_type",$sensorType->id)->where("id_zone",$zone->id)->first();
+    protected function sensorTypeZoneCreate($sensorType,$farm,$zone){
+        $sensorTypeZone=SensorTypeZones::where("id_sensor_type",$sensorType->id)->where("id_farm",$farm->id)->where("id_zone",$zone->id)->first();
         if(is_null($sensorTypeZone)){
             SensorTypeZones::create([
                 "id_sensor_type"=>$sensorType->id,
+                "id_farm" => isset($farm->id)?$farm->id:null,
                 "id_zone" => isset($zone->id)?$zone->id:null,
             ]);
         }        
@@ -154,10 +155,10 @@ class CloneByFarmMeasures extends Command
                 "group"=>$group,
                 "id_farm" => isset($farm->id)?$farm->id:null,
             ]);
-            $this->sensorTypeZoneCreate($newSensorType,$zone);
+            $this->sensorTypeZoneCreate($newSensorType,$farm,$zone);
             return $newSensorType;
         }else{
-            $this->sensorTypeZoneCreate($sensorType,$zone);
+            $this->sensorTypeZoneCreate($sensorType,$farm,$zone);
         }
         return null;
     }
