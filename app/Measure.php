@@ -8,7 +8,7 @@ use App\PhysicalConnection;
 class Measure extends Model
 {
     protected $fillable = [        
-        'name', 'unit','lastData','lastDataDate','monitoringTime','sensorDepth','depthUnit','sensorType','readType','id_node','id_zone','id_farm','id_physical_connection','id_wiseconn'
+        'name', 'unit','lastData','lastDataDate','monitoringTime','sensorDepth','depthUnit','sensorType','readType','lastMeasureDataUpdate','id_node','id_zone','id_farm','id_physical_connection','id_wiseconn'
     ];
     public function farm()
     {

@@ -144,17 +144,15 @@ class MeasureController extends Controller{
         ]);
     }
     public function data(Request $request,$id){        
-        try {            
-            $measuresData = MeasureData::where("id_measure",$id)->whereBetween("time",[$request->input("initTime"),$request->input("endTime")])->get();
-            if(count($measuresData)==0){
+        try {
+            $measure=Measure::find($id);
+            $today = Carbon::today();
+            $measuresData=MeasureData::where("id_measure",$measure->id)->whereBetween("time",[$request->input("initTime"),$request->input("endTime")])->orderBy('time', 'DESC')->get();
+            if((Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($measure->updated_at)->format('Y-m-d').'T00:00:00.000000Z'))||count($measuresData)==0){
                 $client = new Client([
                     'base_uri' => 'https://apiv2.wiseconn.com',
                     'timeout'  => 100.0,
                 ]);
-                $measure=Measure::find($id);
-
-                $initTime=Carbon::now(date_default_timezone_get())->subDays(2)->format('Y-m-d');
-                $endTime=Carbon::now(date_default_timezone_get())->addDays(2)->format('Y-m-d');
 
                 $measuresResponse = $this->requestWiseconn($client,'GET','/measures/'.$measure->id_wiseconn.'/data?initTime='.$request->input("initTime").'&endTime='.$request->input("endTime"));
                 $measuresData=json_decode($measuresResponse->getBody()->getContents());
@@ -163,21 +161,27 @@ class MeasureController extends Controller{
                         $newMeasureData = $this->measureDataCreate($measure,$measureData);
                     }  
                 }
+                $measure->lastMeasureDataUpdate=Carbon::today();
+                $measure->update();
                 $response = [
                     'message'=> 'MeasureData encontrado satisfactoriamente',
-                    'initTime'=>$initTime,
-                    'endTime'=>$endTime,
-                    'request_initTime'=>$request->input("initTime"),
-                    'request_endTime'=>$request->input("endTime"),
-                    'data' => MeasureData::where("id_measure",$measure->id)->whereBetween("time",[$request->input("initTime"),$request->input("endTime")])->get(),
-                ];  
+                    'measure'=>$measure,
+                    'updated_at'=>Carbon::parse($measure->updated_at)->format('Y-m-d').'T00:00:00.000000Z',
+                    'today'=>Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z',
+                    'isAfter'=>Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($measure->updated_at)->format('Y-m-d').'T00:00:00.000000Z'),
+                    'data' => MeasureData::where("id_measure",$measure->id)->whereBetween("time",[$request->input("initTime"),$request->input("endTime")])->orderBy('time', 'DESC')->get(),
+                ];
             }else{
                 $response = [
                     'message'=> 'MeasureData encontrado satisfactoriamente',
-                    'data' => $measuresData,
-                ];  
+                    'measure'=>$measure,
+                    'updated_at'=>Carbon::parse($measure->updated_at)->format('Y-m-d').'T00:00:00.000000Z',
+                    'today'=>Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z',
+                    'isAfter'=>Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($measure->updated_at)->format('Y-m-d').'T00:00:00.000000Z'),
+                    'data' => MeasureData::where("id_measure",$measure->id)->whereBetween("time",[$request->input("initTime"),$request->input("endTime")])->orderBy('time', 'DESC')->get(),
+                ];
             }
-            
+              
             return response()->json($response, 200);
         } catch (\Exception $e) {
             return response()->json([

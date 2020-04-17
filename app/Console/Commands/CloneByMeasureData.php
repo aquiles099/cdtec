@@ -43,6 +43,8 @@ class CloneByMeasureData extends Command
         ]);
     }
     protected function measureDataCreate($measure,$measureData){
+        $measure->lastMeasureDataUpdate=Carbon::today();
+        $measure->update();
         return MeasureData::create([
             'id_measure'=> isset($measure->id)?$measure->id:null,
             'value'=> isset($measureData->value)?$measureData->value:null,
