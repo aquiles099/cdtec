@@ -166,18 +166,12 @@ class MeasureController extends Controller{
                 $response = [
                     'message'=> 'MeasureData encontrado satisfactoriamente',
                     'measure'=>$measure,
-                    'updated_at'=>Carbon::parse($measure->updated_at)->format('Y-m-d').'T00:00:00.000000Z',
-                    'today'=>Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z',
-                    'isAfter'=>Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($measure->updated_at)->format('Y-m-d').'T00:00:00.000000Z'),
                     'data' => MeasureData::where("id_measure",$measure->id)->whereBetween("time",[$request->input("initTime"),$request->input("endTime")])->orderBy('time', 'DESC')->get(),
                 ];
             }else{
                 $response = [
                     'message'=> 'MeasureData encontrado satisfactoriamente',
                     'measure'=>$measure,
-                    'updated_at'=>Carbon::parse($measure->updated_at)->format('Y-m-d').'T00:00:00.000000Z',
-                    'today'=>Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z',
-                    'isAfter'=>Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($measure->updated_at)->format('Y-m-d').'T00:00:00.000000Z'),
                     'data' => MeasureData::where("id_measure",$measure->id)->whereBetween("time",[$request->input("initTime"),$request->input("endTime")])->orderBy('time', 'DESC')->get(),
                 ];
             }
