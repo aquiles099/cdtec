@@ -359,4 +359,24 @@ class FarmController extends Controller
             ], 500);
         }
     }
+    public function weatherStation($id){
+        try {
+            $weatherStation = Zone::where("id_farm",$id)
+                ->where("name","Estación Meteorológica")
+                ->orWhere("name","Estación Metereológica")
+                ->first();
+            $response = [
+                'message'=> 'Lista de zonas',
+                'data' => $weatherStation,
+            ];
+            return response()->json($response, 200);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
 }
