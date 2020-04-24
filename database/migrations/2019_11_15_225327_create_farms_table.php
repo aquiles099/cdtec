@@ -19,8 +19,8 @@ class CreateFarmsTable extends Migration
             $table->string('description', 45)->nullable();
             $table->string('latitude', 45)->nullable();
             $table->string('longitude', 45)->nullable();
-            $table->string('postalAddress', 45)->nullable();
-            $table->string('timeZone', 45)->nullable();
+            $table->text('postalAddress')->nullable();
+            $table->string('timeZone')->nullable();
             $table->string('webhook', 45)->nullable();
             $table->unsignedBigInteger('id_account')->unsigned();
             $table->foreign('id_account')

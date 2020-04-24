@@ -15,7 +15,7 @@ class CreateAccountsTable extends Migration
     {
         Schema::create('accounts', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name', 45);
+            $table->text('name');
             $table->string('rut', 45)->nullable();
             $table->string('razonsocial', 45)->nullable();
             $table->string('rutlegal', 45)->nullable();
