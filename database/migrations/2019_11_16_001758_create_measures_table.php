@@ -17,7 +17,7 @@ class CreateMeasuresTable extends Migration
             $table->bigIncrements('id');
             $table->text('name');
             $table->string('unit', 45)->nullable(); 
-            $table->double('lastData', 15,10)->nullable();
+            $table->double('lastData', 20,15)->nullable();
             $table->timestamp('lastDataDate')->nullable();
             $table->string('monitoringTime', 45)->nullable();
             $table->string('sensorDepth', 45)->nullable();

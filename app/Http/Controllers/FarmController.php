@@ -16,10 +16,88 @@ use App\Irrigation;
 use App\RealIrrigation;
 use App\Alarm;
 use App\SensorType;
+use App\Path;
 class FarmController extends Controller
 {
+    protected function getWiseconnFarms(){
+        $client = new Client([
+            'base_uri' => 'https://apiv2.wiseconn.com',
+            'timeout'  => 100.0,
+        ]);        
+        try {
+            $farmsResponse = $client->request('GET','/farms', [
+                'headers' => [
+                    'api_key' => '9Ev6ftyEbHhylMoKFaok',
+                    'Accept'     => 'application/json'
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+        return json_decode($farmsResponse->getBody()->getContents());
+    }
+    protected function getWiseconnNodes($farm){
+        $client = new Client([
+            'base_uri' => 'https://apiv2.wiseconn.com',
+            'timeout'  => 100.0,
+        ]);        
+        try {
+            $nodesResponse = $client->request('GET','/farms/'.$farm->id_wiseconn.'/nodes', [
+                'headers' => [
+                    'api_key' => '9Ev6ftyEbHhylMoKFaok',
+                    'Accept'     => 'application/json'
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+        return json_decode($nodesResponse->getBody()->getContents());
+    }
     public function all(){
         try {
+            $farms=Farm::with("account")->get();
+            if(count($farms)==0){
+                $wiseconnFarms = $this->getWiseconnFarms();
+                foreach ($wiseconnFarms as $key => $wiseconnFarm) {
+                    if(isset($wiseconnFarm->id)){
+                        $farm=Farm::where("id_wiseconn",$wiseconnFarm->id)->first();
+                        if(is_null($farm)){
+                            $farm=Farm::create([
+                                'name' => $wiseconnFarm->name,
+                                'description' => $wiseconnFarm->description,
+                                'latitude' => $wiseconnFarm->latitude,
+                                'longitude' => $wiseconnFarm->longitude,
+                                'postalAddress' => $wiseconnFarm->postalAddress,
+                                'timeZone' => $wiseconnFarm->timeZone,
+                                'webhook' => $wiseconnFarm->webhook,
+                                'id_account' => $account->id,
+                                'id_wiseconn' => $wiseconnFarm->id,
+                            ]);
+                            $nodesResponse = $this->getWiseconnNodes($farm);
+                            foreach ($nodesResponse as $key => $node) {
+                                if(is_null(Node::where("id_wiseconn",$node->id)->first())){
+                                    Node::create([
+                                        'name' => $node->name,
+                                        'lat' => $node->lat,
+                                        'lng' => $node->lng,
+                                        'nodeType' => $node->nodeType,
+                                        'id_farm' => $farm->id,
+                                        'id_wiseconn' => $node->id
+                                    ]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             $response = [
                 'message'=> 'Lista de campos',
                 'data' => Farm::with("account")->get(),
@@ -142,7 +220,7 @@ class FarmController extends Controller
             ], 500);
         }
     }
-    protected function getWiseconnElements($zone,$initTime,$endTime){
+    /*protected function getWiseconnElements($zone,$initTime,$endTime){
         $client = new Client([
             'base_uri' => 'https://apiv2.wiseconn.com',
             'timeout'  => 100.0,
@@ -162,38 +240,80 @@ class FarmController extends Controller
             ], 500);
         }
         return json_decode($realIrrigationsResponse->getBody()->getContents());
+    }*/
+    protected function getWiseconnZones($farm){
+        $client = new Client([
+            'base_uri' => 'https://apiv2.wiseconn.com',
+            'timeout'  => 100.0,
+        ]);        
+        try {
+            $zonesResponse = $client->request('GET','/farms/'.$farm->id_wiseconn.'/zones/', [
+                'headers' => [
+                    'api_key' => '9Ev6ftyEbHhylMoKFaok',
+                    'Accept'     => 'application/json'
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+        return json_decode($zonesResponse->getBody()->getContents());
     }
     public function zones($id){
         try {            
             $initTime=Carbon::now(date_default_timezone_get())->subDays(2)->format('Y-m-d');
             $endTime=Carbon::now(date_default_timezone_get())->format('Y-m-d');
-            $zones = Zone::where("id_farm",$id)->get();
-            /*foreach ($zones as $key => $zone) {
-                    # code...
-                $wiseconnElements = $this->getWiseconnElements($zone,$initTime,$endTime);
-                foreach ($wiseconnElements as $key => $element) {
-                    $realIrrigation=RealIrrigation::where("id_wiseconn",$element->id)->where("id_zone",$zone->id)->first();
-                    if($realIrrigation){
-                        if($realIrrigation->status!=$element->status){
-                            $realIrrigation->status=$element->status;
-                            $realIrrigation->update();
+            $farm=Farm::find($id);
+            $zones = Zone::where("id_farm",$farm->id)->get();
+            $today = Carbon::today();
+            $wiseconnZones=[];
+            if((Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($farm->updated_at)->format('Y-m-d').'T00:00:00.000000Z'))||count($zones)==0){
+                $wiseconnZones = $this->getWiseconnZones($farm);
+                foreach ($wiseconnZones as $key => $wiseconnZone) {
+                    if(isset($wiseconnZone->id)){
+                        $zone=Zone::where("id_wiseconn",$wiseconnZone->id)->first();
+                        if(is_null($zone)){
+                            $pumpSystem=Pump_system::where("id_wiseconn",$wiseconnZone->pumpSystemId)->first();
+                            $element = Zone::create([
+                                'name' => $wiseconnZone->name,
+                                'description' => $wiseconnZone->description,
+                                'latitude' => $wiseconnZone->latitude,
+                                'longitude' => $wiseconnZone->longitude,
+                                'type' => $wiseconnZone->type,
+                                'kc' => $wiseconnZone->kc,
+                                'theoreticalFlow' => $wiseconnZone->theoreticalFlow,
+                                'unitTheoreticalFlow' => $wiseconnZone->unitTheoreticalFlow,
+                                'efficiency' => $wiseconnZone->efficiency,
+                                'humidityRetention' => $wiseconnZone->humidityRetention,
+                                'max' => $wiseconnZone->max,
+                                'min' => $wiseconnZone->min,
+                                'criticalPoint1' => $wiseconnZone->criticalPoint1,
+                                'criticalPoint2' => $wiseconnZone->criticalPoint2,
+                                'id_farm' => $farm->id,
+                                'id_pump_system' => isset($pumpSystem->id)?$pumpSystem->id:null,
+                                'id_wiseconn' => isset($wiseconnZone->id)?$wiseconnZone->id:null
+                            ]); 
+                            if(isset($wiseconnZone->polygon->path)){
+                                foreach ($wiseconnZone->polygon->path as $key => $path) {
+                                    Path::create([
+                                        'id_zone' => $element->id,
+                                        'lat' => $path->lat,
+                                        'lng' => $path->lng,
+                                    ]);
+                                }
+                            }
+                            $farm->touch();
                         }
-                    }else{
-                        $pumpSystem=Pump_system::where("id_wiseconn",$element->pumpSystemId)->first();
-                        RealIrrigation::create([
-                            'initTime' => isset($element->initTime)?$element->initTime:null,
-                            'endTime' =>isset($element->endTime)?$element->endTime:null,
-                            'status'=> isset($element->status)?$element->status:null,
-                            'id_pump_system'=> isset($pumpSystem->id)?$pumpSystem->id:null,
-                            'id_zone'=> isset($zone->id)?$zone->id:null,
-                            'id_wiseconn' => $element->id
-                        ]);  
                     }
-                }
-            }*/
+                } 
+            }
             $response = [
                 'message'=> 'Lista de zonas',
-                'data' => $zones,
+                'wiseconnZones'=>$wiseconnZones,
+                'data' => Zone::where("id_farm",$farm->id)->get(),
             ];
             return response()->json($response, 200);
             

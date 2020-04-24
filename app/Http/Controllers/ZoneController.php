@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use GuzzleHttp\Client;
 use Carbon\Carbon;
 use App\Zone;
 use App\Farm;
@@ -14,6 +15,7 @@ use App\Hydraulic;
 use App\Alarm;
 use App\RealIrrigation;
 use App\Polygon;
+use App\PhysicalConnection;
 class ZoneController extends Controller
 {
     public function store(Request $request){
@@ -222,12 +224,69 @@ class ZoneController extends Controller
             ], 500);
         }
     }
+    protected function getWiseconnMeasures($zone){
+        $client = new Client([
+            'base_uri' => 'https://apiv2.wiseconn.com',
+            'timeout'  => 100.0,
+        ]);        
+        try {
+            $measuresResponse = $client->request('GET','/zones/'.$zone->id_wiseconn.'/measures/', [
+                'headers' => [
+                    'api_key' => '9Ev6ftyEbHhylMoKFaok',
+                    'Accept'     => 'application/json'
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+        return json_decode($measuresResponse->getBody()->getContents());
+    }
     public function measures($id){
-        try {            
-            $elements = Measure::where("id_zone",$id)->get();
+        try {
+            $zone=Zone::find($id);
+            $today = Carbon::today();
+            if(is_null($zone)){
+                return response()->json(['message'=>'Zona no existente'],404);
+            }
+            $measures = Measure::where("id_zone",$zone->id)->get();
+            $wiseconnMeasures=[];
+            if((Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($zone->updated_at)->format('Y-m-d').'T00:00:00.000000Z'))||count($measures)==0){
+                $wiseconnMeasures = $this->getWiseconnMeasures($zone);
+                foreach ($wiseconnMeasures as $key => $wiseconnMeasure) {
+                    if(isset($wiseconnMeasure->id)){
+                        $measure=Measure::where("id_wiseconn",$wiseconnMeasure->id)->first();
+                        $farm=Farm::where("id_wiseconn",$wiseconnMeasure->farmId)->first();
+                        if(is_null($measure)){
+                            $measure = Measure::create([
+                                'name' => isset($wiseconnMeasure->name)?$wiseconnMeasure->name:null,
+                                'unit' => isset($wiseconnMeasure->unit)?$wiseconnMeasure->unit:null,
+                                'lastData' => isset($wiseconnMeasure->lastData)?$wiseconnMeasure->lastData:null,
+                                'lastDataDate'=> isset($wiseconnMeasure->lastDataDate)?(Carbon::parse($wiseconnMeasure->lastDataDate)):null,
+                                'monitoringTime' => isset($wiseconnMeasure->monitoringTime)?$wiseconnMeasure->monitoringTime:null,
+                                'sensorType' => isset($wiseconnMeasure->sensorType)?$wiseconnMeasure->sensorType:null,
+                                'id_zone' => isset($zone->id)?$zone->id:null,
+                                'id_farm' => isset($farm->id)?$farm->id:null,
+                                'id_wiseconn' => $wiseconnMeasure->id
+                            ]);
+                            if(isset($wiseconnMeasure->id_physical_connection)){
+                                PhysicalConnection::create([
+                                    'expansionPort'=> isset($wiseconnMeasure->physicalConnection)?$wiseconnMeasure->physicalConnection->expansionPort:null,
+                                    'expansionBoard'=> isset($wiseconnMeasure->physicalConnection)?$wiseconnMeasure->physicalConnection->expansionBoard:null,
+                                    'nodePort'=> isset($wiseconnMeasure->physicalConnection)?$wiseconnMeasure->physicalConnection->nodePort:null
+                                ]);
+                            }
+                            $zone->touch();
+                        }
+                    }
+                }
+            }
             $response = [
                 'message'=> 'Measure encontrado satisfactoriamente',
-                'data' => $elements,
+                'data' => Measure::where("id_zone",$zone->id)->get(),
             ];
             return response()->json($response, 200);
         } catch (\Exception $e) {

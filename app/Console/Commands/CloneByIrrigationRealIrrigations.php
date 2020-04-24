@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client;
 use App\Irrigation;
 use App\RealIrrigation;
+use App\Farm;
 use App\Zone;
 use App\Pump_system;
 use App\Volume;
@@ -81,6 +82,7 @@ class CloneByIrrigationRealIrrigations extends Command
                 $realIrrigations=json_decode($realIrrigationsResponse->getBody()->getContents());
                 foreach ($realIrrigations as $key => $realIrrigation) {
                     $zone=Zone::where("id_wiseconn",$realIrrigation->zoneId)->first();
+                    $farm=Farm::where("id_wiseconn",$irrigation->farmId)->first();
                     $pumpSystem=Pump_system::where("id_wiseconn",$realIrrigation->pumpSystemId)->first();
                     if(is_null(RealIrrigation::where("id_wiseconn",$realIrrigation->id)->first())&&!is_null($zone)&&!is_null($pumpSystem)){ 
                         $newVolume =$this->volumeCreate($realIrrigation);
