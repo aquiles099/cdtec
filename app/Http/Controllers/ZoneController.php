@@ -345,21 +345,69 @@ class ZoneController extends Controller
             ], 500);
         }
     }
-    
+    protected function getWiseconnRealIrrigations($zone,$initTime,$endTime){
+        $client = new Client([
+            'base_uri' => 'https://apiv2.wiseconn.com',
+            'timeout'  => 100.0,
+        ]);        
+        try {
+            $zonesResponse = $client->request('GET','/zones/'.$zone->id_wiseconn.'/realIrrigations/?endTime='.$endTime.'&initTime='.$initTime, [
+                'headers' => [
+                    'api_key' => '9Ev6ftyEbHhylMoKFaok',
+                    'Accept'     => 'application/json'
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+        return json_decode($zonesResponse->getBody()->getContents());
+    }
     public function realIrrigations(Request $request,$id){
         try {            
             $initTime=(Carbon::parse($request->input("initTime")))->format('Y-m-d');
             $endTime=(Carbon::parse($request->input("endTime")))->format('Y-m-d');
+            $today = Carbon::today();
             $zone=Zone::find($id);
             if($zone){
-                $localElements = RealIrrigation::where("id_zone",$zone->id)
+                $farm=$zone->id_farm?Farm::find($zone->id_farm):null;
+                $realIrrigations = RealIrrigation::where("id_zone",$zone->id)
                     ->where("initTime",">=",$initTime)
                     ->where(function ($q) use ($endTime) {
                         $q->where("endTime","<=",$endTime)->orWhere("status", "Running");
                     })->with("pumpSystem")->with("irrigations")->with("farm")->get();
+                if((Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($zone->updated_at)->format('Y-m-d').'T00:00:00.000000Z'))&&count($realIrrigations)==0){
+                    //||count($realIrrigations)==0
+                    $wiseconnRealIrrigations = $this->getWiseconnRealIrrigations($zone,$initTime,$endTime);
+                    foreach ($wiseconnRealIrrigations as $key => $wiseconnRealIrrigation) {
+                        if(isset($wiseconnRealIrrigation->id)){
+                            $realIrrigation=RealIrrigation::where("id_wiseconn",$wiseconnRealIrrigation->id)->first();
+                            if(is_null($realIrrigation)){                                    
+                                $pumpSystem=Pump_system::where("id_wiseconn",$wiseconnRealIrrigation->pumpSystemId)->first();
+                                $realIrrigation= RealIrrigation::create([
+                                    'initTime' => isset($wiseconnRealIrrigation->initTime)?$wiseconnRealIrrigation->initTime:null,
+                                    'endTime' =>isset($wiseconnRealIrrigation->endTime)?$wiseconnRealIrrigation->endTime:null,
+                                    'status'=> isset($wiseconnRealIrrigation->status)?$wiseconnRealIrrigation->status:null,
+                                    'id_farm'=> isset($farm->id)?$farm->id:null,
+                                    'id_pump_system'=> isset($pumpSystem->id)?$pumpSystem->id:null,
+                                    'id_zone'=> isset($zone->id)?$zone->id:null,
+                                    'id_wiseconn' => $wiseconnRealIrrigation->id
+                                ]);
+                               $zone->touch();
+                            }                             
+                        }
+                    }
+                }
                 $response = [
                     'message'=> 'Lista de RealIrrigation',
-                    'data' => $localElements
+                    'data' => RealIrrigation::where("id_zone",$zone->id)
+                    ->where("initTime",">=",$initTime)
+                    ->where(function ($q) use ($endTime) {
+                        $q->where("endTime","<=",$endTime)->orWhere("status", "Running");
+                    })->with("pumpSystem")->with("irrigations")->with("farm")->get()
                 ];
                 return response()->json($response, 200);
             }else{                

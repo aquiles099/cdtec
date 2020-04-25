@@ -205,6 +205,7 @@ class CloneByNodeMeasures extends Command
                             $zone=Zone::where("id_wiseconn",$measure->zoneId)->first(); 
                             if($measure->farmId==$farm->id_wiseconn&&!is_null($farm)&&!is_null($zone)){ 
                                 $newmeasure =$this->measureCreate($measure,$farm,$zone,$newPhysicalConnection); 
+                                $zone->touch();
                                 if(isset($measure->sensorType)){
                                     $newSensorType=$this->sensorTypeCreate($measure,$farm,$zone);
                                     if(!is_null($newSensorType)){

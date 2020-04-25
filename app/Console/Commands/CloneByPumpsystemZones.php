@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client;
+use App\Farm;
 use App\Zone;
 use App\Pump_system;
 use Carbon\Carbon;
@@ -81,6 +82,10 @@ class CloneByPumpsystemZones extends Command
                     $pumpSystem=Pump_system::where("id_wiseconn",$zone->pumpSystemId)->first();
                     if(is_null(Zone::where("id_wiseconn",$zone->id)->first()) && !is_null($pumpSystem)){
                         $newZone= $this->zoneCreate($zone,$pumpSystem);
+                        if($zone->id_farm){
+                            $farm=Farm::find($zone->id_farm);
+                            $farm->touch();
+                        }
                         $this->info("New Zone id:".$newZone->id);                                                      
                     }
                 }

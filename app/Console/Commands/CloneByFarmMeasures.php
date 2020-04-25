@@ -230,6 +230,7 @@ class CloneByFarmMeasures extends Command
                         if(is_null($measureRegistered)){
                             $newPhysicalConnection =$this->physicalConnectionCreate($measure);
                             $newmeasure =$this->measureCreate($measure,$farm,$zone,$node,$newPhysicalConnection);
+                            $zone->touch();
                             if(isset($measure->sensorType)){
                                 $newSensorType=$this->sensorTypeCreate($measure,$farm,$zone);
                                 if(!is_null($newSensorType)){

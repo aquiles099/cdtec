@@ -118,6 +118,7 @@ class CloneByFarmZones extends Command
                         $farm=Farm::where("id_wiseconn",$zone->farmId)->first();
                         if(is_null(Zone::where("id_wiseconn",$zone->id)->first()) && !is_null($farm)){
                             $newZone= $this->zoneCreate($zone,$farm); 
+                            $farm->touch();
                             $this->info("New Zone id:".$newZone->id);
                         }
                     }                    

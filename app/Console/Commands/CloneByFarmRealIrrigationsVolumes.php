@@ -99,6 +99,7 @@ class CloneByFarmRealIrrigationsVolumes extends Command
                         if(is_null($realIrrigationRegistered)){ 
                             $newVolume =$this->volumeCreate($realIrrigation);
                             $newRealIrrigation =$this->realIirrigationCreate($realIrrigation,$farm,$zone,$newVolume,$pumpSystem);
+                            $zone->touch();
                             $this->info("New Volume id:".$newVolume->id." / New RealIrrigation id:".$newRealIrrigation->id);                                                                 
                         }else{
                             $realIrrigationUpdated=$this->realIrrigationUpdate($realIrrigation,$realIrrigationRegistered,$farm,$zone,$pumpSystem);
