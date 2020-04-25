@@ -254,7 +254,8 @@ class ZoneController extends Controller
             }
             $measures = Measure::where("id_zone",$zone->id)->get();
             $wiseconnMeasures=[];
-            if((Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($zone->updated_at)->format('Y-m-d').'T00:00:00.000000Z'))||count($measures)==0){
+            $isAfter=(Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($zone->updated_at)->format('Y-m-d').'T00:00:00.000000Z'));
+            if($isAfter||count($measures)==0){
                 $wiseconnMeasures = $this->getWiseconnMeasures($zone);
                 foreach ($wiseconnMeasures as $key => $wiseconnMeasure) {
                     if(isset($wiseconnMeasure->id)){
@@ -381,7 +382,7 @@ class ZoneController extends Controller
                         $q->where("endTime","<=",$endTime)->orWhere("status", "Running");
                     })->with("pumpSystem")->with("irrigations")->with("farm")->get();
                 $isAfter=Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($zone->updated_at)->format('Y-m-d').'T00:00:00.000000Z');
-                if($isAfter){
+                if($isAfter||count($realIrrigations)==0){
                     $wiseconnRealIrrigations = $this->getWiseconnRealIrrigations($zone,$initTime,$endTime);
                     foreach ($wiseconnRealIrrigations as $key => $wiseconnRealIrrigation) {
                         if(isset($wiseconnRealIrrigation->id)){

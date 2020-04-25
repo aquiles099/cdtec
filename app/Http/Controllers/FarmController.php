@@ -93,15 +93,17 @@ class FarmController extends Controller
                             ]);
                             $nodesResponse = $this->getWiseconnNodes($farm);
                             foreach ($nodesResponse as $key => $node) {
-                                if(is_null(Node::where("id_wiseconn",$node->id)->first())){
-                                    Node::create([
-                                        'name' => $node->name,
-                                        'lat' => $node->lat,
-                                        'lng' => $node->lng,
-                                        'nodeType' => $node->nodeType,
-                                        'id_farm' => $farm->id,
-                                        'id_wiseconn' => $node->id
-                                    ]);
+                                if(isset($node->id)){
+                                    if(is_null(Node::where("id_wiseconn",$node->id)->first())){
+                                        Node::create([
+                                            'name' => $node->name,
+                                            'lat' => $node->lat,
+                                            'lng' => $node->lng,
+                                            'nodeType' => $node->nodeType,
+                                            'id_farm' => $farm->id,
+                                            'id_wiseconn' => $node->id
+                                        ]);
+                                    }   
                                 }
                             }
                         }
@@ -279,9 +281,9 @@ class FarmController extends Controller
             $farm=Farm::find($id);
             $zones = Zone::where("id_farm",$farm->id)->get();
             $today = Carbon::today();
-            $wiseconnZones=[];
-            $wiseconnZones = $this->getWiseconnZones($farm);
-            if((Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($farm->updated_at)->format('Y-m-d').'T00:00:00.000000Z'))||count($zones)==0||(count($zones)<count($wiseconnZones))){
+            $isAfter=(Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($farm->updated_at)->format('Y-m-d').'T00:00:00.000000Z'));
+            if($isAfter||count($zones)==0){
+                $wiseconnZones = $this->getWiseconnZones($farm);
                 foreach ($wiseconnZones as $key => $wiseconnZone) {
                     if(isset($wiseconnZone->id)){
                         $zone=Zone::where("id_wiseconn",$wiseconnZone->id)->first();
@@ -322,7 +324,6 @@ class FarmController extends Controller
             }
             $response = [
                 'message'=> 'Lista de zonas',
-                'wiseconnZones'=>$wiseconnZones,
                 'data' => Zone::where("id_farm",$farm->id)->get(),
             ];
             return response()->json($response, 200);
