@@ -367,11 +367,12 @@ class ZoneController extends Controller
         return json_decode($zonesResponse->getBody()->getContents());
     }
     public function realIrrigations(Request $request,$id){
-        try {            
+        try {
             $initTime=(Carbon::parse($request->input("initTime")))->format('Y-m-d');
             $endTime=(Carbon::parse($request->input("endTime")))->format('Y-m-d');
             $today = Carbon::today();
             $zone=Zone::find($id);
+            $wiseconnRealIrrigations=[];
             if($zone){
                 $farm=$zone->id_farm?Farm::find($zone->id_farm):null;
                 $realIrrigations = RealIrrigation::where("id_zone",$zone->id)
@@ -379,8 +380,8 @@ class ZoneController extends Controller
                     ->where(function ($q) use ($endTime) {
                         $q->where("endTime","<=",$endTime)->orWhere("status", "Running");
                     })->with("pumpSystem")->with("irrigations")->with("farm")->get();
-                if((Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($zone->updated_at)->format('Y-m-d').'T00:00:00.000000Z'))&&count($realIrrigations)==0){
-                    //||count($realIrrigations)==0
+                $isAfter=Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($zone->updated_at)->format('Y-m-d').'T00:00:00.000000Z');
+                if($isAfter){
                     $wiseconnRealIrrigations = $this->getWiseconnRealIrrigations($zone,$initTime,$endTime);
                     foreach ($wiseconnRealIrrigations as $key => $wiseconnRealIrrigation) {
                         if(isset($wiseconnRealIrrigation->id)){
@@ -396,13 +397,16 @@ class ZoneController extends Controller
                                     'id_zone'=> isset($zone->id)?$zone->id:null,
                                     'id_wiseconn' => $wiseconnRealIrrigation->id
                                 ]);
-                               $zone->touch();
                             }                             
                         }
                     }
                 }
+                $zone->touch();
                 $response = [
                     'message'=> 'Lista de RealIrrigation',
+                    'zone'=> $zone,
+                    'isAfter'=>$isAfter,
+                    'wiseconnRealIrrigations'=>$wiseconnRealIrrigations,
                     'data' => RealIrrigation::where("id_zone",$zone->id)
                     ->where("initTime",">=",$initTime)
                     ->where(function ($q) use ($endTime) {
