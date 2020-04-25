@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
 use App\Farm;
+use App\Account;
 use App\Zone;
 use App\Node;
 use App\Hydraulic;
@@ -70,6 +71,15 @@ class FarmController extends Controller
                     if(isset($wiseconnFarm->id)){
                         $farm=Farm::where("id_wiseconn",$wiseconnFarm->id)->first();
                         if(is_null($farm)){
+                            if(isset($wiseconnFarm->account)){
+                                $account=Account::where("id_wiseconn",$wiseconnFarm->account->id)->first();
+                                if(!$account){
+                                    $account = Account::create([
+                                        'name' => $wiseconnFarm->account->name,
+                                        'id_wiseconn' => $wiseconnFarm->account->id,
+                                    ]);
+                                }
+                            }
                             $farm=Farm::create([
                                 'name' => $wiseconnFarm->name,
                                 'description' => $wiseconnFarm->description,
@@ -78,7 +88,7 @@ class FarmController extends Controller
                                 'postalAddress' => $wiseconnFarm->postalAddress,
                                 'timeZone' => $wiseconnFarm->timeZone,
                                 'webhook' => $wiseconnFarm->webhook,
-                                'id_account' => $account->id,
+                                'id_account' => $account?$account->id:null,
                                 'id_wiseconn' => $wiseconnFarm->id,
                             ]);
                             $nodesResponse = $this->getWiseconnNodes($farm);
