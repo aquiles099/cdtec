@@ -88,40 +88,44 @@ class CloneByFarmFarmsAccountsNodes extends Command
             $id_wiseconn=null;
             $farmsResponse = $this->requestWiseconn($client,'GET',$currentRequestUri);
             $farms=json_decode($farmsResponse->getBody()->getContents());
+            $farmsIdsToClone=[520,1378,185,2110,719];
             foreach ($farms as $key => $farm) {
-                if(is_null(Farm::where("id_wiseconn",$farm->id)->first())){
-                    if(isset($farm->account)){
-                        $account=Account::where("id_wiseconn",$farm->account->id)->first();
-                        if(is_null($account)){
-                            $account= $this->accountCreate($farm);
-                            $this->info("New account id:".$account->id);
-                        }
-                        $newFarm= $this->farmCreate($farm,$account);
-                        $this->info("New farm id:".$newFarm->id);
-                        try {
-                            $currentRequestUri='/farms/'.$farm->id.'/nodes';
-                            $currentRequestElement='/farms/id/nodes';
-                            $id_wiseconn=$farm->id;
-                            $nodesResponse = $this->requestWiseconn($client,'GET',$currentRequestUri);
-                            $nodes=json_decode($nodesResponse->getBody()->getContents());
-                            foreach ($nodes as $key => $node) {
-                                if(is_null(Node::where("id_wiseconn",$node->id)->first())){
-                                    $newNode= $this->nodeCreate($node,$newFarm);
-                                    $this->info("New node id:".$newNode->id);
+                //prueba de filtrado de farms a clonar
+                if(array_search($farm->id, $farmsIdsToClone)){
+                    if(is_null(Farm::where("id_wiseconn",$farm->id)->first())){
+                        if(isset($farm->account)){
+                            $account=Account::where("id_wiseconn",$farm->account->id)->first();
+                            if(is_null($account)){
+                                $account= $this->accountCreate($farm);
+                                $this->info("New account id:".$account->id);
+                            }
+                            $newFarm= $this->farmCreate($farm,$account);
+                            $this->info("New farm id:".$newFarm->id);
+                            try {
+                                $currentRequestUri='/farms/'.$farm->id.'/nodes';
+                                $currentRequestElement='/farms/id/nodes';
+                                $id_wiseconn=$farm->id;
+                                $nodesResponse = $this->requestWiseconn($client,'GET',$currentRequestUri);
+                                $nodes=json_decode($nodesResponse->getBody()->getContents());
+                                foreach ($nodes as $key => $node) {
+                                    if(is_null(Node::where("id_wiseconn",$node->id)->first())){
+                                        $newNode= $this->nodeCreate($node,$newFarm);
+                                        $this->info("New node id:".$newNode->id);
+                                    }
                                 }
-                            }
-                        } catch (\Exception $e) {
-                            $this->error("Error:" . $e->getMessage());
-                            $this->error("Linea:" . $e->getLine());
-                            $this->error("currentRequestUri:" . $currentRequestUri);
-                            if(is_null(CloningErrors::where("elements",$currentRequestElement)->where("uri",$currentRequestUri)->where("id_wiseconn",$id_wiseconn)->first())){
-                                $cloningError=new CloningErrors();
-                                $cloningError->elements=$currentRequestElement;
-                                $cloningError->uri=$currentRequestUri;
-                                $cloningError->id_wiseconn=$id_wiseconn;
-                                $cloningError->save();
-                            }
-                        } 
+                            } catch (\Exception $e) {
+                                $this->error("Error:" . $e->getMessage());
+                                $this->error("Linea:" . $e->getLine());
+                                $this->error("currentRequestUri:" . $currentRequestUri);
+                                if(is_null(CloningErrors::where("elements",$currentRequestElement)->where("uri",$currentRequestUri)->where("id_wiseconn",$id_wiseconn)->first())){
+                                    $cloningError=new CloningErrors();
+                                    $cloningError->elements=$currentRequestElement;
+                                    $cloningError->uri=$currentRequestUri;
+                                    $cloningError->id_wiseconn=$id_wiseconn;
+                                    $cloningError->save();
+                                }
+                            } 
+                        }
                     }
                 }
             }
