@@ -371,7 +371,7 @@ class ZoneController extends Controller
                                 $wiseconnRealIrrigations = json_decode(($this->requestWiseconn(new Client([
                                     'base_uri' => 'https://apiv2.wiseconn.com',
                                     'timeout'  => 100.0,
-                                ]),'GET','/zones/'.$zone->id_wiseconn.'/realIrrigations/?endTime='.$endTime.'&initTime='.$initTime))->getBody()->getContents());
+                                ]),'GET',$cloningError->uri))->getBody()->getContents());
                                 foreach ($wiseconnRealIrrigations as $key => $wiseconnRealIrrigation) {
                                     if(isset($wiseconnRealIrrigation->id)){
                                         $realIrrigation=RealIrrigation::where("id_wiseconn",$wiseconnRealIrrigation->id)->first();
