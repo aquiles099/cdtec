@@ -11,6 +11,7 @@ use App\Zone;
 use App\Pump_system;
 use App\Volume;
 use Carbon\Carbon;
+use App\CloningErrors;
 class CloneByFarmIrrigationsVolumes extends Command
 {
     /**
@@ -84,22 +85,36 @@ class CloneByFarmIrrigationsVolumes extends Command
         try{
             $farms=Farm::all();
             foreach ($farms as $key => $farm) {
-                $irrigationsResponse = $this->requestWiseconn($client,'GET','/farms/'.$farm->id_wiseconn.'/irrigations/?endTime='.$endTime.'&initTime='.$initTime);
-                $irrigations=json_decode($irrigationsResponse->getBody()->getContents());
-                foreach ($irrigations as $key => $irrigation) {
-                    $zone=Zone::where("id_wiseconn",$irrigation->zoneId)->first();
-                    $pumpSystem=Pump_system::where("id_wiseconn",$irrigation->pumpSystemId)->first();
-                    if(is_null(Irrigation::where("id_wiseconn",$irrigation->id)->first())&&!is_null($zone)&&!is_null($pumpSystem)){ 
-                        $newVolume =$this->volumeCreate($irrigation);
-                        $newIrrigation =$this->irrigationCreate($irrigation,$farm,$zone,$newVolume,$pumpSystem);
-                        $this->info("New Volume id:".$newVolume->id." / New Irrigation id:".$newIrrigation->id);
-                    }
-                }                    
+                try{
+                    $currentRequestUri='/farms/'.$farm->id_wiseconn.'/irrigations/?endTime='.$endTime.'&initTime='.$initTime;
+                    $currentRequestElement='/farms/id/irrigations';
+                    $id_wiseconn=$farm->id_wiseconn;
+                    $irrigationsResponse = $this->requestWiseconn($client,'GET',$currentRequestUri);
+                    $irrigations=json_decode($irrigationsResponse->getBody()->getContents());
+                    foreach ($irrigations as $key => $irrigation) {
+                        $zone=Zone::where("id_wiseconn",$irrigation->zoneId)->first();
+                        $pumpSystem=Pump_system::where("id_wiseconn",$irrigation->pumpSystemId)->first();
+                        if(is_null(Irrigation::where("id_wiseconn",$irrigation->id)->first())&&!is_null($zone)&&!is_null($pumpSystem)){ 
+                            $newVolume =$this->volumeCreate($irrigation);
+                            $newIrrigation =$this->irrigationCreate($irrigation,$farm,$zone,$newVolume,$pumpSystem);
+                            $this->info("New Volume id:".$newVolume->id." / New Irrigation id:".$newIrrigation->id);
+                        }
+                    } 
+                } catch (\Exception $e) {
+                    $this->error("Error:" . $e->getMessage());
+                    $this->error("Linea:" . $e->getLine());
+                    $this->error("currentRequestUri:" . $currentRequestUri);
+                    $cloningError=new CloningErrors();
+                    $cloningError->elements=$currentRequestElement;
+                    $cloningError->uri=$currentRequestUri;
+                    $cloningError->id_wiseconn=$id_wiseconn;
+                    $cloningError->save();
+                }                     
             }
             $this->info("Success: Clone irrigations and volumes data by farm");
         } catch (\Exception $e) {
             $this->error("Error:" . $e->getMessage());
-            $this->error("Linea:" . $e->getLine());
+            $this->error("Linea:" . $e->getLine());            
         }  
     }
 }

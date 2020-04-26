@@ -10,6 +10,7 @@ use App\Alarm;
 use App\Zone;
 use App\RealIrrigation;
 use Carbon\Carbon;
+use App\CloningErrors;
 
 class CloneByZoneAlarms extends Command
 {
@@ -71,17 +72,31 @@ class CloneByZoneAlarms extends Command
         try {
             $zones=Zone::all();
             foreach ($zones as $key => $zone) {
-                $alarmsResponse = $this->requestWiseconn($client,'GET','/zones/'.$zone->id_wiseconn.'/alarms/triggered/?endTime='.$endTime.'&initTime='.$initTime);
-                $this->info('/zones/'.$zone->id_wiseconn.'/alarms/triggered/?endTime='.$endTime.'&initTime='.$initTime);
-                $alarms=json_decode($alarmsResponse->getBody()->getContents());
-                foreach ($alarms as $key => $alarm) {
-                    $farm=Farm::where("id_wiseconn",$alarm->farmId)->first();
-                    $realIrrigation=RealIrrigation::where("id_wiseconn",$alarm->realIrrigationId)->first();
-                    if(is_null(Alarm::where("id_wiseconn",$alarm->id)->first())&&!is_null($farm)&&!is_null($realIrrigation)){
-                        $newAlarm= $this->alarmCreate($alarm,$farm,$zone,$realIrrigation);
-                        $this->info("New Alarm id:".$newAlarm->id);
+                try {
+                    $currentRequestUri='/zones/'.$zone->id_wiseconn.'/alarms/triggered/?endTime='.$endTime.'&initTime='.$initTime;
+                    $currentRequestElement='/zones/id/alarms/triggered';
+                    $id_wiseconn=$zone->id_wiseconn;
+                    $alarmsResponse = $this->requestWiseconn($client,'GET',$currentRequestUri);
+                    $this->info('/zones/'.$zone->id_wiseconn.'/alarms/triggered/?endTime='.$endTime.'&initTime='.$initTime);
+                    $alarms=json_decode($alarmsResponse->getBody()->getContents());
+                    foreach ($alarms as $key => $alarm) {
+                        $farm=Farm::where("id_wiseconn",$alarm->farmId)->first();
+                        $realIrrigation=RealIrrigation::where("id_wiseconn",$alarm->realIrrigationId)->first();
+                        if(is_null(Alarm::where("id_wiseconn",$alarm->id)->first())&&!is_null($farm)&&!is_null($realIrrigation)){
+                            $newAlarm= $this->alarmCreate($alarm,$farm,$zone,$realIrrigation);
+                            $this->info("New Alarm id:".$newAlarm->id);
+                        }
                     }
-                }                
+                } catch (\Exception $e) {
+                    $this->error($e->getMessage());
+                    $this->error($e->getLine());
+                    $this->error("currentRequestUri:" . $currentRequestUri);
+                    $cloningError=new CloningErrors();
+                    $cloningError->elements=$currentRequestElement;
+                    $cloningError->uri=$currentRequestUri;
+                    $cloningError->id_wiseconn=$id_wiseconn;
+                    $cloningError->save();
+                }  
             }
             # code...
             $this->info("Success: Clone farms, accounts and nodes data by zone");

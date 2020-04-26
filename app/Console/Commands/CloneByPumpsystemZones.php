@@ -9,6 +9,7 @@ use App\Farm;
 use App\Zone;
 use App\Pump_system;
 use Carbon\Carbon;
+use App\CloningErrors;
 class CloneByPumpsystemZones extends Command
 {
     /**
@@ -76,19 +77,33 @@ class CloneByPumpsystemZones extends Command
         try { 
             $pumpSystems=Pump_system::all();
             foreach ($pumpSystems as $key => $pumpSystem) {
-                $zonesResponse =  $this->requestWiseconn($client,'GET','/pumpSystems/'.$pumpSystem->id_wiseconn.'/zones');
-                $zones=json_decode($zonesResponse->getBody()->getContents());                
-                foreach ($zones as $key => $zone) {
-                    $pumpSystem=Pump_system::where("id_wiseconn",$zone->pumpSystemId)->first();
-                    if(is_null(Zone::where("id_wiseconn",$zone->id)->first()) && !is_null($pumpSystem)){
-                        $newZone= $this->zoneCreate($zone,$pumpSystem);
-                        if($zone->id_farm){
-                            $farm=Farm::find($zone->id_farm);
-                            $farm->touch();
+                try { 
+                    $currentRequestUri='/pumpSystems/'.$pumpSystem->id_wiseconn.'/zones';
+                    $currentRequestElement='/pumpSystems/id/zones';
+                    $id_wiseconn=$pumpSystem->id_wiseconn;
+                    $zonesResponse =  $this->requestWiseconn($client,'GET',$currentRequestUri);
+                    $zones=json_decode($zonesResponse->getBody()->getContents());                
+                    foreach ($zones as $key => $zone) {
+                        $pumpSystem=Pump_system::where("id_wiseconn",$zone->pumpSystemId)->first();
+                        if(is_null(Zone::where("id_wiseconn",$zone->id)->first()) && !is_null($pumpSystem)){
+                            $newZone= $this->zoneCreate($zone,$pumpSystem);
+                            if($zone->id_farm){
+                                $farm=Farm::find($zone->id_farm);
+                                $farm->touch();
+                            }
+                            $this->info("New Zone id:".$newZone->id);                                                      
                         }
-                        $this->info("New Zone id:".$newZone->id);                                                      
                     }
-                }
+                } catch (\Exception $e) {
+                    $this->error("Error:" . $e->getMessage());
+                    $this->error("Linea:" . $e->getLine());
+                    $this->error("currentRequestUri:" . $currentRequestUri);
+                    $cloningError=new CloningErrors();
+                    $cloningError->elements=$currentRequestElement;
+                    $cloningError->uri=$currentRequestUri;
+                    $cloningError->id_wiseconn=$id_wiseconn;
+                    $cloningError->save();
+                } 
             }
             $this->info("Success: Clone pumpsystems data by farm");
         } catch (\Exception $e) {

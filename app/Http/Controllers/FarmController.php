@@ -226,6 +226,58 @@ class FarmController extends Controller
         }
         return json_decode($realIrrigationsResponse->getBody()->getContents());
     }*/
+    protected function zoneCreate($zone,$farm){
+        $newZone=Zone::create([
+            'name' => isset($zone->name)?$zone->name:null,
+            'description' => isset($zone->description)?$zone->description:null,
+            'latitude' => isset($zone->latitude)?$zone->latitude:null,
+            'longitude' => isset($zone->longitude)?$zone->longitude:null,
+            'id_farm' => isset($farm->id)?$farm->id:null,
+            'kc' => isset($zone->kc)?$zone->kc:null,
+            'theoreticalFlow' => isset($zone->theoreticalFlow)?$zone->theoreticalFlow:null,
+            'unitTheoreticalFlow' => isset($zone->unitTheoreticalFlow)?$zone->unitTheoreticalFlow:null,
+            'efficiency' => isset($zone->efficiency)?$zone->efficiency:null,
+            'humidityRetention' => isset($zone->humidityRetention)?$zone->humidityRetention:null,
+            'max' => isset($zone->max)?$zone->max:null,
+            'min' => isset($zone->min)?$zone->min:null,
+            'criticalPoint1' => isset($zone->criticalPoint1)?$zone->criticalPoint1:null,
+            'criticalPoint2' => isset($zone->criticalPoint2)?$zone->criticalPoint2:null,
+            'id_pump_system' => isset($zone->pumpSystemId)?$zone->pumpSystemId:null,
+            'id_wiseconn' => isset($zone->id)?$zone->id:null
+        ]);
+        if(isset($zone->type)){
+            foreach ($zone->type as $key => $type) {
+                Type::create([
+                    'description'=>$type,
+                    'id_zone'=>$newZone->id,
+                ]);
+            }
+        }
+        if(isset($zone->polygon->path)){
+            foreach ($zone->polygon->path as $key => $path) {
+                Path::create([
+                    'id_zone' => $newZone->id,
+                    'lat' => $path->lat,
+                    'lng' => $path->lng,
+                ]);
+            }
+        }
+        if(isset($zone->polygon->bounds->southWest)){
+            SouthWestBound::create([
+                'id_zone' => $newZone->id,
+                'lat' => $zone->polygon->bounds->southWest->lat,
+                'lng' => $zone->polygon->bounds->southWest->lng,
+            ]);
+        }
+        if(isset($zone->polygon->bounds->northEast)){
+            NorthEastBound::create([
+                'id_zone' => $newZone->id,
+                'lat' => $zone->polygon->bounds->northEast->lat,
+                'lng' => $zone->polygon->bounds->northEast->lng,
+            ]);
+        }
+        return $newZone;
+    }
     public function zones($id){
         try {            
             $initTime=Carbon::now(date_default_timezone_get())->subDays(2)->format('Y-m-d');
@@ -244,25 +296,7 @@ class FarmController extends Controller
                         $zone=Zone::where("id_wiseconn",$wiseconnZone->id)->first();
                         if(is_null($zone)){
                             $pumpSystem=Pump_system::where("id_wiseconn",$wiseconnZone->pumpSystemId)->first();
-                            $element = Zone::create([
-                                'name' => $wiseconnZone->name,
-                                'description' => $wiseconnZone->description,
-                                'latitude' => $wiseconnZone->latitude,
-                                'longitude' => $wiseconnZone->longitude,
-                                'type' => $wiseconnZone->type,
-                                'kc' => $wiseconnZone->kc,
-                                'theoreticalFlow' => $wiseconnZone->theoreticalFlow,
-                                'unitTheoreticalFlow' => $wiseconnZone->unitTheoreticalFlow,
-                                'efficiency' => $wiseconnZone->efficiency,
-                                'humidityRetention' => $wiseconnZone->humidityRetention,
-                                'max' => $wiseconnZone->max,
-                                'min' => $wiseconnZone->min,
-                                'criticalPoint1' => $wiseconnZone->criticalPoint1,
-                                'criticalPoint2' => $wiseconnZone->criticalPoint2,
-                                'id_farm' => $farm->id,
-                                'id_pump_system' => isset($pumpSystem->id)?$pumpSystem->id:null,
-                                'id_wiseconn' => isset($wiseconnZone->id)?$wiseconnZone->id:null
-                            ]); 
+                            $element = $this->zoneCreate($wiseconnZone,$farm);
                             if(isset($wiseconnZone->polygon->path)){
                                 foreach ($wiseconnZone->polygon->path as $key => $path) {
                                     Path::create([
@@ -544,7 +578,7 @@ class FarmController extends Controller
             $today = Carbon::today();
             $isAfter=(Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($farm->updated_at)->format('Y-m-d').'T00:00:00.000000Z'));
             $sensorTypes = SensorType::where("id_farm",$farm->id)->with("zones")->get();
-            //if($isAfter||count($sensorTypes)==0){
+            if($isAfter||count($sensorTypes)==0){
                 $measures=json_decode(($this->requestWiseconn(new Client([
                     'base_uri' => 'https://apiv2.wiseconn.com',
                     'timeout'  => 100.0,
@@ -574,7 +608,7 @@ class FarmController extends Controller
                     }
                 }
                 $farm->touch();
-            //}
+            }
             $response = [
                 'message'=> 'Lista de SensorTypes',
                 'route'=>'/farms/'.$farm->id_wiseconn.'/measures',

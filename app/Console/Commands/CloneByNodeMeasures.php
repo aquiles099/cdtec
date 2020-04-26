@@ -14,6 +14,7 @@ use App\Measure;
 use App\PhysicalConnection;
 use App\SensorType;
 use App\SensorTypeZones;
+use App\CloningErrors;
 
 class CloneByNodeMeasures extends Command
 {
@@ -195,32 +196,46 @@ class CloneByNodeMeasures extends Command
         try{
             $nodes=Node::all();
             foreach ($nodes as $key => $node) {
-                $measuresResponse = $this->requestWiseconn($client,'GET','/nodes/'.$node->id_wiseconn.'/measures');
-                $measures=json_decode($measuresResponse->getBody()->getContents());
-                foreach ($measures as $key => $measure) {
-                    if(is_null(Measure::where("id_wiseconn",$measure->id)->first())){
-                        $newPhysicalConnection =$this->physicalConnectionCreate($measure);
-                        if(isset($measure->farmId)&&isset($measure->zoneId)){
-                            $farm=Farm::where("id_wiseconn",$measure->farmId)->first();
-                            $zone=Zone::where("id_wiseconn",$measure->zoneId)->first(); 
-                            if($measure->farmId==$farm->id_wiseconn&&!is_null($farm)&&!is_null($zone)){ 
-                                $newmeasure =$this->measureCreate($measure,$farm,$zone,$newPhysicalConnection); 
-                                $zone->touch();
-                                if(isset($measure->sensorType)){
-                                    $newSensorType=$this->sensorTypeCreate($measure,$farm,$zone);
-                                    if(!is_null($newSensorType)){
-                                        $this->info("New SensorType id:".$newSensorType->id);
+                try{
+                    $currentRequestUri='/nodes/'.$node->id_wiseconn.'/measures';
+                    $currentRequestElement='/nodes/id/measures';
+                    $id_wiseconn=$node->id_wiseconn;
+                    $measuresResponse = $this->requestWiseconn($client,'GET',$currentRequestUri);
+                    $measures=json_decode($measuresResponse->getBody()->getContents());
+                    foreach ($measures as $key => $measure) {
+                        if(is_null(Measure::where("id_wiseconn",$measure->id)->first())){
+                            $newPhysicalConnection =$this->physicalConnectionCreate($measure);
+                            if(isset($measure->farmId)&&isset($measure->zoneId)){
+                                $farm=Farm::where("id_wiseconn",$measure->farmId)->first();
+                                $zone=Zone::where("id_wiseconn",$measure->zoneId)->first(); 
+                                if($measure->farmId==$farm->id_wiseconn&&!is_null($farm)&&!is_null($zone)){ 
+                                    $newmeasure =$this->measureCreate($measure,$farm,$zone,$newPhysicalConnection); 
+                                    $zone->touch();
+                                    if(isset($measure->sensorType)){
+                                        $newSensorType=$this->sensorTypeCreate($measure,$farm,$zone);
+                                        if(!is_null($newSensorType)){
+                                            $this->info("New SensorType id:".$newSensorType->id);
+                                        }
                                     }
+                                    $this->info("New PhysicalConnectio id:".$newPhysicalConnection->id." / New Measure, id:".$newmeasure->id);
                                 }
-                                $this->info("New PhysicalConnectio id:".$newPhysicalConnection->id." / New Measure, id:".$newmeasure->id);
+                            }else{
+                                $newmeasure =$this->measureCreate($measure,$farm,null,$newPhysicalConnection); 
+                                $this->info("New PhysicalConnectio, id:".$newPhysicalConnection->id." / New Measure, id:".$newmeasure->id);
                             }
-                        }else{
-                            $newmeasure =$this->measureCreate($measure,$farm,null,$newPhysicalConnection); 
-                            $this->info("New PhysicalConnectio, id:".$newPhysicalConnection->id." / New Measure, id:".$newmeasure->id);
-                        }
-                        
-                    }  
-                }
+                            
+                        }  
+                    }
+                } catch (\Exception $e) {
+                    $this->error("Error:" . $e->getMessage());
+                    $this->error("Linea:" . $e->getLine());
+                    $this->error("currentRequestUri:" . $currentRequestUri);
+                    $cloningError=new CloningErrors();
+                    $cloningError->elements=$currentRequestElement;
+                    $cloningError->uri=$currentRequestUri;
+                    $cloningError->id_wiseconn=$id_wiseconn;
+                    $cloningError->save();
+                } 
             }
             $this->info("Success: Clone measures data by node");
         } catch (\Exception $e) {

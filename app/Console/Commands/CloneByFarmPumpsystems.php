@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client;
 use App\Farm;
 use App\Pump_system;
+use App\CloningErrors;
 class CloneByFarmPumpsystems extends Command
 {
     /**
@@ -62,14 +63,27 @@ class CloneByFarmPumpsystems extends Command
         try { 
             $farms=Farm::all();
             foreach ($farms as $key => $farm) {
-                $pumpSystemsResponse =  $this->requestWiseconn($client,'GET','/farms/'.$farm->id_wiseconn.'/pumpSystems');
-                $pumpSystems=json_decode($pumpSystemsResponse->getBody()->getContents());
-                foreach ($pumpSystems as $key => $pumpSystem) {
-                    if(is_null(Pump_system::where("id_wiseconn",$pumpSystem->id)->first()) && $pumpSystem->farmId==$farm->id_wiseconn){
-                        $newPumpSystem= $this->pumpSystemCreate($pumpSystem,$farm);
-                        $this->info("New PumpSystem, id:".$newPumpSystem->id);
+                try {
+                    $currentRequestUri='/farms/'.$farm->id_wiseconn.'/pumpSystems';
+                    $currentRequestElement='/farms/id/pumpSystems';
+                    $id_wiseconn=$farm->id_wiseconn;
+                    $pumpSystemsResponse =  $this->requestWiseconn($client,'GET',$currentRequestUri);
+                    $pumpSystems=json_decode($pumpSystemsResponse->getBody()->getContents());
+                    foreach ($pumpSystems as $key => $pumpSystem) {
+                        if(is_null(Pump_system::where("id_wiseconn",$pumpSystem->id)->first()) && $pumpSystem->farmId==$farm->id_wiseconn){
+                            $newPumpSystem= $this->pumpSystemCreate($pumpSystem,$farm);
+                            $this->info("New PumpSystem, id:".$newPumpSystem->id);
+                        }
                     }
-                }
+                } catch (\Exception $e) {
+                    $this->error("Error:" . $e->getMessage());
+                    $this->error("Linea:" . $e->getLine());
+                    $this->error("currentRequestUri:" . $currentRequestUri);
+                    $cloningError=new CloningErrors();
+                    $cloningError->elements=$currentRequestElement;
+                    $cloningError->uri=$currentRequestUri;
+                    $cloningError->save();
+                } 
             }
             $this->info("Success: Clone pumpsystems data by farm");
         } catch (\Exception $e) {

@@ -9,6 +9,8 @@ use App\Farm;
 use App\Node;
 use App\Hydraulic;
 use App\PhysicalConnection;
+use App\CloningErrors;
+
 class CloneByZoneHydraulics extends Command
 {
     /**
@@ -73,16 +75,30 @@ class CloneByZoneHydraulics extends Command
         try{
             $zones=Zone::all();
             foreach ($zones as $key => $zone) {
-                $hydraulicsResponse = $this->requestWiseconn($client,'GET','/zones/'.$zone->id_wiseconn.'/hydraulics');
-                $hydraulics=json_decode($hydraulicsResponse->getBody()->getContents());            
-                foreach ($hydraulics as $key => $hydraulic) {
-                    $farm=Node::where("id_wiseconn",$hydraulic->farmId)->first();
-                    if(is_null(Hydraulic::where("id_wiseconn",$hydraulic->id)->first())&&!is_null($node)){ 
-                        $newPhysicalConnection =$this->physicalConnectionCreate($hydraulic);
-                        $newHydraulic =$this->hydraulicCreate($hydraulic,$farm,$node,$newPhysicalConnection);
-                        $this->info("New PhysicalConnection id:".$newPhysicalConnection->id." / New Hydraulic id:".$newHydraulic->id);                                                                 
+                try{
+                    $currentRequestUri='/zones/'.$zone->id_wiseconn.'/hydraulics';
+                    $currentRequestElement='/zones/id/hydraulics';
+                    $id_wiseconn=$zone->id_wiseconn;
+                    $hydraulicsResponse = $this->requestWiseconn($client,'GET',$currentRequestUri);
+                    $hydraulics=json_decode($hydraulicsResponse->getBody()->getContents());            
+                    foreach ($hydraulics as $key => $hydraulic) {
+                        $farm=Node::where("id_wiseconn",$hydraulic->farmId)->first();
+                        if(is_null(Hydraulic::where("id_wiseconn",$hydraulic->id)->first())&&!is_null($node)){ 
+                            $newPhysicalConnection =$this->physicalConnectionCreate($hydraulic);
+                            $newHydraulic =$this->hydraulicCreate($hydraulic,$farm,$node,$newPhysicalConnection);
+                            $this->info("New PhysicalConnection id:".$newPhysicalConnection->id." / New Hydraulic id:".$newHydraulic->id);
+                        }
                     }
-                }
+                } catch (\Exception $e) {
+                    $this->error("Error:" . $e->getMessage());
+                    $this->error("Linea:" . $e->getLine());
+                    $this->error("currentRequestUri:" . $currentRequestUri);
+                    $cloningError=new CloningErrors();
+                    $cloningError->elements=$currentRequestElement;
+                    $cloningError->uri=$currentRequestUri;
+                    $cloningError->id_wiseconn=$id_wiseconn;
+                    $cloningError->save();
+                }  
             }
             $this->info("Success: Clone hydraulics and newPhysicalConnections data by zone");
         } catch (\Exception $e) {

@@ -11,6 +11,7 @@ use App\Path;
 use App\Type;
 use App\NorthEastBound;
 use App\SouthWestBound;
+use App\CloningErrors;
 class CloneByFarmZones extends Command
 {
     /**
@@ -112,20 +113,33 @@ class CloneByFarmZones extends Command
             $farms=Farm::all();
             foreach ($farms as $key => $farm) {
                 if($farm->id_wiseconn){
-                    $zonesResponse =  $this->requestWiseconn($client,'GET','/farms/'.$farm->id_wiseconn.'/zones');
-                    $zones=json_decode($zonesResponse->getBody()->getContents()); 
-                    foreach ($zones as $key => $zone) {
-                        $farm=Farm::where("id_wiseconn",$zone->farmId)->first();
-                        if(is_null(Zone::where("id_wiseconn",$zone->id)->first()) && !is_null($farm)){
-                            $newZone= $this->zoneCreate($zone,$farm); 
-                            $farm->touch();
-                            $this->info("New Zone id:".$newZone->id);
+                    try {
+                        $currentRequestUri='/farms/'.$farm->id_wiseconn.'/zones';
+                        $currentRequestElement='/farms/id/zones';
+                        $id_wiseconn=$farm->id_wiseconn;
+                        $zonesResponse =  $this->requestWiseconn($client,'GET',$currentRequestUri);
+                        $zones=json_decode($zonesResponse->getBody()->getContents()); 
+                        foreach ($zones as $key => $zone) {
+                            $farm=Farm::where("id_wiseconn",$zone->farmId)->first();
+                            if(is_null(Zone::where("id_wiseconn",$zone->id)->first()) && !is_null($farm)){
+                                $newZone= $this->zoneCreate($zone,$farm); 
+                                $farm->touch();
+                                $this->info("New Zone id:".$newZone->id);
+                            }
                         }
-                    }                    
+                    } catch (\Exception $e) {
+                        $this->error("Error:" . $e->getMessage());
+                        $this->error("Linea:" . $e->getLine());
+                        $this->error("currentRequestUri:" . $currentRequestUri);
+                        $cloningError=new CloningErrors();
+                        $cloningError->elements=$currentRequestElement;
+                        $cloningError->uri=$currentRequestUri;
+                        $cloningError->save();
+                    } 
                 }
             }
             $this->info("Success: Clone pumpsystems data by farm");
-        } catch (\Exception $e) {
+        } catch (\Exception $e) {            
             $this->error("Error:" . $e->getMessage());
             $this->error("Linea:" . $e->getLine());
         } 
