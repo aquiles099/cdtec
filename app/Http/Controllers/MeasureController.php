@@ -147,6 +147,12 @@ class MeasureController extends Controller{
     public function data(Request $request,$id){        
         try {
             $measure=Measure::find($id);
+            if(is_null($measure)){
+                return response()->json([
+                    "message"=>"Measure no existente",
+                    "data"=>$measure
+                ],404);
+            }
             $cloningErrors=CloningErrors::where("elements","/measures/id/data")->where("uri","/measures/".$measure->id_wiseconn."/data")->where("id_wiseconn",$measure->id_wiseconn)->get();
             if(count($cloningErrors)>0){
                 foreach ($cloningErrors as $key => $cloningError) {
@@ -156,7 +162,7 @@ class MeasureController extends Controller{
                             'timeout'  => 100.0,
                         ]);
 
-                        $measuresResponse = $this->requestWiseconn($client,'GET','/measures/'.$measure->id_wiseconn.'/data?initTime='.$request->input("initTime").'&endTime='.$request->input("endTime"));
+                        $measuresResponse = $this->requestWiseconn($client,'GET',$cloningError->uri);
                         $measuresData=json_decode($measuresResponse->getBody()->getContents());
                         foreach ($measuresData as $mDkey => $measureData) {
                             if(is_null(MeasureData::where("id_measure",$measure->id)->where("time",$measureData->time)->first())){
