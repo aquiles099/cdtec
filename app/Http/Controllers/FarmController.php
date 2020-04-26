@@ -46,8 +46,8 @@ class FarmController extends Controller
                         ]),'GET',$cloningError->uri))->getBody()->getContents());
                         foreach ($wiseconnFarms as $key => $wiseconnFarm) {
                             if(isset($wiseconnFarm->id)){
-                                $farm=Farm::where("id_wiseconn",$wiseconnFarm->id)->first();
-                                if(array_search($farm->id, $farmsIdsToClone)){
+                                if(array_search($wiseconnFarm->id, $farmsIdsToClone)){
+                                    $farm=Farm::where("id_wiseconn",$wiseconnFarm->id)->first();
                                     if(is_null($farm)){
                                         if(isset($wiseconnFarm->account)){
                                             $account=Account::where("id_wiseconn",$wiseconnFarm->account->id)->first();
