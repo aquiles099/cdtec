@@ -19,6 +19,7 @@ use App\Alarm;
 use App\SensorType;
 use App\SensorTypeZones;
 use App\Path;
+use App\CloningErrors;
 class FarmController extends Controller
 {
     protected function requestWiseconn($client,$method,$uri){
@@ -31,56 +32,75 @@ class FarmController extends Controller
     }
     public function all(){
         try {
-            $farms=Farm::with("account")->get();
-            if(count($farms)==0){
-                $wiseconnFarms = json_decode(($this->requestWiseconn(new Client([
-                    'base_uri' => 'https://apiv2.wiseconn.com',
-                    'timeout'  => 100.0,
-                ]),'GET','/farms'))->getBody()->getContents());
-                foreach ($wiseconnFarms as $key => $wiseconnFarm) {
-                    if(isset($wiseconnFarm->id)){
-                        $farm=Farm::where("id_wiseconn",$wiseconnFarm->id)->first();
-                        if(is_null($farm)){
-                            if(isset($wiseconnFarm->account)){
-                                $account=Account::where("id_wiseconn",$wiseconnFarm->account->id)->first();
-                                if(!$account){
-                                    $account = Account::create([
-                                        'name' => $wiseconnFarm->account->name,
-                                        'id_wiseconn' => $wiseconnFarm->account->id,
+            $cloningErrors=CloningErrors::where("elements","/farms")->where("uri","/farms")->get();
+            if(count($cloningErrors)>0){
+                foreach ($cloningErrors as $key => $cloningError) {
+                    try{
+                        $wiseconnFarms = json_decode(($this->requestWiseconn(new Client([
+                            'base_uri' => 'https://apiv2.wiseconn.com',
+                            'timeout'  => 100.0,
+                        ]),'GET',$cloningError->uri))->getBody()->getContents());
+                        foreach ($wiseconnFarms as $key => $wiseconnFarm) {
+                            if(isset($wiseconnFarm->id)){
+                                $farm=Farm::where("id_wiseconn",$wiseconnFarm->id)->first();
+                                if(is_null($farm)){
+                                    if(isset($wiseconnFarm->account)){
+                                        $account=Account::where("id_wiseconn",$wiseconnFarm->account->id)->first();
+                                        if(!$account){
+                                            $account = Account::create([
+                                                'name' => $wiseconnFarm->account->name,
+                                                'id_wiseconn' => $wiseconnFarm->account->id,
+                                            ]);
+                                        }
+                                    }
+                                    $farm=Farm::create([
+                                        'name' => $wiseconnFarm->name,
+                                        'description' => $wiseconnFarm->description,
+                                        'latitude' => $wiseconnFarm->latitude,
+                                        'longitude' => $wiseconnFarm->longitude,
+                                        'postalAddress' => $wiseconnFarm->postalAddress,
+                                        'timeZone' => $wiseconnFarm->timeZone,
+                                        'webhook' => $wiseconnFarm->webhook,
+                                        'id_account' => $account?$account->id:null,
+                                        'id_wiseconn' => $wiseconnFarm->id,
                                     ]);
-                                }
-                            }
-                            $farm=Farm::create([
-                                'name' => $wiseconnFarm->name,
-                                'description' => $wiseconnFarm->description,
-                                'latitude' => $wiseconnFarm->latitude,
-                                'longitude' => $wiseconnFarm->longitude,
-                                'postalAddress' => $wiseconnFarm->postalAddress,
-                                'timeZone' => $wiseconnFarm->timeZone,
-                                'webhook' => $wiseconnFarm->webhook,
-                                'id_account' => $account?$account->id:null,
-                                'id_wiseconn' => $wiseconnFarm->id,
-                            ]);
-                            $nodesResponse = json_decode(($this->requestWiseconn(new Client([
-                                'base_uri' => 'https://apiv2.wiseconn.com',
-                                'timeout'  => 100.0,
-                            ]),'GET','/farms/'.$farm->id_wiseconn.'/nodes'))->getBody()->getContents());
-                            foreach ($nodesResponse as $key => $node) {
-                                if(isset($node->id)){
-                                    if(is_null(Node::where("id_wiseconn",$node->id)->first())){
-                                        Node::create([
-                                            'name' => $node->name,
-                                            'lat' => $node->lat,
-                                            'lng' => $node->lng,
-                                            'nodeType' => $node->nodeType,
-                                            'id_farm' => $farm->id,
-                                            'id_wiseconn' => $node->id
-                                        ]);
-                                    }   
+                                    try{
+                                        $nodesResponse = json_decode(($this->requestWiseconn(new Client([
+                                            'base_uri' => 'https://apiv2.wiseconn.com',
+                                            'timeout'  => 100.0,
+                                        ]),'GET','/farms/'.$farm->id_wiseconn.'/nodes'))->getBody()->getContents());
+                                        foreach ($nodesResponse as $key => $node) {
+                                            if(isset($node->id)){
+                                                if(is_null(Node::where("id_wiseconn",$node->id)->first())){
+                                                    Node::create([
+                                                        'name' => $node->name,
+                                                        'lat' => $node->lat,
+                                                        'lng' => $node->lng,
+                                                        'nodeType' => $node->nodeType,
+                                                        'id_farm' => $farm->id,
+                                                        'id_wiseconn' => $node->id
+                                                    ]);
+                                                }   
+                                            }
+                                        }
+                                    } catch (\Exception $e) {
+                                        return response()->json([
+                                            'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                                            'error' => $e->getMessage(),
+                                            'linea' => $e->getLine()
+                                        ], 500);
+                                    }
                                 }
                             }
                         }
-                    }
+                        $cloningError->delete();
+                    } catch (\Exception $e) {
+                        return response()->json([
+                            'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                            'error' => $e->getMessage(),
+                            'linea' => $e->getLine()
+                        ], 500);
+                    }     
                 }
             }
             $response = [

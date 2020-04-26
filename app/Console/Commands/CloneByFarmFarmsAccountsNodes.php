@@ -83,8 +83,8 @@ class CloneByFarmFarmsAccountsNodes extends Command
             'timeout'  => 100.0,
         ]);
         try {
-            $currentRequestUri='farms';
-            $currentRequestElement='farms';
+            $currentRequestUri='/farms';
+            $currentRequestElement='/farms';
             $id_wiseconn=null;
             $farmsResponse = $this->requestWiseconn($client,'GET',$currentRequestUri);
             $farms=json_decode($farmsResponse->getBody()->getContents());
