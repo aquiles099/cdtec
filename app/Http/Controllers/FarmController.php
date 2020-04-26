@@ -304,32 +304,45 @@ class FarmController extends Controller
             $endTime=Carbon::now(date_default_timezone_get())->format('Y-m-d');
             $farm=Farm::find($id);
             $zones = Zone::where("id_farm",$farm->id)->get();
-            $today = Carbon::today();
-            $isAfter=(Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($farm->updated_at)->format('Y-m-d').'T00:00:00.000000Z'));
-            if($isAfter||count($zones)==0){
-                $wiseconnZones = json_decode(($this->requestWiseconn(new Client([
-                    'base_uri' => 'https://apiv2.wiseconn.com',
-                    'timeout'  => 100.0,
-                ]),'GET','/farms/'.$farm->id_wiseconn.'/zones/'))->getBody()->getContents());
-                foreach ($wiseconnZones as $key => $wiseconnZone) {
-                    if(isset($wiseconnZone->id)){
-                        $zone=Zone::where("id_wiseconn",$wiseconnZone->id)->first();
-                        if(is_null($zone)){
-                            $pumpSystem=Pump_system::where("id_wiseconn",$wiseconnZone->pumpSystemId)->first();
-                            $element = $this->zoneCreate($wiseconnZone,$farm);
-                            if(isset($wiseconnZone->polygon->path)){
-                                foreach ($wiseconnZone->polygon->path as $key => $path) {
-                                    Path::create([
-                                        'id_zone' => $element->id,
-                                        'lat' => $path->lat,
-                                        'lng' => $path->lng,
-                                    ]);
+            //$today = Carbon::today();
+            //$isAfter=(Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($farm->updated_at)->format('Y-m-d').'T00:00:00.000000Z'));
+            //if($isAfter||count($zones)==0){
+            $cloningErrors=CloningErrors::where("elements","/farms/id/zones")->where("uri","/farms/".$farm->id_wiseconn."/zones")->where("id_wiseconn",$farm->id_wiseconn)->get();
+            if(count($cloningErrors)>0){
+                foreach ($cloningErrors as $key => $cloningError) {
+                    try{
+                        $wiseconnZones = json_decode(($this->requestWiseconn(new Client([
+                            'base_uri' => 'https://apiv2.wiseconn.com',
+                            'timeout'  => 100.0,
+                        ]),'GET',$cloningError->uri))->getBody()->getContents());
+                        foreach ($wiseconnZones as $key => $wiseconnZone) {
+                            if(isset($wiseconnZone->id)){
+                                $zone=Zone::where("id_wiseconn",$wiseconnZone->id)->first();
+                                if(is_null($zone)){
+                                    $pumpSystem=Pump_system::where("id_wiseconn",$wiseconnZone->pumpSystemId)->first();
+                                    $element = $this->zoneCreate($wiseconnZone,$farm);
+                                    if(isset($wiseconnZone->polygon->path)){
+                                        foreach ($wiseconnZone->polygon->path as $key => $path) {
+                                            Path::create([
+                                                'id_zone' => $element->id,
+                                                'lat' => $path->lat,
+                                                'lng' => $path->lng,
+                                            ]);
+                                        }
+                                    }
+                                    $farm->touch();
                                 }
                             }
-                            $farm->touch();
                         }
+                    } catch (\Exception $e) {
+                        return response()->json([
+                            'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                            'error' => $e->getMessage(),
+                            'linea' => $e->getLine()
+                        ], 500);
                     }
-                } 
+                    $cloningError->delete();
+                }
             }
             $response = [
                 'message'=> 'Lista de zonas',
@@ -497,82 +510,82 @@ class FarmController extends Controller
         switch (strtolower($sensorType)) {
             //clima
             case 'temperature':
-                return ['name'=>'Temperatura','group'=>'Clima'];
-                break;
+            return ['name'=>'Temperatura','group'=>'Clima'];
+            break;
             case 'humidity':
-                return ['name'=>'Humedad Relativa','group'=>'Clima'];
-                break;
+            return ['name'=>'Humedad Relativa','group'=>'Clima'];
+            break;
             case 'wind velocity':
-                return ['name'=>'Velocidad Viento','group'=>'Clima'];
-                break;
+            return ['name'=>'Velocidad Viento','group'=>'Clima'];
+            break;
             case 'solar radiation':
-                return ['name'=>'Radiación Solar','group'=>'Clima'];
-                break;
+            return ['name'=>'Radiación Solar','group'=>'Clima'];
+            break;
             case 'wind direction':
-                return ['name'=>'Dirección Viento','group'=>'Clima'];
-                break;
+            return ['name'=>'Dirección Viento','group'=>'Clima'];
+            break;
             case 'atmospheric preassure':
-                return ['name'=>'Presión Atmosférica','group'=>'Clima'];
-                break;
+            return ['name'=>'Presión Atmosférica','group'=>'Clima'];
+            break;
             case 'wind gust':
-                return ['name'=>'Ráfaga Viento','group'=>'Clima'];
-                break;
+            return ['name'=>'Ráfaga Viento','group'=>'Clima'];
+            break;
             case 'chill hours':
-                return ['name'=>'Horas Frío','group'=>'Clima'];
-                break;
+            return ['name'=>'Horas Frío','group'=>'Clima'];
+            break;
             case 'chill portion':
-                return ['name'=>'Porción Frío','group'=>'Clima'];
-                break;
+            return ['name'=>'Porción Frío','group'=>'Clima'];
+            break;
             case 'daily etp':
-                return ['name'=>'Etp Diaria','group'=>'Clima'];
-                break;
+            return ['name'=>'Etp Diaria','group'=>'Clima'];
+            break;
             case 'daily et0':
-                return ['name'=>'Et0 Diaria','group'=>'Clima'];
-                break;
+            return ['name'=>'Et0 Diaria','group'=>'Clima'];
+            break;
             //humedad
             case 'salinity':
-                return ['name'=>'Salinidad','group'=>'Humedad'];
-                break;
+            return ['name'=>'Salinidad','group'=>'Humedad'];
+            break;
             case 'soil temperature':
-                return ['name'=>'Temperatura Suelo','group'=>'Humedad'];
-                break;
+            return ['name'=>'Temperatura Suelo','group'=>'Humedad'];
+            break;
             case 'soil moisture':
-                return ['name'=>'Humedad Suelo','group'=>'Humedad'];
-                break;
+            return ['name'=>'Humedad Suelo','group'=>'Humedad'];
+            break;
             case 'soil humidity':
-                return ['name'=>'Humedad de Tubo','group'=>'Humedad'];
-                break;
+            return ['name'=>'Humedad de Tubo','group'=>'Humedad'];
+            break;
             case 'added soild moisture':
-                return ['name'=>'Suma Humedades','group'=>'Humedad'];
-                break;
+            return ['name'=>'Suma Humedades','group'=>'Humedad'];
+            break;
             //Riego
             case 'irrigation':
-                return ['name'=>'Riego','group'=>'Riego'];
-                break;
+            return ['name'=>'Riego','group'=>'Riego'];
+            break;
             case 'irrigation volume':
-                return ['name'=>'Volumen Riego','group'=>'Riego'];
-                break;
+            return ['name'=>'Volumen Riego','group'=>'Riego'];
+            break;
             case 'daily irrigation time':
-                return ['name'=>'Tiempo de Riego Diario','group'=>'Riego'];
-                break;
+            return ['name'=>'Tiempo de Riego Diario','group'=>'Riego'];
+            break;
             case 'flow':
-                return ['name'=>'Caudal','group'=>'Riego'];
-                break;
+            return ['name'=>'Caudal','group'=>'Riego'];
+            break;
             case 'daily irrigation volume by pump system':
-                return ['name'=>'Volumen de Riego Diario por Equipo','group'=>'Riego'];
-                break;
+            return ['name'=>'Volumen de Riego Diario por Equipo','group'=>'Riego'];
+            break;
             case 'daily irrigation time by pump system':
-                return ['name'=>'Tiempo de Riego Diario por Equipo','group'=>'Riego'];
-                break;
+            return ['name'=>'Tiempo de Riego Diario por Equipo','group'=>'Riego'];
+            break;
             case 'irrigation by pump system':
-                return ['name'=>'Riego por Equipo','group'=>'Riego'];
-                break;
+            return ['name'=>'Riego por Equipo','group'=>'Riego'];
+            break;
             case 'flow by zone':
-                return ['name'=>'Caudal por Sector','group'=>'Riego'];
-                break;
+            return ['name'=>'Caudal por Sector','group'=>'Riego'];
+            break;
             default:
-                return ['name'=>$sensorType,'group'=>'Otros'];
-                break;
+            return ['name'=>$sensorType,'group'=>'Otros'];
+            break;
         }
     }
     protected function sensorTypeCreate($measure,$farm,$zone){
@@ -615,53 +628,53 @@ class FarmController extends Controller
                         $zone=Zone::where("id_wiseconn",$measure->zoneId)->first(); 
                     }
                     if(!is_null($farm)&&!is_null($zone)){
-                       $measureRegistered=Measure::where("id_wiseconn",$measure->id)
-                        ->where("id_farm",$farm->id)
-                        ->where("id_zone",$zone->id)
-                        ->first();
-                        if(is_null($measureRegistered)){
-                            if(isset($measure->sensorType)){
-                                $newSensorType=$this->sensorTypeCreate($measure,$farm,$zone);
-                            }
-
+                     $measureRegistered=Measure::where("id_wiseconn",$measure->id)
+                     ->where("id_farm",$farm->id)
+                     ->where("id_zone",$zone->id)
+                     ->first();
+                     if(is_null($measureRegistered)){
+                        if(isset($measure->sensorType)){
+                            $newSensorType=$this->sensorTypeCreate($measure,$farm,$zone);
                         }
+
                     }
                 }
-                $farm->touch();
             }
-            $response = [
-                'message'=> 'Lista de SensorTypes',
-                'route'=>'/farms/'.$farm->id_wiseconn.'/measures',
-                'measures'=>$measures,
-                'data' => SensorType::where("id_farm",$farm->id)->with("zones")->get(),
-            ];
-            return response()->json($response, 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
-                'error' => $e->getMessage(),
-                'linea' => $e->getLine()
-            ], 500);
+            $farm->touch();
         }
+        $response = [
+            'message'=> 'Lista de SensorTypes',
+            'route'=>'/farms/'.$farm->id_wiseconn.'/measures',
+            'measures'=>$measures,
+            'data' => SensorType::where("id_farm",$farm->id)->with("zones")->get(),
+        ];
+        return response()->json($response, 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+            'error' => $e->getMessage(),
+            'linea' => $e->getLine()
+        ], 500);
     }
-    public function weatherStation($id){
-        try {
-            $weatherStation = Zone::where("id_farm",$id)
-                ->where("name","Estación Meteorológica")
-                ->orWhere("name","Estación Metereológica")
-                ->first();
-            $response = [
-                'message'=> 'Lista de zonas',
-                'data' => $weatherStation,
-            ];
-            return response()->json($response, 200);
-            
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
-                'error' => $e->getMessage(),
-                'linea' => $e->getLine()
-            ], 500);
-        }
+}
+public function weatherStation($id){
+    try {
+        $weatherStation = Zone::where("id_farm",$id)
+        ->where("name","Estación Meteorológica")
+        ->orWhere("name","Estación Metereológica")
+        ->first();
+        $response = [
+            'message'=> 'Lista de zonas',
+            'data' => $weatherStation,
+        ];
+        return response()->json($response, 200);
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+            'error' => $e->getMessage(),
+            'linea' => $e->getLine()
+        ], 500);
     }
+}
 }
