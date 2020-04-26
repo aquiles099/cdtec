@@ -149,7 +149,7 @@ class CloneByZoneMeasures extends Command
     protected function sensorTypeCreate($measure,$farm,$zone){
         $name=$this->getNameAndGroup($measure->sensorType)['name'];
         $group=$this->getNameAndGroup($measure->sensorType)['group'];
-        $sensorType=SensorType::where("name",$name)->first();
+        $sensorType=SensorType::where("name",$name)->where("id_farm",$farm->id)->first();
         if(is_null($sensorType)){
             $newSensorType=SensorType::create([
                 "name"=>$name,

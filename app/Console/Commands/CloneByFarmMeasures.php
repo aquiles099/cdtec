@@ -148,7 +148,7 @@ class CloneByFarmMeasures extends Command
     protected function sensorTypeCreate($measure,$farm,$zone){
         $name=$this->getNameAndGroup($measure->sensorType)['name'];
         $group=$this->getNameAndGroup($measure->sensorType)['group'];
-        $sensorType=SensorType::where("name",$name)->first();
+        $sensorType=SensorType::where("name",$name)->where("id_farm",$farm->id)->first();
         if(is_null($sensorType)){
             $newSensorType=SensorType::create([
                 "name"=>$name,
@@ -211,7 +211,7 @@ class CloneByFarmMeasures extends Command
             foreach ($farms as $key => $farm) {
                 $measuresResponse = $this->requestWiseconn($client,'GET','/farms/'.$farm->id_wiseconn.'/measures');
                 $measures=json_decode($measuresResponse->getBody()->getContents());
-                foreach ($measures as $key => $measure) {                    
+                foreach ($measures as $key => $measure) {
                     $farm=null;$node=null;$zone=null;
                     if(isset($measure->farmId)){
                         $farm=Farm::where("id_wiseconn",$measure->farmId)->first();

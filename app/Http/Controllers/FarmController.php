@@ -17,56 +17,26 @@ use App\Irrigation;
 use App\RealIrrigation;
 use App\Alarm;
 use App\SensorType;
+use App\SensorTypeZones;
 use App\Path;
 class FarmController extends Controller
 {
-    protected function getWiseconnFarms(){
-        $client = new Client([
-            'base_uri' => 'https://apiv2.wiseconn.com',
-            'timeout'  => 100.0,
-        ]);        
-        try {
-            $farmsResponse = $client->request('GET','/farms', [
-                'headers' => [
-                    'api_key' => '9Ev6ftyEbHhylMoKFaok',
-                    'Accept'     => 'application/json'
-                ]
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
-                'error' => $e->getMessage(),
-                'linea' => $e->getLine()
-            ], 500);
-        }
-        return json_decode($farmsResponse->getBody()->getContents());
-    }
-    protected function getWiseconnNodes($farm){
-        $client = new Client([
-            'base_uri' => 'https://apiv2.wiseconn.com',
-            'timeout'  => 100.0,
-        ]);        
-        try {
-            $nodesResponse = $client->request('GET','/farms/'.$farm->id_wiseconn.'/nodes', [
-                'headers' => [
-                    'api_key' => '9Ev6ftyEbHhylMoKFaok',
-                    'Accept'     => 'application/json'
-                ]
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
-                'error' => $e->getMessage(),
-                'linea' => $e->getLine()
-            ], 500);
-        }
-        return json_decode($nodesResponse->getBody()->getContents());
+    protected function requestWiseconn($client,$method,$uri){
+        return $client->request($method, $uri, [
+            'headers' => [
+                'api_key' => '9Ev6ftyEbHhylMoKFaok',
+                'Accept'     => 'application/json'
+            ]
+        ]);
     }
     public function all(){
         try {
             $farms=Farm::with("account")->get();
             if(count($farms)==0){
-                $wiseconnFarms = $this->getWiseconnFarms();
+                $wiseconnFarms = json_decode(($this->requestWiseconn(new Client([
+                    'base_uri' => 'https://apiv2.wiseconn.com',
+                    'timeout'  => 100.0,
+                ]),'GET','/farms'))->getBody()->getContents());
                 foreach ($wiseconnFarms as $key => $wiseconnFarm) {
                     if(isset($wiseconnFarm->id)){
                         $farm=Farm::where("id_wiseconn",$wiseconnFarm->id)->first();
@@ -91,7 +61,10 @@ class FarmController extends Controller
                                 'id_account' => $account?$account->id:null,
                                 'id_wiseconn' => $wiseconnFarm->id,
                             ]);
-                            $nodesResponse = $this->getWiseconnNodes($farm);
+                            $nodesResponse = json_decode(($this->requestWiseconn(new Client([
+                                'base_uri' => 'https://apiv2.wiseconn.com',
+                                'timeout'  => 100.0,
+                            ]),'GET','/farms/'.$farm->id_wiseconn.'/nodes'))->getBody()->getContents());
                             foreach ($nodesResponse as $key => $node) {
                                 if(isset($node->id)){
                                     if(is_null(Node::where("id_wiseconn",$node->id)->first())){
@@ -253,27 +226,6 @@ class FarmController extends Controller
         }
         return json_decode($realIrrigationsResponse->getBody()->getContents());
     }*/
-    protected function getWiseconnZones($farm){
-        $client = new Client([
-            'base_uri' => 'https://apiv2.wiseconn.com',
-            'timeout'  => 100.0,
-        ]);        
-        try {
-            $zonesResponse = $client->request('GET','/farms/'.$farm->id_wiseconn.'/zones/', [
-                'headers' => [
-                    'api_key' => '9Ev6ftyEbHhylMoKFaok',
-                    'Accept'     => 'application/json'
-                ]
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
-                'error' => $e->getMessage(),
-                'linea' => $e->getLine()
-            ], 500);
-        }
-        return json_decode($zonesResponse->getBody()->getContents());
-    }
     public function zones($id){
         try {            
             $initTime=Carbon::now(date_default_timezone_get())->subDays(2)->format('Y-m-d');
@@ -283,7 +235,10 @@ class FarmController extends Controller
             $today = Carbon::today();
             $isAfter=(Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($farm->updated_at)->format('Y-m-d').'T00:00:00.000000Z'));
             if($isAfter||count($zones)==0){
-                $wiseconnZones = $this->getWiseconnZones($farm);
+                $wiseconnZones = json_decode(($this->requestWiseconn(new Client([
+                    'base_uri' => 'https://apiv2.wiseconn.com',
+                    'timeout'  => 100.0,
+                ]),'GET','/farms/'.$farm->id_wiseconn.'/zones/'))->getBody()->getContents());
                 foreach ($wiseconnZones as $key => $wiseconnZone) {
                     if(isset($wiseconnZone->id)){
                         $zone=Zone::where("id_wiseconn",$wiseconnZone->id)->first();
@@ -474,12 +429,157 @@ class FarmController extends Controller
             ], 500);
         }
     }
+    protected function sensorTypeZoneCreate($sensorType,$farm,$zone){
+        $sensorTypeZone=SensorTypeZones::where("id_sensor_type",$sensorType->id)->where("id_farm",$farm->id)->where("id_zone",$zone->id)->first();
+        if(is_null($sensorTypeZone)){
+            SensorTypeZones::create([
+                "id_sensor_type"=>$sensorType->id,
+                "id_farm" => isset($farm->id)?$farm->id:null,
+                "id_zone" => isset($zone->id)?$zone->id:null,
+            ]);
+        }        
+    }
+    protected function getNameAndGroup($sensorType){
+        switch (strtolower($sensorType)) {
+            //clima
+            case 'temperature':
+                return ['name'=>'Temperatura','group'=>'Clima'];
+                break;
+            case 'humidity':
+                return ['name'=>'Humedad Relativa','group'=>'Clima'];
+                break;
+            case 'wind velocity':
+                return ['name'=>'Velocidad Viento','group'=>'Clima'];
+                break;
+            case 'solar radiation':
+                return ['name'=>'Radiación Solar','group'=>'Clima'];
+                break;
+            case 'wind direction':
+                return ['name'=>'Dirección Viento','group'=>'Clima'];
+                break;
+            case 'atmospheric preassure':
+                return ['name'=>'Presión Atmosférica','group'=>'Clima'];
+                break;
+            case 'wind gust':
+                return ['name'=>'Ráfaga Viento','group'=>'Clima'];
+                break;
+            case 'chill hours':
+                return ['name'=>'Horas Frío','group'=>'Clima'];
+                break;
+            case 'chill portion':
+                return ['name'=>'Porción Frío','group'=>'Clima'];
+                break;
+            case 'daily etp':
+                return ['name'=>'Etp Diaria','group'=>'Clima'];
+                break;
+            case 'daily et0':
+                return ['name'=>'Et0 Diaria','group'=>'Clima'];
+                break;
+            //humedad
+            case 'salinity':
+                return ['name'=>'Salinidad','group'=>'Humedad'];
+                break;
+            case 'soil temperature':
+                return ['name'=>'Temperatura Suelo','group'=>'Humedad'];
+                break;
+            case 'soil moisture':
+                return ['name'=>'Humedad Suelo','group'=>'Humedad'];
+                break;
+            case 'soil humidity':
+                return ['name'=>'Humedad de Tubo','group'=>'Humedad'];
+                break;
+            case 'added soild moisture':
+                return ['name'=>'Suma Humedades','group'=>'Humedad'];
+                break;
+            //Riego
+            case 'irrigation':
+                return ['name'=>'Riego','group'=>'Riego'];
+                break;
+            case 'irrigation volume':
+                return ['name'=>'Volumen Riego','group'=>'Riego'];
+                break;
+            case 'daily irrigation time':
+                return ['name'=>'Tiempo de Riego Diario','group'=>'Riego'];
+                break;
+            case 'flow':
+                return ['name'=>'Caudal','group'=>'Riego'];
+                break;
+            case 'daily irrigation volume by pump system':
+                return ['name'=>'Volumen de Riego Diario por Equipo','group'=>'Riego'];
+                break;
+            case 'daily irrigation time by pump system':
+                return ['name'=>'Tiempo de Riego Diario por Equipo','group'=>'Riego'];
+                break;
+            case 'irrigation by pump system':
+                return ['name'=>'Riego por Equipo','group'=>'Riego'];
+                break;
+            case 'flow by zone':
+                return ['name'=>'Caudal por Sector','group'=>'Riego'];
+                break;
+            default:
+                return ['name'=>$sensorType,'group'=>'Otros'];
+                break;
+        }
+    }
+    protected function sensorTypeCreate($measure,$farm,$zone){
+        $name=$this->getNameAndGroup($measure->sensorType)['name'];
+        $group=$this->getNameAndGroup($measure->sensorType)['group'];
+        $sensorType=SensorType::where("name",$name)->where("id_farm",$farm->id)->first();
+        if(is_null($sensorType)){
+            $newSensorType=SensorType::create([
+                "name"=>$name,
+                "group"=>$group,
+                "id_farm" => isset($farm->id)?$farm->id:null,
+            ]);
+            $this->sensorTypeZoneCreate($newSensorType,$farm,$zone);
+            return $newSensorType;
+        }else{
+            $this->sensorTypeZoneCreate($sensorType,$farm,$zone);
+        }
+        return null;
+    }
     public function sensorTypes($id){
-        try {            
-            $elements = SensorType::where("id_farm",$id)->with("zones")->get();
+        try {
+            $farm=Farm::find($id);            
+            $today = Carbon::today();
+            $isAfter=(Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($farm->updated_at)->format('Y-m-d').'T00:00:00.000000Z'));
+            $sensorTypes = SensorType::where("id_farm",$farm->id)->with("zones")->get();
+            //if($isAfter||count($sensorTypes)==0){
+                $measures=json_decode(($this->requestWiseconn(new Client([
+                    'base_uri' => 'https://apiv2.wiseconn.com',
+                    'timeout'  => 100.0,
+                ]),'GET','/farms/'.$farm->id_wiseconn.'/measures'))->getBody()->getContents());
+                foreach ($measures as $key => $measure) {                    
+                    $farm=null;$node=null;$zone=null;
+                    if(isset($measure->farmId)){
+                        $farm=Farm::where("id_wiseconn",$measure->farmId)->first();
+                    }
+                    if(isset($measure->nodeId)){
+                        $node=Node::where("id_wiseconn",$measure->nodeId)->first();
+                    }
+                    if(isset($measure->zoneId)){
+                        $zone=Zone::where("id_wiseconn",$measure->zoneId)->first(); 
+                    }
+                    if(!is_null($farm)&&!is_null($zone)){
+                       $measureRegistered=Measure::where("id_wiseconn",$measure->id)
+                        ->where("id_farm",$farm->id)
+                        ->where("id_zone",$zone->id)
+                        ->first();
+                        if(is_null($measureRegistered)){
+                            if(isset($measure->sensorType)){
+                                $newSensorType=$this->sensorTypeCreate($measure,$farm,$zone);
+                            }
+
+                        }
+                    }
+                }
+                $farm->touch();
+            //}
             $response = [
                 'message'=> 'Lista de SensorTypes',
-                'data' => $elements,
+                'route'=>'/farms/'.$farm->id_wiseconn.'/measures',
+                'measures'=>$measures,
+                'data' => SensorType::where("id_farm",$farm->id)->with("zones")->get(),
             ];
             return response()->json($response, 200);
         } catch (\Exception $e) {

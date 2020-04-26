@@ -18,6 +18,14 @@ use App\Polygon;
 use App\PhysicalConnection;
 class ZoneController extends Controller
 {
+    protected function requestWiseconn($client,$method,$uri){
+        return $client->request($method, $uri, [
+            'headers' => [
+                'api_key' => '9Ev6ftyEbHhylMoKFaok',
+                'Accept'     => 'application/json'
+            ]
+        ]);
+    }
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
             'name'                 => 'required|string|max:45',
@@ -224,27 +232,6 @@ class ZoneController extends Controller
             ], 500);
         }
     }
-    protected function getWiseconnMeasures($zone){
-        $client = new Client([
-            'base_uri' => 'https://apiv2.wiseconn.com',
-            'timeout'  => 100.0,
-        ]);        
-        try {
-            $measuresResponse = $client->request('GET','/zones/'.$zone->id_wiseconn.'/measures/', [
-                'headers' => [
-                    'api_key' => '9Ev6ftyEbHhylMoKFaok',
-                    'Accept'     => 'application/json'
-                ]
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
-                'error' => $e->getMessage(),
-                'linea' => $e->getLine()
-            ], 500);
-        }
-        return json_decode($measuresResponse->getBody()->getContents());
-    }
     public function measures($id){
         try {
             $zone=Zone::find($id);
@@ -256,7 +243,10 @@ class ZoneController extends Controller
             $wiseconnMeasures=[];
             $isAfter=(Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($zone->updated_at)->format('Y-m-d').'T00:00:00.000000Z'));
             if($isAfter||count($measures)==0){
-                $wiseconnMeasures = $this->getWiseconnMeasures($zone);
+                $wiseconnMeasures = json_decode(($this->requestWiseconn(new Client([
+                    'base_uri' => 'https://apiv2.wiseconn.com',
+                    'timeout'  => 100.0,
+                ]),'GET','/zones/'.$zone->id_wiseconn.'/measures/'))->getBody()->getContents());
                 foreach ($wiseconnMeasures as $key => $wiseconnMeasure) {
                     if(isset($wiseconnMeasure->id)){
                         $measure=Measure::where("id_wiseconn",$wiseconnMeasure->id)->first();
@@ -346,44 +336,26 @@ class ZoneController extends Controller
             ], 500);
         }
     }
-    protected function getWiseconnRealIrrigations($zone,$initTime,$endTime){
-        $client = new Client([
-            'base_uri' => 'https://apiv2.wiseconn.com',
-            'timeout'  => 100.0,
-        ]);        
-        try {
-            $zonesResponse = $client->request('GET','/zones/'.$zone->id_wiseconn.'/realIrrigations/?endTime='.$endTime.'&initTime='.$initTime, [
-                'headers' => [
-                    'api_key' => '9Ev6ftyEbHhylMoKFaok',
-                    'Accept'     => 'application/json'
-                ]
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
-                'error' => $e->getMessage(),
-                'linea' => $e->getLine()
-            ], 500);
-        }
-        return json_decode($zonesResponse->getBody()->getContents());
-    }
     public function realIrrigations(Request $request,$id){
         try {
-            $initTime=(Carbon::parse($request->input("initTime")))->format('Y-m-d');
-            $endTime=(Carbon::parse($request->input("endTime")))->format('Y-m-d');
-            $today = Carbon::today();
             $zone=Zone::find($id);
             $wiseconnRealIrrigations=[];
             if($zone){
                 $farm=$zone->id_farm?Farm::find($zone->id_farm):null;
+                $initTime=(Carbon::parse($request->input("initTime")))->format('Y-m-d');
+                $endTime=(Carbon::parse($request->input("endTime")))->format('Y-m-d');
                 $realIrrigations = RealIrrigation::where("id_zone",$zone->id)
                     ->where("initTime",">=",$initTime)
                     ->where(function ($q) use ($endTime) {
                         $q->where("endTime","<=",$endTime)->orWhere("status", "Running");
                     })->with("pumpSystem")->with("irrigations")->with("farm")->get();
+                $today = Carbon::today();
                 $isAfter=Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($zone->updated_at)->format('Y-m-d').'T00:00:00.000000Z');
                 if($isAfter||count($realIrrigations)==0){
-                    $wiseconnRealIrrigations = $this->getWiseconnRealIrrigations($zone,$initTime,$endTime);
+                    $wiseconnRealIrrigations = json_decode(($this->requestWiseconn(new Client([
+                        'base_uri' => 'https://apiv2.wiseconn.com',
+                        'timeout'  => 100.0,
+                    ]),'GET','/zones/'.$zone->id_wiseconn.'/realIrrigations/?endTime='.$endTime.'&initTime='.$initTime))->getBody()->getContents());
                     foreach ($wiseconnRealIrrigations as $key => $wiseconnRealIrrigation) {
                         if(isset($wiseconnRealIrrigation->id)){
                             $realIrrigation=RealIrrigation::where("id_wiseconn",$wiseconnRealIrrigation->id)->first();
