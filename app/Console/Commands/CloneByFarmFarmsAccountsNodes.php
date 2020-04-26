@@ -114,11 +114,13 @@ class CloneByFarmFarmsAccountsNodes extends Command
                             $this->error("Error:" . $e->getMessage());
                             $this->error("Linea:" . $e->getLine());
                             $this->error("currentRequestUri:" . $currentRequestUri);
-                            $cloningError=new CloningErrors();
-                            $cloningError->elements=$currentRequestElement;
-                            $cloningError->uri=$currentRequestUri;
-                            $cloningError->id_wiseconn=$id_wiseconn;
-                            $cloningError->save();
+                            if(is_null(CloningErrors::where("elements",$currentRequestElement)->where("uri",$currentRequestUri)->where("id_wiseconn",$id_wiseconn)->first())){
+                                $cloningError=new CloningErrors();
+                                $cloningError->elements=$currentRequestElement;
+                                $cloningError->uri=$currentRequestUri;
+                                $cloningError->id_wiseconn=$id_wiseconn;
+                                $cloningError->save();
+                            }
                         } 
                     }
                 }
@@ -129,11 +131,13 @@ class CloneByFarmFarmsAccountsNodes extends Command
             $this->error("Error:" . $e->getMessage());
             $this->error("Linea:" . $e->getLine());
             $this->error("currentRequestUri:" . $currentRequestUri);
-            $cloningError=new CloningErrors();
-            $cloningError->elements=$currentRequestElement;
-            $cloningError->uri=$currentRequestUri;
-            $cloningError->id_wiseconn=$id_wiseconn;
-            $cloningError->save();
+            if(is_null(CloningErrors::where("elements",$currentRequestElement)->where("uri",$currentRequestUri)->where("id_wiseconn",$id_wiseconn)->first())){
+                $cloningError=new CloningErrors();
+                $cloningError->elements=$currentRequestElement;
+                $cloningError->uri=$currentRequestUri;
+                $cloningError->id_wiseconn=$id_wiseconn;
+                $cloningError->save();
+            }
         }    
     }
 }
