@@ -12,6 +12,7 @@ use App\Farm;
 use App\PhysicalConnection;
 use App\Measure;
 use App\MeasureData;
+use App\CloningErrors;
 class MeasureController extends Controller{    
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
@@ -146,35 +147,40 @@ class MeasureController extends Controller{
     public function data(Request $request,$id){        
         try {
             $measure=Measure::find($id);
-            $today = Carbon::today();
-            $measuresData=MeasureData::where("id_measure",$measure->id)->whereBetween("time",[$request->input("initTime"),$request->input("endTime")])->orderBy('time', 'DESC')->get();
-            if((Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($measure->updated_at)->format('Y-m-d').'T00:00:00.000000Z'))||count($measuresData)==0){
-                $client = new Client([
-                    'base_uri' => 'https://apiv2.wiseconn.com',
-                    'timeout'  => 100.0,
-                ]);
+            $cloningErrors=CloningErrors::where("elements","/measures/id/data")->where("uri","/measures/".$measure->id_wiseconn."/data")->where("id_wiseconn",$measure->id_wiseconn)->get();
+            if(count($cloningErrors)>0){
+                foreach ($cloningErrors as $key => $cloningError) {
+                    try{
+                        $client = new Client([
+                            'base_uri' => 'https://apiv2.wiseconn.com',
+                            'timeout'  => 100.0,
+                        ]);
 
-                $measuresResponse = $this->requestWiseconn($client,'GET','/measures/'.$measure->id_wiseconn.'/data?initTime='.$request->input("initTime").'&endTime='.$request->input("endTime"));
-                $measuresData=json_decode($measuresResponse->getBody()->getContents());
-                foreach ($measuresData as $mDkey => $measureData) {
-                    if(is_null(MeasureData::where("id_measure",$measure->id)->where("time",$measureData->time)->first())){
-                        $newMeasureData = $this->measureDataCreate($measure,$measureData);
-                    }  
+                        $measuresResponse = $this->requestWiseconn($client,'GET','/measures/'.$measure->id_wiseconn.'/data?initTime='.$request->input("initTime").'&endTime='.$request->input("endTime"));
+                        $measuresData=json_decode($measuresResponse->getBody()->getContents());
+                        foreach ($measuresData as $mDkey => $measureData) {
+                            if(is_null(MeasureData::where("id_measure",$measure->id)->where("time",$measureData->time)->first())){
+                                $newMeasureData = $this->measureDataCreate($measure,$measureData);
+                            }  
+                        }
+                        $measure->lastMeasureDataUpdate=Carbon::today();
+                        $measure->update();
+                        $cloningError->delete();
+                    } catch (\Exception $e) {
+                        return response()->json([
+                            'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                            'error' => $e->getMessage(),
+                            'linea' => $e->getLine()
+                        ], 500);
+                        $cloningError->delete();
+                    }
                 }
-                $measure->lastMeasureDataUpdate=Carbon::today();
-                $measure->update();
-                $response = [
-                    'message'=> 'MeasureData encontrado satisfactoriamente',
-                    'measure'=>$measure,
-                    'data' => MeasureData::where("id_measure",$measure->id)->whereBetween("time",[$request->input("initTime"),$request->input("endTime")])->orderBy('time', 'DESC')->get(),
-                ];
-            }else{
-                $response = [
-                    'message'=> 'MeasureData encontrado satisfactoriamente',
-                    'measure'=>$measure,
-                    'data' => MeasureData::where("id_measure",$measure->id)->whereBetween("time",[$request->input("initTime"),$request->input("endTime")])->orderBy('time', 'DESC')->get(),
-                ];
             }
+                $response = [
+                    'message'=> 'MeasureData encontrado satisfactoriamente',
+                    'measure'=>$measure,
+                    'data' => MeasureData::where("id_measure",$measure->id)->whereBetween("time",[$request->input("initTime"),$request->input("endTime")])->orderBy('time', 'DESC')->get(),
+                ];
               
             return response()->json($response, 200);
         } catch (\Exception $e) {

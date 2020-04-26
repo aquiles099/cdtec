@@ -16,6 +16,9 @@ use App\Measure;
 use App\Irrigation;
 use App\RealIrrigation;
 use App\Alarm;
+use App\Type;
+use App\SouthWestBound;
+use App\NorthEastBound;
 use App\SensorType;
 use App\SensorTypeZones;
 use App\Path;
@@ -334,6 +337,7 @@ class FarmController extends Controller
                                 }
                             }
                         }
+                        $cloningError->delete();
                     } catch (\Exception $e) {
                         return response()->json([
                             'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
@@ -341,7 +345,6 @@ class FarmController extends Controller
                             'linea' => $e->getLine()
                         ], 500);
                     }
-                    $cloningError->delete();
                 }
             }
             $response = [
@@ -644,6 +647,7 @@ class FarmController extends Controller
                                 }
                             }
                         }
+                        $cloningError->delete();
                     } catch (\Exception $e) {
                         return response()->json([
                             'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
@@ -651,7 +655,6 @@ class FarmController extends Controller
                             'linea' => $e->getLine()
                         ], 500);
                     }
-                    $cloningError->delete();
                 }
                 $farm->touch();
             }

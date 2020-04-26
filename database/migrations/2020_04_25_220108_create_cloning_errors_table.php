@@ -15,8 +15,8 @@ class CreateCloningErrorsTable extends Migration
     {
         Schema::create('cloning_errors', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('elements', 60)->nullable();
-            $table->string('uri', 60)->nullable();
+            $table->string('elements', 80)->nullable();
+            $table->text('uri')->nullable();
             $table->string('id_wiseconn')->nullable();
             $table->timestamps();
         });

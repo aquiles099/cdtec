@@ -95,7 +95,7 @@ class CloneByZoneRealIrrigationVolumes extends Command
                         $id_wiseconn=$zone->id_wiseconn;
                         $realIrrigationsResponse = $this->requestWiseconn($client,'GET',$currentRequestUri);
                         $realIrrigations=json_decode($realIrrigationsResponse->getBody()->getContents());
-                        foreach ($realIrrigations as $key => $realIrrigation) {
+                        /*foreach ($realIrrigations as $key => $realIrrigation) {
                             $pumpSystem=Pump_system::where("id_wiseconn",$realIrrigation->pumpSystemId)->first();
                             if(!is_null($pumpSystem)){
                                 $realIrrigationRegistered=RealIrrigation::where("id_wiseconn",$realIrrigation->id)->where("id_zone",$zone->id)->first();
@@ -109,7 +109,7 @@ class CloneByZoneRealIrrigationVolumes extends Command
                                     $this->info("Real Irrigation updated:".$realIrrigationUpdated->id);
                                 }   
                             }
-                        }
+                        }*/
                     } catch (\Exception $e) {
                         $this->error("Error:" . $e->getMessage());
                         $this->error("Linea:" . $e->getLine());
