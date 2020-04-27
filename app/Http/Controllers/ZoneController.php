@@ -348,6 +348,17 @@ class ZoneController extends Controller
             ], 500);
         }
     }
+    protected function createRealIrrigation($wiseconnRealIrrigation,$farm,$pumpSystem,$zone){
+        return RealIrrigation::create([
+            'initTime' => isset($wiseconnRealIrrigation->initTime)?$wiseconnRealIrrigation->initTime:null,
+            'endTime' =>isset($wiseconnRealIrrigation->endTime)?$wiseconnRealIrrigation->endTime:null,
+            'status'=> isset($wiseconnRealIrrigation->status)?$wiseconnRealIrrigation->status:null,
+            'id_farm'=> isset($farm->id)?$farm->id:null,
+            'id_pump_system'=> isset($pumpSystem->id)?$pumpSystem->id:null,
+            'id_zone'=> isset($zone->id)?$zone->id:null,
+            'id_wiseconn' => $wiseconnRealIrrigation->id
+        ]);
+    }
     public function realIrrigations(Request $request,$id){
         try {
             $zone=Zone::find($id);
@@ -377,16 +388,8 @@ class ZoneController extends Controller
                                         $realIrrigation=RealIrrigation::where("id_wiseconn",$wiseconnRealIrrigation->id)->first();
                                         if(is_null($realIrrigation)){                                    
                                             $pumpSystem=Pump_system::where("id_wiseconn",$wiseconnRealIrrigation->pumpSystemId)->first();
-                                            $realIrrigation= RealIrrigation::create([
-                                                'initTime' => isset($wiseconnRealIrrigation->initTime)?$wiseconnRealIrrigation->initTime:null,
-                                                'endTime' =>isset($wiseconnRealIrrigation->endTime)?$wiseconnRealIrrigation->endTime:null,
-                                                'status'=> isset($wiseconnRealIrrigation->status)?$wiseconnRealIrrigation->status:null,
-                                                'id_farm'=> isset($farm->id)?$farm->id:null,
-                                                'id_pump_system'=> isset($pumpSystem->id)?$pumpSystem->id:null,
-                                                'id_zone'=> isset($zone->id)?$zone->id:null,
-                                                'id_wiseconn' => $wiseconnRealIrrigation->id
-                                            ]);
-                                        }                             
+                                            $realIrrigation= $this->createRealIrrigation($wiseconnRealIrrigation,$farm,$pumpSystem,$zone);
+                                        }
                                     }
                                 }
                                 $cloningError->delete();
@@ -399,9 +402,39 @@ class ZoneController extends Controller
                             }
                         }
                     }
+                    $realIrrigations=RealIrrigation::where("id_zone",$zone->id)
+                        ->where("initTime",">=",$initTime)
+                        ->where(function ($q) use ($endTime) {
+                            $q->where("endTime","<=",$endTime)->orWhere("status", "Running");
+                        })->with("pumpSystem")->with("irrigations")->with("farm")->get();
+                    $wiseconnRealIrrigations=[];
+                    if(count($realIrrigations)==0){
+                        try{
+                                $wiseconnRealIrrigations = json_decode(($this->requestWiseconn(new Client([
+                                    'base_uri' => 'https://apiv2.wiseconn.com',
+                                    'timeout'  => 100.0,
+                                ]),'GET',"/zones/".$zone->id_wiseconn."/realIrrigations?initTime=".$initTime."&endTime=".$endTime))->getBody()->getContents());
+                                foreach ($wiseconnRealIrrigations as $key => $wiseconnRealIrrigation) {
+                                    if(isset($wiseconnRealIrrigation->id)){
+                                        $realIrrigation=RealIrrigation::where("id_wiseconn",$wiseconnRealIrrigation->id)->first();
+                                        if(is_null($realIrrigation)){                                    
+                                            $pumpSystem=Pump_system::where("id_wiseconn",$wiseconnRealIrrigation->pumpSystemId)->first();
+                                            $realIrrigation= $this->createRealIrrigation($wiseconnRealIrrigation,$farm,$pumpSystem,$zone);
+                                        }                             
+                                    }
+                                }
+                            } catch (\Exception $e) {
+                                return response()->json([
+                                    'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                                    'error' => $e->getMessage(),
+                                    'linea' => $e->getLine()
+                                ], 500);
+                            }
+                    }
                     $response = [
                         'message'=> 'Lista de RealIrrigation',
                         'zone'=> $zone,
+                        'wiseconnRealIrrigations'=>$wiseconnRealIrrigations,
                         'data' => RealIrrigation::where("id_zone",$zone->id)
                         ->where("initTime",">=",$initTime)
                         ->where(function ($q) use ($endTime) {
