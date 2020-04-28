@@ -155,8 +155,7 @@ class MeasureController extends Controller{
             }
             //forzando no clonar desde controlador por lentitud en tiempo de respuesta 
             //$cloningErrors=CloningErrors::where("elements","/measures/id/data")->where("uri","/measures/".$measure->id_wiseconn."/data")->where("id_wiseconn",$measure->id_wiseconn)->get();
-            //if(count($cloningErrors)>0){
-            if(false){
+            /*if(count($cloningErrors)>0){
                 foreach ($cloningErrors as $key => $cloningError) {
                     try{
                         $client = new Client([
@@ -180,10 +179,9 @@ class MeasureController extends Controller{
                         ], 500);
                     }
                 }
-            }
+            }*/
             //forzando no clonar desde controlador por lentitud en tiempo de respuesta 
-            //if(count(MeasureData::where("id_measure",$measure->id)->whereBetween("time",[$request->input("initTime"),$request->input("endTime")])->orderBy('time', 'DESC')->get())==0){
-            if(false){
+            /*if(count(MeasureData::where("id_measure",$measure->id)->whereBetween("time",[$request->input("initTime"),$request->input("endTime")])->orderBy('time', 'DESC')->get())==0){
                 try{
                         $client = new Client([
                             'base_uri' => 'https://apiv2.wiseconn.com',
@@ -206,7 +204,7 @@ class MeasureController extends Controller{
                             'linea' => $e->getLine()
                         ], 500);
                     }
-            }
+            }*/
             $response = [
                 'message'=> 'MeasureData encontrado satisfactoriamente',
                 'measure'=>$measure,

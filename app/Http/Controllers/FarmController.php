@@ -37,8 +37,7 @@ class FarmController extends Controller
         try {
             //forzando no clonar desde controlador por lentitud en tiempo de respuesta 
             //$cloningErrors=CloningErrors::where("elements","/farms")->where("uri","/farms")->get();
-            //if(count($cloningErrors)>0){
-            if(false){
+            /*if(count($cloningErrors)>0){
                 $farmsIdsToClone=[520,1378,185,2110,719];
                 foreach ($cloningErrors as $key => $cloningError) {
                     try{
@@ -110,7 +109,7 @@ class FarmController extends Controller
                         ], 500);
                     }     
                 }
-            }
+            }*/
             $response = [
                 'message'=> 'Lista de campos',
                 'data' => Farm::with("account")->get(),
@@ -126,16 +125,16 @@ class FarmController extends Controller
     }
     public function get($id){
         try {            
-            $element = Farm::with("account")->find($id);
-            if(is_null($element)){
+            $farm = Farm::with("account")->find($id);
+            if(is_null($farm)){
                 return response()->json([
                     'message'=>'Campo no exitente',
-                    'data'=>$element
+                    'id'=>$id
                 ],404);
             }
             $response = [
                 'message'=> 'Campo encontrado satisfactoriamente',
-                'data' => $element,
+                'data' => $farm,
             ];
             return response()->json($response, 200);
         } catch (\Exception $e) {
@@ -309,11 +308,13 @@ class FarmController extends Controller
     public function zones($id){
         try {
             $farm=Farm::find($id);
+            if(is_null($farm)){
+                return response()->json(['message'=>'Campo no existente'],404);
+            }
             $zones = Zone::where("id_farm",$farm->id)->get();
             //forzando no clonar desde controlador por lentitud en tiempo de respuesta 
             //$cloningErrors=CloningErrors::where("elements","/farms/id/zones")->where("uri","/farms/".$farm->id_wiseconn."/zones")->where("id_wiseconn",$farm->id_wiseconn)->get();
-            //if(count($cloningErrors)>0){
-            if(false){
+            /*if(count($cloningErrors)>0){
                 foreach ($cloningErrors as $key => $cloningError) {
                     try{
                         $wiseconnZones = json_decode(($this->requestWiseconn(new Client([
@@ -348,7 +349,7 @@ class FarmController extends Controller
                         ], 500);
                     }
                 }
-            }
+            }*/
             $response = [
                 'message'=> 'Lista de zonas',
                 'data' => Zone::where("id_farm",$farm->id)->get(),
@@ -621,8 +622,7 @@ class FarmController extends Controller
             }
             //forzando no clonar desde controlador por lentitud en tiempo de respuesta 
             //$cloningErrors=CloningErrors::where("elements","/farms/id/measures")->where("uri","/farms/".$farm->id_wiseconn."/measures")->where("id_wiseconn",$farm->id_wiseconn)->get();
-            //if(count($cloningErrors)>0){
-            if(false){
+            /*if(count($cloningErrors)>0){
                 foreach ($cloningErrors as $key => $cloningError) {
                     try{
                         $measures=json_decode(($this->requestWiseconn(new Client([
@@ -663,7 +663,7 @@ class FarmController extends Controller
                     }
                 }
                 $farm->touch();
-            }
+            }*/
         $response = [
             'message'=> 'Lista de SensorTypes',
             'data' => SensorType::where("id_farm",$farm->id)->with("zones")->get(),
