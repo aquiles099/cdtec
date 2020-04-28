@@ -242,8 +242,10 @@ class ZoneController extends Controller
             }
             $measures = Measure::where("id_zone",$zone->id)->get();
             $wiseconnMeasures=[];
-            $cloningErrors=CloningErrors::where("elements","/zones/id/measures")->where("uri","/zones/".$zone->id_wiseconn."/measures")->where("id_wiseconn",$zone->id_wiseconn)->get();
-            if(count($cloningErrors)>0){
+            //forzando no clonar desde controlador por lentitud en tiempo de respuesta 
+            //$cloningErrors=CloningErrors::where("elements","/zones/id/measures")->where("uri","/zones/".$zone->id_wiseconn."/measures")->where("id_wiseconn",$zone->id_wiseconn)->get();
+            //if(count($cloningErrors)>0){            
+            if(false){
                 foreach ($cloningErrors as $key => $cloningError) {
                     try{
                         $wiseconnMeasures = json_decode(($this->requestWiseconn(new Client([
@@ -367,16 +369,10 @@ class ZoneController extends Controller
                 $farm=$zone->id_farm?Farm::find($zone->id_farm):null;
                 $initTime=(Carbon::parse($request->input("initTime")))->format('Y-m-d');
                 $endTime=(Carbon::parse($request->input("endTime")))->format('Y-m-d');
-                /*$realIrrigations = RealIrrigation::where("id_zone",$zone->id)
-                    ->where("initTime",">=",$initTime)
-                    ->where(function ($q) use ($endTime) {
-                        $q->where("endTime","<=",$endTime)->orWhere("status", "Running");
-                    })->with("pumpSystem")->with("irrigations")->with("farm")->get();
-                $today = Carbon::today();
-                $isAfter=Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($zone->updated_at)->format('Y-m-d').'T00:00:00.000000Z');
-                if($isAfter||count($realIrrigations)==0){*/
                     $cloningErrors=CloningErrors::where("elements","/zones/id/realIrrigations")->where("uri",'LIKE',"/zones/".$zone->id_wiseconn."/realIrrigations/%")->where("id_wiseconn",$zone->id_wiseconn)->get();
-                    if(count($cloningErrors)>0){
+                    //forzando no clonar desde controlador por lentitud en tiempo de respuesta 
+                    //if(count($cloningErrors)>0){
+                    if(false){
                         foreach ($cloningErrors as $key => $cloningError) {
                             try{
                                 $wiseconnRealIrrigations = json_decode(($this->requestWiseconn(new Client([
@@ -402,13 +398,15 @@ class ZoneController extends Controller
                             }
                         }
                     }
-                    $realIrrigations=RealIrrigation::where("id_zone",$zone->id)
+                    $wiseconnRealIrrigations=[];
+                    //forzando no clonar desde controlador por lentitud en tiempo de respuesta 
+                    /*$realIrrigations=RealIrrigation::where("id_zone",$zone->id)
                         ->where("initTime",">=",$initTime)
                         ->where(function ($q) use ($endTime) {
                             $q->where("endTime","<=",$endTime)->orWhere("status", "Running");
-                        })->with("pumpSystem")->with("irrigations")->with("farm")->get();
-                    $wiseconnRealIrrigations=[];
-                    if(count($realIrrigations)==0){
+                        })->with("pumpSystem")->with("irrigations")->with("farm")->get();*/
+                    //if(count($realIrrigations)>0){
+                    if(false){
                         try{
                                 $wiseconnRealIrrigations = json_decode(($this->requestWiseconn(new Client([
                                     'base_uri' => 'https://apiv2.wiseconn.com',

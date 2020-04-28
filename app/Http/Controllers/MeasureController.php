@@ -144,7 +144,7 @@ class MeasureController extends Controller{
             'time'=> isset($measureData->time)?$measureData->time:null
         ]);
     }
-    public function data(Request $request,$id){        
+    public function data(Request $request,$id){
         try {
             $measure=Measure::find($id);
             if(is_null($measure)){
@@ -153,8 +153,10 @@ class MeasureController extends Controller{
                     "data"=>$measure
                 ],404);
             }
-            $cloningErrors=CloningErrors::where("elements","/measures/id/data")->where("uri","/measures/".$measure->id_wiseconn."/data")->where("id_wiseconn",$measure->id_wiseconn)->get();
-            if(count($cloningErrors)>0){
+            //forzando no clonar desde controlador por lentitud en tiempo de respuesta 
+            //$cloningErrors=CloningErrors::where("elements","/measures/id/data")->where("uri","/measures/".$measure->id_wiseconn."/data")->where("id_wiseconn",$measure->id_wiseconn)->get();
+            //if(count($cloningErrors)>0){
+            if(false){
                 foreach ($cloningErrors as $key => $cloningError) {
                     try{
                         $client = new Client([
@@ -179,7 +181,9 @@ class MeasureController extends Controller{
                     }
                 }
             }
-            if(count(MeasureData::where("id_measure",$measure->id)->whereBetween("time",[$request->input("initTime"),$request->input("endTime")])->orderBy('time', 'DESC')->get())==0){
+            //forzando no clonar desde controlador por lentitud en tiempo de respuesta 
+            //if(count(MeasureData::where("id_measure",$measure->id)->whereBetween("time",[$request->input("initTime"),$request->input("endTime")])->orderBy('time', 'DESC')->get())==0){
+            if(false){
                 try{
                         $client = new Client([
                             'base_uri' => 'https://apiv2.wiseconn.com',

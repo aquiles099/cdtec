@@ -35,8 +35,10 @@ class FarmController extends Controller
     }
     public function all(){
         try {
-            $cloningErrors=CloningErrors::where("elements","/farms")->where("uri","/farms")->get();
-            if(count($cloningErrors)>0){
+            //forzando no clonar desde controlador por lentitud en tiempo de respuesta 
+            //$cloningErrors=CloningErrors::where("elements","/farms")->where("uri","/farms")->get();
+            //if(count($cloningErrors)>0){
+            if(false){
                 $farmsIdsToClone=[520,1378,185,2110,719];
                 foreach ($cloningErrors as $key => $cloningError) {
                     try{
@@ -305,16 +307,13 @@ class FarmController extends Controller
         return $newZone;
     }
     public function zones($id){
-        try {            
-            $initTime=Carbon::now(date_default_timezone_get())->subDays(2)->format('Y-m-d');
-            $endTime=Carbon::now(date_default_timezone_get())->format('Y-m-d');
+        try {
             $farm=Farm::find($id);
             $zones = Zone::where("id_farm",$farm->id)->get();
-            //$today = Carbon::today();
-            //$isAfter=(Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($farm->updated_at)->format('Y-m-d').'T00:00:00.000000Z'));
-            //if($isAfter||count($zones)==0){
-            $cloningErrors=CloningErrors::where("elements","/farms/id/zones")->where("uri","/farms/".$farm->id_wiseconn."/zones")->where("id_wiseconn",$farm->id_wiseconn)->get();
-            if(count($cloningErrors)>0){
+            //forzando no clonar desde controlador por lentitud en tiempo de respuesta 
+            //$cloningErrors=CloningErrors::where("elements","/farms/id/zones")->where("uri","/farms/".$farm->id_wiseconn."/zones")->where("id_wiseconn",$farm->id_wiseconn)->get();
+            //if(count($cloningErrors)>0){
+            if(false){
                 foreach ($cloningErrors as $key => $cloningError) {
                     try{
                         $wiseconnZones = json_decode(($this->requestWiseconn(new Client([
@@ -613,13 +612,17 @@ class FarmController extends Controller
     }
     public function sensorTypes($id){
         try {
-            $farm=Farm::find($id);            
-            //$today = Carbon::today();
-            //$isAfter=(Carbon::parse(Carbon::parse($today)->format('Y-m-d').'T00:00:00.000000Z')->isAfter(Carbon::parse($farm->updated_at)->format('Y-m-d').'T00:00:00.000000Z'));
-            //$sensorTypes = SensorType::where("id_farm",$farm->id)->with("zones")->get();
-            //if($isAfter||count($sensorTypes)==0){
-            $cloningErrors=CloningErrors::where("elements","/farms/id/measures")->where("uri","/farms/".$farm->id_wiseconn."/measures")->where("id_wiseconn",$farm->id_wiseconn)->get();
-            if(count($cloningErrors)>0){
+            $farm=Farm::find($id);
+            if(is_null($farm)){
+                return response()->json([
+                    "message"=>"Campo no existente",
+                    "data"=>$farm
+                ],404);
+            }
+            //forzando no clonar desde controlador por lentitud en tiempo de respuesta 
+            //$cloningErrors=CloningErrors::where("elements","/farms/id/measures")->where("uri","/farms/".$farm->id_wiseconn."/measures")->where("id_wiseconn",$farm->id_wiseconn)->get();
+            //if(count($cloningErrors)>0){
+            if(false){
                 foreach ($cloningErrors as $key => $cloningError) {
                     try{
                         $measures=json_decode(($this->requestWiseconn(new Client([
