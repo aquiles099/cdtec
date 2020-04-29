@@ -112,6 +112,14 @@ Route::group(['middleware' => ['cors'] ], function() {
 	Route::delete('roles/delete/{id}', 'RoleController@delete');
 	// types
 	Route::post('types/store', 'TypeController@store');	
+	// accountssettings
+	Route::get('accountsettings', 'AccountSettingsController@all');
+	Route::get('accountsettings/get/{id}', 'AccountSettingsController@get');
+	Route::post('accountsettings/store', 'AccountSettingsController@store');
+	Route::post('accountsettings/update/{id}', 'AccountSettingsController@update');
+	Route::delete('accountsettings/delete/{id}', 'AccountSettingsController@delete');
+	Route::get('accountsettings/generateapikey', 'AccountSettingsController@generateApiKey');
+
 });
 Route::post('auth/login', 'Api\AuthController@login');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
