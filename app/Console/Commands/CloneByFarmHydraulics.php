@@ -35,7 +35,11 @@ class CloneByFarmHydraulics extends Command
     {
         parent::__construct();
     }
-    protected function requestWiseconn($client,$method,$uri){
+    protected function requestWiseconn($method,$uri){
+        $client = new Client([
+            'base_uri' => 'https://apiv2.wiseconn.com',
+            'timeout'  => 100.0,
+        ]);
         return $client->request($method, $uri, [
             'headers' => [
                 'api_key' => '9Ev6ftyEbHhylMoKFaok',
@@ -60,6 +64,16 @@ class CloneByFarmHydraulics extends Command
             'id_wiseconn' => $hydraulic->id
         ]); 
     }
+    protected function cloneBy($hydraulic,$farm){
+        $node=Node::where("id_wiseconn",$hydraulic->nodeId)->first();
+        if(is_null(Hydraulic::where("id_wiseconn",$hydraulic->id)->first())&&!is_null($node)){ 
+            $newPhysicalConnection =$this->physicalConnectionCreate($hydraulic);
+            $newHydraulic =$this->hydraulicCreate($hydraulic,$farm,$node,$newPhysicalConnection);
+            $this->info("New PhysicalConnection id:".$newPhysicalConnection->id." / New Hydraulic id:".$newHydraulic->id);  
+        }else{
+            $this->info("Elemento existente");
+        }
+    }
     /**
      * Execute the console command.
      *
@@ -67,38 +81,49 @@ class CloneByFarmHydraulics extends Command
      */
     public function handle()
     {
-        $client = new Client([
-            'base_uri' => 'https://apiv2.wiseconn.com',
-            'timeout'  => 100.0,
-        ]);
+        
         try{
             $farms=Farm::all();
             foreach ($farms as $key => $farm) {
                 try{
-                    $currentRequestUri='/farms/'.$farm->id_wiseconn.'/hydraulics';
-                    $currentRequestElement='/farms/id/hydraulics';
-                    $id_wiseconn=$farm->id_wiseconn;
-                    $hydraulicsResponse = $this->requestWiseconn($client,'GET',$currentRequestUri);
-                    $hydraulics=json_decode($hydraulicsResponse->getBody()->getContents());            
-                    foreach ($hydraulics as $key => $hydraulic) {
-                        $node=Node::where("id_wiseconn",$hydraulic->nodeId)->first();
-                        if(is_null(Hydraulic::where("id_wiseconn",$hydraulic->id)->first())&&!is_null($node)){ 
-                            $newPhysicalConnection =$this->physicalConnectionCreate($hydraulic);
-                            $newHydraulic =$this->hydraulicCreate($hydraulic,$farm,$node,$newPhysicalConnection);
-                            $this->info("New PhysicalConnection id:".$newPhysicalConnection->id." / New Hydraulic id:".$newHydraulic->id);  
+                    $cloningErrors=CloningErrors::where("elements","/farms/id/hydraulics")->get();
+                    if(count($cloningErrors)>0){
+                        foreach ($cloningErrors as $key => $cloningError) {
+                            $hydraulicsResponse = $this->requestWiseconn('GET',$cloningError->uri);
+                            $hydraulics=json_decode($hydraulicsResponse->getBody()->getContents());
+                            $this->info("==========Clonando pendientes por error en peticion (".count($hydraulics)." elementos)");
+                            foreach ($hydraulics as $key => $hydraulic) {
+                                $this->cloneBy($hydraulic,$farm);
+                            }
+                            $cloningError->delete();
+                        }
+                    }else{
+                        try{
+                            $currentRequestUri='/farms/'.$farm->id_wiseconn.'/hydraulics';
+                            $currentRequestElement='/farms/id/hydraulics';
+                            $id_wiseconn=$farm->id_wiseconn;
+                            $hydraulicsResponse = $this->requestWiseconn('GET',$currentRequestUri);
+                            $hydraulics=json_decode($hydraulicsResponse->getBody()->getContents());
+                            $this->info("==========Clonando nuevos elementos (".count($hydraulics)." elementos)");
+                            foreach ($hydraulics as $key => $hydraulic) {
+                                $this->cloneBy($hydraulic,$farm);
+                            }
+                        } catch (\Exception $e) {
+                            $this->error("Error:" . $e->getMessage());
+                            $this->error("Linea:" . $e->getLine());
+                            $this->error("currentRequestUri:" . $currentRequestUri);
+                            if(is_null(CloningErrors::where("elements",$currentRequestElement)->where("uri",$currentRequestUri)->where("id_wiseconn",$id_wiseconn)->first())){
+                                $cloningError=new CloningErrors();
+                                $cloningError->elements=$currentRequestElement;
+                                $cloningError->uri=$currentRequestUri;
+                                $cloningError->id_wiseconn=$id_wiseconn;
+                                $cloningError->save();
+                            }
                         }
                     }
                 } catch (\Exception $e) {
                     $this->error("Error:" . $e->getMessage());
                     $this->error("Linea:" . $e->getLine());
-                    $this->error("currentRequestUri:" . $currentRequestUri);
-                    if(is_null(CloningErrors::where("elements",$currentRequestElement)->where("uri",$currentRequestUri)->where("id_wiseconn",$id_wiseconn)->first())){
-                        $cloningError=new CloningErrors();
-                        $cloningError->elements=$currentRequestElement;
-                        $cloningError->uri=$currentRequestUri;
-                        $cloningError->id_wiseconn=$id_wiseconn;
-                        $cloningError->save();
-                    }
                 }
             }
             $this->info("Success: Clone hydraulics and physical connections data by farm");

@@ -37,7 +37,11 @@ class CloneByFarmZones extends Command
     {
         parent::__construct();
     }
-    protected function requestWiseconn($client,$method,$uri){
+    protected function requestWiseconn($method,$uri){
+        $client = new Client([
+            'base_uri' => 'https://apiv2.wiseconn.com',
+            'timeout'  => 100.0,
+        ]);
         return $client->request($method, $uri, [
             'headers' => [
                 'api_key' => '9Ev6ftyEbHhylMoKFaok',
@@ -97,7 +101,16 @@ class CloneByFarmZones extends Command
         }
         return $newZone;
     }
-    
+    public function cloneBy($zone){
+        $farm=Farm::where("id_wiseconn",$zone->farmId)->first();
+        if(is_null(Zone::where("id_wiseconn",$zone->id)->first()) && !is_null($farm)){
+            $newZone= $this->zoneCreate($zone,$farm); 
+            $farm->touch();
+            $this->info("New Zone id:".$newZone->id);
+        }else{
+            $this->info("Elemento existente");
+        }
+    }
     /**
      * Execute the console command.
      *
@@ -105,40 +118,50 @@ class CloneByFarmZones extends Command
      */
     public function handle()
     {
-        $client = new Client([
-            'base_uri' => 'https://apiv2.wiseconn.com',
-            'timeout'  => 100.0,
-        ]);
         try { 
             $farms=Farm::all();
             foreach ($farms as $key => $farm) {
                 if($farm->id_wiseconn){
                     try {
-                        $currentRequestUri='/farms/'.$farm->id_wiseconn.'/zones';
-                        $currentRequestElement='/farms/id/zones';
-                        $id_wiseconn=$farm->id_wiseconn;
-                        $zonesResponse =  $this->requestWiseconn($client,'GET',$currentRequestUri);
-                        $zones=json_decode($zonesResponse->getBody()->getContents()); 
-                        foreach ($zones as $key => $zone) {
-                            $farm=Farm::where("id_wiseconn",$zone->farmId)->first();
-                            if(is_null(Zone::where("id_wiseconn",$zone->id)->first()) && !is_null($farm)){
-                                $newZone= $this->zoneCreate($zone,$farm); 
-                                $farm->touch();
-                                $this->info("New Zone id:".$newZone->id);
+                        $cloningErrors=CloningErrors::where("elements","/farms/id/zones")->get();
+                        if(count($cloningErrors)>0){
+                            foreach ($cloningErrors as $key => $cloningError) {
+                                $zonesResponse = $this->requestWiseconn('GET',$cloningError->uri);
+                                $zones=json_decode($zonesResponse->getBody()->getContents());
+                                $this->info("==========Clonando pendientes por error en peticion (".count($zones)." elementos)");
+                                foreach ($zones as $key => $zone) {
+                                    $this->cloneBy($zone);
+                                }
+                                $cloningError->delete();
                             }
-                        }
+                        }else{
+                            try {
+                                $currentRequestUri='/farms/'.$farm->id_wiseconn.'/zones';
+                                $currentRequestElement='/farms/id/zones';
+                                $id_wiseconn=$farm->id_wiseconn;
+                                $zonesResponse =  $this->requestWiseconn('GET',$currentRequestUri);
+                                $zones=json_decode($zonesResponse->getBody()->getContents()); 
+                                $this->info("==========Clonando nuevos elementos (".count($zones)." elementos)");
+                                foreach ($zones as $key => $zone) {
+                                    $this->cloneBy($zone);
+                                }
+                            } catch (\Exception $e) {
+                                $this->error("Error:" . $e->getMessage());
+                                $this->error("Linea:" . $e->getLine());
+                                $this->error("currentRequestUri:" . $currentRequestUri);
+                                if(is_null(CloningErrors::where("elements",$currentRequestElement)->where("uri",$currentRequestUri)->where("id_wiseconn",$id_wiseconn)->first())){
+                                    $cloningError=new CloningErrors();
+                                    $cloningError->elements=$currentRequestElement;
+                                    $cloningError->uri=$currentRequestUri;
+                                    $cloningError->id_wiseconn=$id_wiseconn;
+                                    $cloningError->save();
+                                }
+                            }
+                        } 
                     } catch (\Exception $e) {
                         $this->error("Error:" . $e->getMessage());
                         $this->error("Linea:" . $e->getLine());
-                        $this->error("currentRequestUri:" . $currentRequestUri);
-                        if(is_null(CloningErrors::where("elements",$currentRequestElement)->where("uri",$currentRequestUri)->where("id_wiseconn",$id_wiseconn)->first())){
-                            $cloningError=new CloningErrors();
-                            $cloningError->elements=$currentRequestElement;
-                            $cloningError->uri=$currentRequestUri;
-                            $cloningError->id_wiseconn=$id_wiseconn;
-                            $cloningError->save();
-                        }
-                    } 
+                    }
                 }
             }
             $this->info("Success: Clone pumpsystems data by farm");

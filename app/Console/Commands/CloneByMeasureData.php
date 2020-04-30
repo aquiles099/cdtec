@@ -35,7 +35,11 @@ class CloneByMeasureData extends Command
     {
         parent::__construct();
     }
-    protected function requestWiseconn($client,$method,$uri){
+    protected function requestWiseconn($method,$uri){
+        $client = new Client([
+            'base_uri' => 'https://apiv2.wiseconn.com',
+            'timeout'  => 100.0,
+        ]);
         return $client->request($method, $uri, [
             'headers' => [
                 'api_key' => '9Ev6ftyEbHhylMoKFaok',
@@ -44,13 +48,21 @@ class CloneByMeasureData extends Command
         ]);
     }
     protected function measureDataCreate($measure,$measureData){
-        $measure->lastMeasureDataUpdate=Carbon::today();
+        $measure->lastMeasureDataUpdate=$measureData->time;
         $measure->update();
         return MeasureData::create([
             'id_measure'=> isset($measure->id)?$measure->id:null,
             'value'=> isset($measureData->value)?$measureData->value:null,
             'time'=> isset($measureData->time)?$measureData->time:null
         ]);
+    }
+    protected function cloneBy($measure,$measureData,$measuresDataCount){
+        if(is_null(MeasureData::where("id_measure",$measure->id)->where("time",$measureData->time)->first())){
+            $newMeasureData = $this->measureDataCreate($measure,$measureData);
+            $this->info("New MeasureData id:".$newMeasureData->id." cantidad de MeasureData:".$measuresDataCount);
+        }else{
+            $this->info("Elemento existente");
+        }
     }
     /**
      * Execute the console command.
@@ -59,10 +71,6 @@ class CloneByMeasureData extends Command
      */
     public function handle()
     {
-        $client = new Client([
-            'base_uri' => 'https://apiv2.wiseconn.com',
-            'timeout'  => 100.0,
-        ]);
         try{
             //$zonesId=Zone::whereIn("name",["Estación Meteorológica","Estación Metereológica"])->pluck("id");
             //$measures=Measure::whereIn("id_zone",$zonesId)->get();
@@ -71,28 +79,47 @@ class CloneByMeasureData extends Command
             $endTime=Carbon::now(date_default_timezone_get())->addDays(1)->format('Y-m-d');
             foreach ($measures as $mKey => $measure) {
                 try{
-                    $currentRequestUri='/measures/'.$measure->id_wiseconn.'/data?initTime='.$initTime.'T00:00&endTime='.$endTime.'T00:00';
-                    $currentRequestElement='/measures/id/data';
-                    $id_wiseconn=$measure->id_wiseconn;
-                    $measuresResponse = $this->requestWiseconn($client,'GET',$currentRequestUri);
-                    $measuresData=json_decode($measuresResponse->getBody()->getContents());
-                    foreach ($measuresData as $mDkey => $measureData) {
-                        if(is_null(MeasureData::where("id_measure",$measure->id)->where("time",$measureData->time)->first())){
-                            $newMeasureData = $this->measureDataCreate($measure,$measureData);
-                            $this->info("New MeasureData id:".$newMeasureData->id." Measures:(".($mKey+1)."/".count($measures).") Measures data:(".($mDkey+1)."/".count($measuresData).")");
-                        }  
+                    $cloningErrors=CloningErrors::where("elements","/measures/id/data")->get();
+                    if(count($cloningErrors)>0){
+                        foreach ($cloningErrors as $mKey => $cloningError) {
+                            $measuresResponse = $this->requestWiseconn('GET',$cloningError->uri);
+                            $measuresData=json_decode($measuresResponse->getBody()->getContents());
+                            $this->info("==========Clonando pendientes por error en peticion (".count($measuresData)." elementos)");
+                            foreach ($measuresData as $mDkey => $measureData) {
+                                $this->cloneBy($measure,$measureData,count($measuresData));
+                            }
+                            $cloningError->delete();
+                        }
+                    }else{
+                        try {
+                            if($measure->lastMeasureDataUpdate){
+                                $initTime=Carbon::parse($measure->lastMeasureDataUpdate)->format('Y-m-d');
+                            }
+                            $currentRequestUri='/measures/'.$measure->id_wiseconn.'/data?initTime='.$initTime.'T00:00&endTime='.$endTime.'T00:00';
+                            $currentRequestElement='/measures/id/data';
+                            $id_wiseconn=$measure->id_wiseconn;
+                            $measuresResponse = $this->requestWiseconn('GET',$currentRequestUri);
+                            $measuresData=json_decode($measuresResponse->getBody()->getContents());
+                            $this->info("==========Clonando nuevos elementos (".count($measuresData)." elementos)");
+                            foreach ($measuresData as $mDkey => $measureData) {
+                                $this->cloneBy($measure,$measureData,count($measuresData));
+                            }
+                        } catch (\Exception $e) {
+                            $this->error("Error:" . $e->getMessage());
+                            $this->error("Linea:" . $e->getLine());
+                            $this->error("currentRequestUri:" . $currentRequestUri);
+                            if(is_null(CloningErrors::where("elements",$currentRequestElement)->where("uri",$currentRequestUri)->where("id_wiseconn",$id_wiseconn)->first())){
+                                $cloningError=new CloningErrors();
+                                $cloningError->elements=$currentRequestElement;
+                                $cloningError->uri=$currentRequestUri;
+                                $cloningError->id_wiseconn=$id_wiseconn;
+                                $cloningError->save();
+                            }
+                        } 
                     }
                 } catch (\Exception $e) {
                     $this->error("Error:" . $e->getMessage());
                     $this->error("Linea:" . $e->getLine());
-                    $this->error("currentRequestUri:" . $currentRequestUri);
-                    if(is_null(CloningErrors::where("elements",$currentRequestElement)->where("uri",$currentRequestUri)->where("id_wiseconn",$id_wiseconn)->first())){
-                        $cloningError=new CloningErrors();
-                        $cloningError->elements=$currentRequestElement;
-                        $cloningError->uri=$currentRequestUri;
-                        $cloningError->id_wiseconn=$id_wiseconn;
-                        $cloningError->save();
-                    }
                 } 
             }
             $this->info("Success: Clone measures data by node");

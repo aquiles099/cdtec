@@ -41,7 +41,11 @@ class CloneByNodeMeasures extends Command
     {
         parent::__construct();
     }
-    protected function requestWiseconn($client,$method,$uri){
+    protected function requestWiseconn($method,$uri){
+        $client = new Client([
+            'base_uri' => 'https://apiv2.wiseconn.com',
+            'timeout'  => 100.0,
+        ]);
         return $client->request($method, $uri, [
             'headers' => [
                 'api_key' => '9Ev6ftyEbHhylMoKFaok',
@@ -70,82 +74,82 @@ class CloneByNodeMeasures extends Command
         switch (strtolower($sensorType)) {
             //clima
             case 'temperature':
-                return ['name'=>'Temperatura','group'=>'Clima'];
-                break;
+            return ['name'=>'Temperatura','group'=>'Clima'];
+            break;
             case 'humidity':
-                return ['name'=>'Humedad Relativa','group'=>'Clima'];
-                break;
+            return ['name'=>'Humedad Relativa','group'=>'Clima'];
+            break;
             case 'wind velocity':
-                return ['name'=>'Velocidad Viento','group'=>'Clima'];
-                break;
+            return ['name'=>'Velocidad Viento','group'=>'Clima'];
+            break;
             case 'solar radiation':
-                return ['name'=>'Radiación Solar','group'=>'Clima'];
-                break;
+            return ['name'=>'Radiación Solar','group'=>'Clima'];
+            break;
             case 'wind direction':
-                return ['name'=>'Dirección Viento','group'=>'Clima'];
-                break;
+            return ['name'=>'Dirección Viento','group'=>'Clima'];
+            break;
             case 'atmospheric preassure':
-                return ['name'=>'Presión Atmosférica','group'=>'Clima'];
-                break;
+            return ['name'=>'Presión Atmosférica','group'=>'Clima'];
+            break;
             case 'wind gust':
-                return ['name'=>'Ráfaga Viento','group'=>'Clima'];
-                break;
+            return ['name'=>'Ráfaga Viento','group'=>'Clima'];
+            break;
             case 'chill hours':
-                return ['name'=>'Horas Frío','group'=>'Clima'];
-                break;
+            return ['name'=>'Horas Frío','group'=>'Clima'];
+            break;
             case 'chill portion':
-                return ['name'=>'Porción Frío','group'=>'Clima'];
-                break;
+            return ['name'=>'Porción Frío','group'=>'Clima'];
+            break;
             case 'daily etp':
-                return ['name'=>'Etp Diaria','group'=>'Clima'];
-                break;
+            return ['name'=>'Etp Diaria','group'=>'Clima'];
+            break;
             case 'daily et0':
-                return ['name'=>'Et0 Diaria','group'=>'Clima'];
-                break;
+            return ['name'=>'Et0 Diaria','group'=>'Clima'];
+            break;
             //humedad
             case 'salinity':
-                return ['name'=>'Salinidad','group'=>'Humedad'];
-                break;
+            return ['name'=>'Salinidad','group'=>'Humedad'];
+            break;
             case 'soil temperature':
-                return ['name'=>'Temperatura Suelo','group'=>'Humedad'];
-                break;
+            return ['name'=>'Temperatura Suelo','group'=>'Humedad'];
+            break;
             case 'soil moisture':
-                return ['name'=>'Humedad Suelo','group'=>'Humedad'];
-                break;
+            return ['name'=>'Humedad Suelo','group'=>'Humedad'];
+            break;
             case 'soil humidity':
-                return ['name'=>'Humedad de Tubo','group'=>'Humedad'];
-                break;
+            return ['name'=>'Humedad de Tubo','group'=>'Humedad'];
+            break;
             case 'added soild moisture':
-                return ['name'=>'Suma Humedades','group'=>'Humedad'];
-                break;
+            return ['name'=>'Suma Humedades','group'=>'Humedad'];
+            break;
             //Riego
             case 'irrigation':
-                return ['name'=>'Riego','group'=>'Riego'];
-                break;
+            return ['name'=>'Riego','group'=>'Riego'];
+            break;
             case 'irrigation volume':
-                return ['name'=>'Volumen Riego','group'=>'Riego'];
-                break;
+            return ['name'=>'Volumen Riego','group'=>'Riego'];
+            break;
             case 'daily irrigation time':
-                return ['name'=>'Tiempo de Riego Diario','group'=>'Riego'];
-                break;
+            return ['name'=>'Tiempo de Riego Diario','group'=>'Riego'];
+            break;
             case 'flow':
-                return ['name'=>'Caudal','group'=>'Riego'];
-                break;
+            return ['name'=>'Caudal','group'=>'Riego'];
+            break;
             case 'daily irrigation volume by pump system':
-                return ['name'=>'Volumen de Riego Diario por Equipo','group'=>'Riego'];
-                break;
+            return ['name'=>'Volumen de Riego Diario por Equipo','group'=>'Riego'];
+            break;
             case 'daily irrigation time by pump system':
-                return ['name'=>'Tiempo de Riego Diario por Equipo','group'=>'Riego'];
-                break;
+            return ['name'=>'Tiempo de Riego Diario por Equipo','group'=>'Riego'];
+            break;
             case 'irrigation by pump system':
-                return ['name'=>'Riego por Equipo','group'=>'Riego'];
-                break;
+            return ['name'=>'Riego por Equipo','group'=>'Riego'];
+            break;
             case 'flow by zone':
-                return ['name'=>'Caudal por Sector','group'=>'Riego'];
-                break;
+            return ['name'=>'Caudal por Sector','group'=>'Riego'];
+            break;
             default:
-                return ['name'=>$sensorType,'group'=>'Otros'];
-                break;
+            return ['name'=>$sensorType,'group'=>'Otros'];
+            break;
         }
     }
     protected function sensorTypeCreate($measure,$farm,$zone){
@@ -182,6 +186,28 @@ class CloneByNodeMeasures extends Command
             'id_wiseconn' => $measure->id
         ]); 
     }
+    protected function cloneBy($measure,$node){
+        if(is_null(Measure::where("id_wiseconn",$measure->id)->first())){
+            $newPhysicalConnection =$this->physicalConnectionCreate($measure);
+            if(isset($measure->farmId)&&isset($measure->zoneId)){
+                $farm=Farm::where("id_wiseconn",$measure->farmId)->first();
+                $zone=Zone::where("id_wiseconn",$measure->zoneId)->first(); 
+                if($measure->farmId==$farm->id_wiseconn&&!is_null($farm)&&!is_null($zone)){ 
+                    $newmeasure =$this->measureCreate($measure,$farm,$zone,$node,$newPhysicalConnection); 
+                    $zone->touch();
+                    if(isset($measure->sensorType)){
+                        $newSensorType=$this->sensorTypeCreate($measure,$farm,$zone);
+                        if(!is_null($newSensorType)){
+                            $this->info("New SensorType id:".$newSensorType->id);
+                        }
+                    }
+                    $this->info("New PhysicalConnectio id:".$newPhysicalConnection->id." / New Measure, id:".$newmeasure->id);
+                }
+            }
+        }else{
+            $this->info("Elemento existente");
+        }
+    }
     /**
      * Execute the console command.
      *
@@ -189,60 +215,54 @@ class CloneByNodeMeasures extends Command
      */
     public function handle()
     {
-        $client = new Client([
-            'base_uri' => 'https://apiv2.wiseconn.com',
-            'timeout'  => 100.0,
-        ]);
         try{
             $nodes=Node::all();
             foreach ($nodes as $key => $node) {
                 try{
-                    $currentRequestUri='/nodes/'.$node->id_wiseconn.'/measures';
-                    $currentRequestElement='/nodes/id/measures';
-                    $id_wiseconn=$node->id_wiseconn;
-                    $measuresResponse = $this->requestWiseconn($client,'GET',$currentRequestUri);
-                    $measures=json_decode($measuresResponse->getBody()->getContents());
-                    foreach ($measures as $key => $measure) {
-                        if(is_null(Measure::where("id_wiseconn",$measure->id)->first())){
-                            $newPhysicalConnection =$this->physicalConnectionCreate($measure);
-                            if(isset($measure->farmId)&&isset($measure->zoneId)){
-                                $farm=Farm::where("id_wiseconn",$measure->farmId)->first();
-                                $zone=Zone::where("id_wiseconn",$measure->zoneId)->first(); 
-                                if($measure->farmId==$farm->id_wiseconn&&!is_null($farm)&&!is_null($zone)){ 
-                                    $newmeasure =$this->measureCreate($measure,$farm,$zone,$newPhysicalConnection); 
-                                    $zone->touch();
-                                    if(isset($measure->sensorType)){
-                                        $newSensorType=$this->sensorTypeCreate($measure,$farm,$zone);
-                                        if(!is_null($newSensorType)){
-                                            $this->info("New SensorType id:".$newSensorType->id);
-                                        }
-                                    }
-                                    $this->info("New PhysicalConnectio id:".$newPhysicalConnection->id." / New Measure, id:".$newmeasure->id);
-                                }
-                            }else{
-                                $newmeasure =$this->measureCreate($measure,$farm,null,$newPhysicalConnection); 
-                                $this->info("New PhysicalConnectio, id:".$newPhysicalConnection->id." / New Measure, id:".$newmeasure->id);
+                    $cloningErrors=CloningErrors::where("elements","/nodes/id/measures")->get();
+                    if(count($cloningErrors)>0){
+                        foreach ($cloningErrors as $key => $cloningError) {
+                            $measuresResponse = $this->requestWiseconn('GET',$cloningError->uri);
+                            $measures=json_decode($measuresResponse->getBody()->getContents());
+                            $this->info("==========Clonando pendientes por error en peticion (".count($measures)." elementos)");
+                            foreach ($measures as $key => $measure) {
+                                $this->cloneBy($measure,$node);
                             }
-                            
-                        }  
+                            $cloningError->delete();
+                        }
+                    }else{
+                        try {
+                            $currentRequestUri='/nodes/'.$node->id_wiseconn.'/measures';
+                            $currentRequestElement='/nodes/id/measures';
+                            $id_wiseconn=$node->id_wiseconn;
+                            $measuresResponse = $this->requestWiseconn('GET',$currentRequestUri);
+                            $measures=json_decode($measuresResponse->getBody()->getContents());
+                            $this->info("==========Clonando nuevos elementos (".count($measures)." elementos)");
+                            foreach ($measures as $key => $measure) {
+                                $this->cloneBy($measure,$node);                                
+                            }
+                        } catch (\Exception $e) {
+                            $this->error("Error:" . $e->getMessage());
+                            $this->error("Linea:" . $e->getLine());
+                            $this->error("currentRequestUri:" . $currentRequestUri);
+                            if(is_null(CloningErrors::where("elements",$currentRequestElement)->where("uri",$currentRequestUri)->where("id_wiseconn",$id_wiseconn)->first())){
+                                $cloningError=new CloningErrors();
+                                $cloningError->elements=$currentRequestElement;
+                                $cloningError->uri=$currentRequestUri;
+                                $cloningError->id_wiseconn=$id_wiseconn;
+                                $cloningError->save();
+                            }
+                        } 
                     }
                 } catch (\Exception $e) {
                     $this->error("Error:" . $e->getMessage());
                     $this->error("Linea:" . $e->getLine());
-                    $this->error("currentRequestUri:" . $currentRequestUri);
-                    if(is_null(CloningErrors::where("elements",$currentRequestElement)->where("uri",$currentRequestUri)->where("id_wiseconn",$id_wiseconn)->first())){
-                        $cloningError=new CloningErrors();
-                        $cloningError->elements=$currentRequestElement;
-                        $cloningError->uri=$currentRequestUri;
-                        $cloningError->id_wiseconn=$id_wiseconn;
-                        $cloningError->save();
-                    }
                 } 
+                $this->info("Success: Clone measures data by node");             
             }
-            $this->info("Success: Clone measures data by node");
         } catch (\Exception $e) {
             $this->error("Error:" . $e->getMessage());
             $this->error("Linea:" . $e->getLine());
-        } 
+        }
     }
 }

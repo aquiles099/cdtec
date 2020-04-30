@@ -37,7 +37,11 @@ class CloneByPumpsystemRealIrrigationsVolumes extends Command
     {
         parent::__construct();
     }
-    protected function requestWiseconn($client,$method,$uri){
+    protected function requestWiseconn($method,$uri){
+        $client = new Client([
+            'base_uri' => 'https://apiv2.wiseconn.com',
+            'timeout'  => 100.0,
+        ]);
         return $client->request($method, $uri, [
             'headers' => [
                 'api_key' => '9Ev6ftyEbHhylMoKFaok',
@@ -63,6 +67,18 @@ class CloneByPumpsystemRealIrrigationsVolumes extends Command
             'id_wiseconn' => $realIrrigation->id
         ]); 
     }
+    protected function cloneBy($realIrrigation){
+        $zone=Zone::where("id_wiseconn",$realIrrigation->zoneId)->first();
+        $pumpSystem=Pump_system::where("id_wiseconn",$realIrrigation->pumpSystemId)->first();
+        if(is_null(RealIrrigation::where("id_wiseconn",$realIrrigation->id)->first())&&!is_null($zone)&&!is_null($pumpSystem)){ 
+            $newVolume =$this->volumeCreate($realIrrigation);
+            $newRealIrrigation =$this->realIrrigationCreate($realIrrigation,$zone,$newVolume,$pumpSystem);
+            $zone->touch();
+            $this->info("New Volume id:".$newVolume->id." / New RealIrrigation id:".$newRealIrrigation->id);
+        }else{
+            $this->info("Elemento existente");
+        }
+    }
     /**
      * Execute the console command.
      *
@@ -70,48 +86,51 @@ class CloneByPumpsystemRealIrrigationsVolumes extends Command
      */
     public function handle()
     {
-        $client = new Client([
-            'base_uri' => 'https://apiv2.wiseconn.com',
-            'timeout'  => 100.0,
-        ]);
         $initTime=Carbon::now(date_default_timezone_get())->subDays(10)->format('Y-m-d');
         $endTime=Carbon::now(date_default_timezone_get())->addDays(5)->format('Y-m-d');
         try{
             $pumpSystems=Pump_system::all();
             foreach ($pumpSystems as $key => $pumpSystem) {
-                try{
-                    $currentRequestUri='/pumpSystems/'.$pumpSystem->id_wiseconn.'/realIrrigations/?endTime='.$endTime.'&initTime='.$initTime;
-                    $currentRequestElement='/pumpSystems/id/realIrrigations';
-                    $id_wiseconn=$pumpSystem->id_wiseconn;
-                    $realIrrigationsResponse = $this->requestWiseconn($client,'GET',$currentRequestUri);
-                    $realIrrigations=json_decode($realIrrigationsResponse->getBody()->getContents());
-                    foreach ($realIrrigations as $key => $realIrrigation) {
-                        $zone=Zone::where("id_wiseconn",$realIrrigation->zoneId)->first();
-                        $pumpSystem=Pump_system::where("id_wiseconn",$realIrrigation->pumpSystemId)->first();
-                        if(is_null(RealIrrigation::where("id_wiseconn",$realIrrigation->id)->first())&&!is_null($zone)&&!is_null($pumpSystem)){ 
-                            $newVolume =$this->volumeCreate($realIrrigation);
-                            $newRealIrrigation =$this->realIrrigationCreate($realIrrigation,$zone,$newVolume,$pumpSystem);
-                            $zone->touch();
-                            $this->info("New Volume id:".$newVolume->id." / New RealIrrigation id:".$newRealIrrigation->id);
+                $cloningErrors=CloningErrors::where("elements","/pumpSystems/id/realIrrigations")->get();
+                if(count($cloningErrors)>0){
+                    foreach ($cloningErrors as $key => $cloningError) {
+                        $realIrrigationsResponse = $this->requestWiseconn('GET',$cloningError->uri);
+                        $realIrrigations=json_decode($realIrrigationsResponse->getBody()->getContents());
+                        $this->info("==========Clonando pendientes por error en peticion (".count($realIrrigations)." elementos)");
+                        foreach ($realIrrigations as $key => $realIrrigation) {
+                            $this->cloneBy($realIrrigation);
+                        }
+                        $cloningError->delete();
+                    }
+                }else{
+                    try {
+                        $currentRequestUri='/pumpSystems/'.$pumpSystem->id_wiseconn.'/realIrrigations/?endTime='.$endTime.'&initTime='.$initTime;
+                        $currentRequestElement='/pumpSystems/id/realIrrigations';
+                        $id_wiseconn=$pumpSystem->id_wiseconn;
+                        $realIrrigationsResponse = $this->requestWiseconn('GET',$currentRequestUri);
+                        $realIrrigations=json_decode($realIrrigationsResponse->getBody()->getContents());
+                        $this->info("==========Clonando nuevos elementos (".count($realIrrigations)." elementos)");
+                        foreach ($realIrrigations as $key => $realIrrigation) {
+                            $this->cloneBy($realIrrigation);
+                        }
+                    } catch (\Exception $e) {
+                        $this->error("Error:" . $e->getMessage());
+                        $this->error("Linea:" . $e->getLine());
+                        $this->error("currentRequestUri:" . $currentRequestUri);
+                        if(is_null(CloningErrors::where("elements",$currentRequestElement)->where("uri",$currentRequestUri)->where("id_wiseconn",$id_wiseconn)->first())){
+                            $cloningError=new CloningErrors();
+                            $cloningError->elements=$currentRequestElement;
+                            $cloningError->uri=$currentRequestUri;
+                            $cloningError->id_wiseconn=$id_wiseconn;
+                            $cloningError->save();
                         }
                     }
-                } catch (\Exception $e) {
-                    $this->error("Error:" . $e->getMessage());
-                    $this->error("Linea:" . $e->getLine());
-                    $this->error("currentRequestUri:" . $currentRequestUri);
-                    if(is_null(CloningErrors::where("elements",$currentRequestElement)->where("uri",$currentRequestUri)->where("id_wiseconn",$id_wiseconn)->first())){
-                        $cloningError=new CloningErrors();
-                        $cloningError->elements=$currentRequestElement;
-                        $cloningError->uri=$currentRequestUri;
-                        $cloningError->id_wiseconn=$id_wiseconn;
-                        $cloningError->save();
-                    }
-                } 
+                }
             }
-            $this->info("Success: Clone real irrigations and volumes data by pumpsystem");
-        } catch (\Exception $e) {
+        }catch (\Exception $e) {
             $this->error("Error:" . $e->getMessage());
             $this->error("Linea:" . $e->getLine());
-        }  
-    }
+        } 
+        $this->info("Success: Clone real irrigations and volumes data by pumpsystem");
+    } 
 }
