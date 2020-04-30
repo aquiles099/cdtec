@@ -55,15 +55,15 @@ class CloneByFarmAlarms extends Command
             'description' => $alarm->description,
             'date' => $alarm->date,
             'id_farm' => $farm->id,
-            'id_zone' => $zone->id,
-            'id_real_irrigation' => $realIrrigation->id,
+            'id_zone' => $zone?$zone->id:null,
+            'id_real_irrigation' => $realIrrigation?$realIrrigation->id:null,
             'id_wiseconn' => $alarm->id,
         ]);
     }
-    protected function cloneBy($alarm){
-        $zone=Zone::where("id_wiseconn",$alarm->zoneId)->first();
-        $realIrrigation=RealIrrigation::where("id_wiseconn",$alarm->realIrrigationId)->first();
-        if(is_null(Alarm::where("id_wiseconn",$alarm->id)->first())&&!is_null($zone)&&!is_null($realIrrigation)){
+    protected function cloneBy($alarm,$farm){
+        $zone=isset($alarm->id_zone)?Zone::where("id_wiseconn",$alarm->id_zone)->first():null;
+        $realIrrigation=isset($alarm->id_real_irrigation)?RealIrrigation::where("id_wiseconn",$alarm->id_real_irrigation)->first():null;
+        if(is_null(Alarm::where("id_wiseconn",$alarm->id)->first())&&!is_null($farm)){
             $newAlarm= $this->alarmCreate($alarm,$farm,$zone,$realIrrigation);
             $this->info("New alarm, id:".$newAlarm->id);
         }else{
@@ -81,11 +81,13 @@ class CloneByFarmAlarms extends Command
             $cloningErrors=CloningErrors::where("elements","/farms/id/alarms")->get();
             if(count($cloningErrors)>0){
                 foreach ($cloningErrors as $key => $cloningError) {
+                    $farm=Farm::find($cloningError->id_wiseconn);
                     $alarmsResponse = $this->requestWiseconn('GET',$cloningError->uri);
                     $alarms=json_decode($alarmsResponse->getBody()->getContents());
                     $this->info("==========Clonando pendientes por error en peticion (".count($alarms)." elementos)");
                     foreach ($alarms as $key => $alarm) {
-                        $this->cloneBy($alarm);
+                        $this->info("alarm, id:".$newAlarm->id);
+                        $this->cloneBy($alarm,$farm);
                     }
                     $cloningError->delete();
                 }
@@ -95,14 +97,18 @@ class CloneByFarmAlarms extends Command
                 $endTime=Carbon::now(date_default_timezone_get())->format('Y-m-d');
                 foreach ($farms as $key => $farm) {
                     try {
-                        $currentRequestUri='/farms/'.$farm->id_wiseconn.'/alarms/triggered/?endTime='.$endTime.'&initTime='.$initTime;
+                        $initTime="2020-04-01";
+                        $endTime="2020-04-30";
+                        $currentRequestUri='/farms/'.$farm->id_wiseconn.'/alerts/triggered/?initTime='.$initTime.'&endTime='.$endTime;
+
+                        $this->info($currentRequestUri);
                         $currentRequestElement='/farms/id/alarms';
                         $id_wiseconn=$farm->id_wiseconn;
                         $alarmsResponse = $this->requestWiseconn('GET',$currentRequestUri);
                         $alarms=json_decode($alarmsResponse->getBody()->getContents());
                         $this->info("==========Clonando nuevos elementos (".count($alarms)." elementos)");
                         foreach ($alarms as $key => $alarm) {
-                            $this->cloneBy($alarm);
+                            $this->cloneBy($alarm,$farm);
                         }
                     } catch (\Exception $e) {
                         $this->error("Error:" . $e->getMessage());
