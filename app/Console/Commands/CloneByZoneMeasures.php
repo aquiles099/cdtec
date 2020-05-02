@@ -214,20 +214,50 @@ class CloneByZoneMeasures extends Command
         }
         if(!is_null($farm)&&!is_null($zone)){
             $measureRegistered=Measure::where("id_wiseconn",$measure->id)->where("id_farm",$farm->id)->where("id_zone",$zone->id)->first();
-            if(is_null($measureRegistered)){
-                $newPhysicalConnection =$this->physicalConnectionCreate($measure);
-                $newmeasure =$this->measureCreate($measure,$farm,$zone,$node,$newPhysicalConnection);
-                $zone->touch();
-                if(isset($measure->sensorType)){
-                    $newSensorType=$this->sensorTypeCreate($measure,$farm,$zone);
-                    if(!is_null($newSensorType)){
-                        $this->info("New SensorType id:".$newSensorType->id);
+            $measuresToClone=[
+                "temperature",
+                "humidity",
+                "wind velocity",
+                "solar radiation",
+                "wind direction",
+                "atmospheric preassure",
+                "wind gust",
+                "chill hours",
+                "chill portion",
+                "daily etp",
+                "daily et0",
+                "salinity",
+                "soil temperature",
+                "soil humidity",
+                "added soild moisture",
+                "irrigation",
+                "irrigation volume",
+                "daily irrigation time",
+                "flow",
+                "daily irrigation volume by pump system",
+                "daily irrigation time by pump system",
+                "irrigation by pump system",
+                "flow by zone"
+            ];
+            if(!isset($measure->sensorType)){
+                $measure->sensorType=$measure->name;
+            }
+            if(array_search(strtolower($measure->name), $measuresToClone)||array_search(strtolower($measure->sensorType), $measuresToClone)){
+                if(is_null($measureRegistered)){
+                    $newPhysicalConnection =$this->physicalConnectionCreate($measure);
+                    $newmeasure =$this->measureCreate($measure,$farm,$zone,$node,$newPhysicalConnection);
+                    $zone->touch();
+                    if(isset($measure->sensorType)){
+                        $newSensorType=$this->sensorTypeCreate($measure,$farm,$zone);
+                        if(!is_null($newSensorType)){
+                            $this->info("New SensorType id:".$newSensorType->id);
+                        }
                     }
+                    $this->info("New Measure id:".$newmeasure->id." / New PhysicalConnection id:".$newPhysicalConnection->id);
+                }else{
+                    $measureUpdated =$this->measureUpdate($measure,$measureRegistered,$farm,$zone,$node);
+                    $this->info("Measure updated:".$measureUpdated->id);
                 }
-                $this->info("New Measure id:".$newmeasure->id." / New PhysicalConnection id:".$newPhysicalConnection->id);
-            }else{
-                $measureUpdated =$this->measureUpdate($measure,$measureRegistered,$farm,$zone,$node);
-                $this->info("Measure updated:".$measureUpdated->id);
             }
         }
     }
