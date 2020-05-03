@@ -119,6 +119,8 @@ Route::group(['middleware' => ['cors'] ], function() {
 	Route::post('accountsettings/update/{id}', 'AccountSettingsController@update');
 	Route::delete('accountsettings/delete/{id}', 'AccountSettingsController@delete');
 	Route::get('accountsettings/generateapikey', 'AccountSettingsController@generateApiKey');
+	Route::get('accountsettings/getbyfarm/{id}', 'AccountSettingsController@getByFarm');
+
 
 });
 Route::post('auth/login', 'Api\AuthController@login');

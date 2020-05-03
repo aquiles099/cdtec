@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\AccountSettings;
 use App\Account;
+use App\Farm;
 class AccountSettingsController extends Controller
 {
     public function all(){
@@ -23,8 +24,38 @@ class AccountSettingsController extends Controller
             ], 500);
         }
     }
+    public function getByFarm($id){
+        try {
+            $farm=Farm::find($id);
+            if(is_null($farm)){
+                return response()->json([
+                    'message'=>'No existe el campo',
+                    'data'=>$farm
+                ],404);
+            }
+            $element = AccountSettings::where("id_account",$farm->account->id)->first();
+            if(is_null($element)){
+                return response()->json([
+                    'message'=>'No existe la configuración de la cuenta',
+                    'data'=>$element
+                ],404);
+            }
+            $response = [
+                'message'=> 'Configuración de cuenta encontrada',
+                'farm' => $farm,
+                'data' => $element,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
     public function get($id){
-        try {            
+        try {
             $element = AccountSettings::find($id);
             if(is_null($element)){
                 return response()->json([
@@ -59,7 +90,7 @@ class AccountSettingsController extends Controller
             'name'          => 'required|string',
             'api_key'       => 'required|string|max:45|unique:account_settings',
             'password'      => 'required|string',
-            'id_account'    => 'required',
+            'id_account'    => 'required|unique:account_settings',
             'id_user'       => 'required|string|max:45|unique:account_settings',
         ],[
             'name.required'          => 'El nombre es requerido',
@@ -68,6 +99,7 @@ class AccountSettingsController extends Controller
             'api_key.unique'         => 'Este api_key ya se encuentra en uso',
             'password.required'      => 'La contraseña es requerida',
             'id_account.required'    => 'Debe seleccionar una cuenta',
+            'id_account.unique'      => 'Ya existe una configuración para la cuenta seleccionada',
             'id_user.required'       => 'Debe ingresar el id del usuario',
             'id_user.max'            => 'El id del usuario debe tener un máximo de 45 caracteres',
             'id_user.unique'         => 'Este id de usuario ya se encuentra en uso',
