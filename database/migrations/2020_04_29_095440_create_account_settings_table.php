@@ -18,6 +18,7 @@ class CreateAccountSettingsTable extends Migration
             $table->string('api_key', 45);
             $table->string('name', 45);
             $table->string('password', 45);
+            $table->string('id_user')->unique();
             $table->unsignedBigInteger('id_account')->unsigned();
             $table->foreign('id_account')
                 ->references('id')

@@ -60,6 +60,7 @@ class AccountSettingsController extends Controller
             'api_key'       => 'required|string|max:45|unique:account_settings',
             'password'      => 'required|string',
             'id_account'    => 'required',
+            'id_user'       => 'required|string|max:45|unique:account_settings',
         ],[
             'name.required'          => 'El nombre es requerido',
             'api_key.required'       => 'El api_key es requerido',
@@ -67,6 +68,9 @@ class AccountSettingsController extends Controller
             'api_key.unique'         => 'Este api_key ya se encuentra en uso',
             'password.required'      => 'La contraseña es requerida',
             'id_account.required'    => 'Debe seleccionar una cuenta',
+            'id_user.required'       => 'Debe ingresar el id del usuario',
+            'id_user.max'            => 'El id del usuario debe tener un máximo de 45 caracteres',
+            'id_user.unique'         => 'Este id de usuario ya se encuentra en uso',
         ]);
         if($validator->fails()){
             return response()->json($validator->errors(), 400);
@@ -80,7 +84,8 @@ class AccountSettingsController extends Controller
                 'name' => $request->get('name'),
                 'password' => $request->get('password'),
                 'api_key' => $request->get('api_key'), 
-                'id_account' => $request->get('id_account'),         
+                'id_account' => $request->get('id_account'), 
+                'id_user' => $request->get('id_user'),         
             ]);
             $response = [
                 'message'=> 'Configuracion de cuenta registrada satisfactoriamente',
@@ -101,12 +106,15 @@ class AccountSettingsController extends Controller
             'api_key'       => 'required|string|max:45',
             'password'      => 'required|string',
             'id_account'    => 'required',
+            'id_user'       => 'required|string|max:45',
         ],[
             'name.required'          => 'El nombre es requerido',
             'api_key.required'       => 'El api_key es requerido',
             'api_key.max'            => 'El api_key debe tener un máximo de 45 caracteres',
             'password.required'      => 'La contraseña es requerida',
             'id_account.required'    => 'Debe seleccionar una cuenta',
+            'id_user.required'       => 'Debe ingresar el id del usuario',
+            'id_user.max'            => 'El id del usuario debe tener un máximo de 45 caracteres',
         ]);
         if($validator->fails()){
             return response()->json($validator->errors(), 400);
@@ -120,9 +128,17 @@ class AccountSettingsController extends Controller
             if(is_null($accountSettings)){
                 return response()->json(['message'=>'Configuracion de cuenta no existente'],404);
             }
-            $apiKeyExist= AccountSettings::where("id","!=",$accountSettings->id)->where("api_key",$accountSettings->api_key)->first();
+            $messages=[];
+            $apiKeyExist= AccountSettings::where("id","!=",$accountSettings->id)->where("api_key",$request->get('api_key'))->first();
             if(!is_null($apiKeyExist)){
-                return response()->json(['message'=>'Este api_key ya se encuentra en uso en otra cuenta configurada'],404);
+                array_push($messages,"Este api_key ya se encuentra en uso en otra cuenta configurada");
+            }
+            $idUserExist= AccountSettings::where("id","!=",$accountSettings->id)->where("id_user",$request->get('id_user'))->first();
+            if(!is_null($idUserExist)){
+                array_push($messages,"Este id de usuario ya se encuentra en uso en otra cuenta configurada");
+            }
+            if(count($messages)>0){
+                return response()->json(['message'=>$messages],404);
             }
             $accountSettings->fill($request->all());
             $response = [
