@@ -192,17 +192,15 @@ class CloneByNodeMeasures extends Command
             if(isset($measure->farmId)&&isset($measure->zoneId)){
                 $farm=Farm::where("id_wiseconn",$measure->farmId)->first();
                 $zone=Zone::where("id_wiseconn",$measure->zoneId)->first(); 
-                if($measure->farmId==$farm->id_wiseconn&&!is_null($farm)&&!is_null($zone)){ 
-                    $newmeasure =$this->measureCreate($measure,$farm,$zone,$node,$newPhysicalConnection); 
-                    $zone->touch();
-                    if(isset($measure->sensorType)){
-                        $newSensorType=$this->sensorTypeCreate($measure,$farm,$zone);
-                        if(!is_null($newSensorType)){
-                            $this->info("New SensorType id:".$newSensorType->id);
-                        }
+                $newmeasure =$this->measureCreate($measure,$farm,$zone,$node,$newPhysicalConnection); 
+                $zone->touch();
+                if(isset($measure->sensorType)){
+                    $newSensorType=$this->sensorTypeCreate($measure,$farm,$zone);
+                    if(!is_null($newSensorType)){
+                        $this->info("New SensorType id:".$newSensorType->id);
                     }
-                    $this->info("New PhysicalConnectio id:".$newPhysicalConnection->id." / New Measure, id:".$newmeasure->id);
                 }
+                $this->info("New PhysicalConnectio id:".$newPhysicalConnection->id." / New Measure, id:".$newmeasure->id);
             }
         }else{
             $this->info("Elemento existente");

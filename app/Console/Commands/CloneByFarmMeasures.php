@@ -59,14 +59,16 @@ class CloneByFarmMeasures extends Command
         ]);
     }
     protected function sensorTypeZoneCreate($sensorType,$farm,$zone){
-        $sensorTypeZone=SensorTypeZones::where("id_sensor_type",$sensorType->id)->where("id_farm",$farm->id)->where("id_zone",$zone->id)->first();
-        if(is_null($sensorTypeZone)){
-            SensorTypeZones::create([
-                "id_sensor_type"=>$sensorType->id,
-                "id_farm" => isset($farm->id)?$farm->id:null,
-                "id_zone" => isset($zone->id)?$zone->id:null,
-            ]);
-        }        
+        if($sensorType){
+            $sensorTypeZone=SensorTypeZones::where("id_sensor_type",$sensorType->id)->where("id_farm",$farm->id)->where("id_zone",$zone->id)->first();
+            if(is_null($sensorTypeZone)){
+                SensorTypeZones::create([
+                    "id_sensor_type"=>$sensorType->id,
+                    "id_farm" => isset($farm->id)?$farm->id:null,
+                    "id_zone" => isset($zone->id)?$zone->id:null,
+                ]);
+            } 
+        }               
     }
     protected function getNameAndGroup($sensorType){
         switch (strtolower($sensorType)) {
@@ -155,15 +157,12 @@ class CloneByFarmMeasures extends Command
         $group=$this->getNameAndGroup($measure->sensorType)['group'];
         $sensorType=SensorType::where("name",$name)->where("id_farm",$farm->id)->first();
         if(is_null($sensorType)){
-            $newSensorType=SensorType::create([
-                "name"=>$name,
-                "group"=>$group,
-                "id_farm" => isset($farm->id)?$farm->id:null,
-            ]);
-            $this->sensorTypeZoneCreate($newSensorType,$farm,$zone);
+            $newSensorType=new SensorType();
+            $newSensorType->name=$name;
+            $newSensorType->group=$group;
+            $newSensorType->id_farm=isset($farm->id)?$farm->id:null;
+            $newSensorType->save();
             return $newSensorType;
-        }else{
-            $this->sensorTypeZoneCreate($sensorType,$farm,$zone);
         }
         return null;
     }
@@ -211,56 +210,48 @@ class CloneByFarmMeasures extends Command
         if(isset($measure->zoneId)){
             $zone=Zone::where("id_wiseconn",$measure->zoneId)->first(); 
         }
-        if(!is_null($farm)&&!is_null($zone)){
-            $measureRegistered=Measure::where("id_wiseconn",$measure->id)
-                ->where("id_farm",$farm->id)
-                ->where("id_zone",$zone->id)
-                ->first();
-            $measuresToClone=[
-                "temperature",
-                "humidity",
-                "wind velocity",
-                "solar radiation",
-                "wind direction",
-                "atmospheric preassure",
-                "wind gust",
-                "chill hours",
-                "chill portion",
-                "daily etp",
-                "daily et0",
-                "salinity",
-                "soil temperature",
-                "soil humidity",
-                "added soild moisture",
-                "irrigation",
-                "irrigation volume",
-                "daily irrigation time",
-                "flow",
-                "daily irrigation volume by pump system",
-                "daily irrigation time by pump system",
-                "irrigation by pump system",
-                "flow by zone"
-            ];
-            if(!isset($measure->sensorType)){
-                $measure->sensorType=$measure->name;
-            }
-            if(array_search(strtolower($measure->name), $measuresToClone)||array_search(strtolower($measure->sensorType), $measuresToClone)){
-                if(is_null($measureRegistered)){
-                    $newPhysicalConnection =$this->physicalConnectionCreate($measure);
-                    $newmeasure =$this->measureCreate($measure,$farm,$zone,$node,$newPhysicalConnection);
-                    $zone->touch();
-                    if(isset($measure->sensorType)){
-                        $newSensorType=$this->sensorTypeCreate($measure,$farm,$zone);
-                        if(!is_null($newSensorType)){
-                            $this->info("New SensorType id:".$newSensorType->id);
-                        }
-                    }
-                    $this->info("New Measure id:".$newmeasure->id." / New PhysicalConnection id:".$newPhysicalConnection->id);
-                }else {
-                    $measureUpdated =$this->measureUpdate($measure,$measureRegistered,$farm,$zone,$node);
-                    $this->info("Measure updated:".$measureUpdated->id);
-                }  
-            }             
+        $measuresToClone=[
+            "temperature",
+            "humidity",
+            "wind velocity",
+            "solar radiation",
+            "wind direction",
+            "atmospheric preassure",
+            "wind gust",
+            "chill hours",
+            "chill portion",
+            "daily etp",
+            "daily et0",
+            "salinity",
+            "soil temperature",
+            "soil humidity",
+            "added soild moisture",
+            "irrigation",
+            "irrigation volume",
+            "daily irrigation time",
+            "flow",
+            "daily irrigation volume by pump system",
+            "daily irrigation time by pump system",
+            "irrigation by pump system",
+            "flow by zone"
+        ];
+        if(!isset($measure->sensorType)){
+            $measure->sensorType=$measure->name;
+        }
+        if(array_search(strtolower($measure->name), $measuresToClone)>=0||array_search(strtolower($measure->sensorType), $measuresToClone)>=0){
+            $measureRegistered=Measure::where("id_wiseconn",$measure->id)->first();
+            if(is_null($measureRegistered)){
+                $newPhysicalConnection =$this->physicalConnectionCreate($measure);
+                $newmeasure =$this->measureCreate($measure,$farm,$zone,$node,$newPhysicalConnection);
+                if(isset($measure->sensorType)){
+                    $newSensorType=$this->sensorTypeCreate($measure,$farm,$zone);
+                    $this->sensorTypeZoneCreate($newSensorType,$farm,$zone);
+                }
+                $this->info("New Measure id:".$newmeasure->id." / New PhysicalConnection id:".$newPhysicalConnection->id);
+            }else {
+                $measureUpdated =$this->measureUpdate($measure,$measureRegistered,$farm,$zone,$node);
+                $this->info("Measure updated:".$measureUpdated->id);
+            }  
         } 
     }
     /**
@@ -280,7 +271,7 @@ class CloneByFarmMeasures extends Command
                             $measuresResponse = $this->requestWiseconn('GET',$cloningError->uri);
                             $measures=json_decode($measuresResponse->getBody()->getContents());
                             $this->info("==========Clonando pendientes por error en peticion (".count($measures)." elementos)");
-                            foreach ($measures as $key => $measure) {
+                            foreach ($measures as $key => $measure) {                               
                                 $this->cloneBy($measure);
                             }
                             $cloningError->delete();
