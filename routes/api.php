@@ -55,6 +55,8 @@ Route::group(['middleware' => ['cors'] ], function() {
 	Route::post('measures/store', 'MeasureController@store');
 	Route::get('measures/{id}', 'MeasureController@get');
 	Route::get('measures/{id}/data', 'MeasureController@data');
+	Route::post('measures/filter/data', 'MeasureController@filterData');
+
 	// pumpsystems
 	Route::post('pumpsystems/store', 'PumpSystemController@store');
 	Route::get('pumpsystems/{id}', 'PumpSystemController@get');

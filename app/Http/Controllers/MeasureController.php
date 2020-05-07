@@ -219,4 +219,29 @@ class MeasureController extends Controller{
             ], 500);
         }
     }
+    public function filterData(Request $request){
+        try {
+            $measure=Measure::where("id_zone",$request->input("zone")["id"])
+                    ->where("sensorDepth",$request->input("sensorSelected")["sensorDepth"])
+                    ->where("unit",$request->input("sensorSelected")["unit"])
+                    ->where("depthUnit",$request->input("sensorSelected")["depthUnit"])->first();
+            if(is_null($measure)){
+                return response()->json([
+                    "message"=>"Measure no existente",
+                    "data"=>$measure
+                ],404);
+            }
+            $response = [
+                'message'=> 'MeasureData encontrado satisfactoriamente',
+                'data' => MeasureData::where("id_measure",$measure->id)->whereBetween("time",[$request->input("initTime"),$request->input("endTime")])->orderBy('time', 'DESC')->get(),
+            ];              
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
 }
