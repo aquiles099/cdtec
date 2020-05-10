@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['middleware' => ['cors']], function() {
+Route::group(['middleware' => ['api']], function() {
 	// accounts
 	Route::get('accounts', 'AccountController@all');
 	Route::get('accounts/{id}', 'AccountController@get');
