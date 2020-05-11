@@ -35,6 +35,7 @@ Route::group(['middleware' => ['api']], function() {
 	Route::get('farms/{id}/measures', 'FarmController@measures');
 	Route::get('farms/{id}/sensortypes', 'FarmController@sensorTypes');	
 	Route::post('farms/{id}/webhook', 'FarmController@webhookUpdate');
+	Route::get('farms/{id}/activecloning', 'FarmController@activeCloning');	
 	//
 	Route::get('sensortypes', 'SensorTypeController@all');
 	// zones

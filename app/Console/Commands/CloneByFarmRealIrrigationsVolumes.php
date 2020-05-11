@@ -106,45 +106,47 @@ class CloneByFarmRealIrrigationsVolumes extends Command
         try{
             $farms=Farm::all();
             foreach ($farms as $key => $farm) {
-                try{
-                    $cloningErrors=CloningErrors::where("elements","/farms/id/realIrrigations")->get();
-                    if(count($cloningErrors)>0){
-                        foreach ($cloningErrors as $key => $cloningError) {
-                            $realIrrigationsResponse = $this->requestWiseconn('GET',$cloningError->uri);
-                            $realIrrigations=json_decode($realIrrigationsResponse->getBody()->getContents());
-                            $this->info("==========Clonando pendientes por error en peticion (".count($realIrrigations)." elementos)");
-                            foreach ($realIrrigations as $key => $realIrrigation) {
-                                $this->cloneBy($realIrrigation,$farm);
+                if($farm->active_cloning==1){
+                    try{
+                        $cloningErrors=CloningErrors::where("elements","/farms/id/realIrrigations")->get();
+                        if(count($cloningErrors)>0){
+                            foreach ($cloningErrors as $key => $cloningError) {
+                                $realIrrigationsResponse = $this->requestWiseconn('GET',$cloningError->uri);
+                                $realIrrigations=json_decode($realIrrigationsResponse->getBody()->getContents());
+                                $this->info("==========Clonando pendientes por error en peticion (".count($realIrrigations)." elementos)");
+                                foreach ($realIrrigations as $key => $realIrrigation) {
+                                    $this->cloneBy($realIrrigation,$farm);
+                                }
+                                $cloningError->delete();
                             }
-                            $cloningError->delete();
+                        }else{
+                            try {
+                                $currentRequestUri='/farms/'.$farm->id_wiseconn.'/realIrrigations/?endTime='.$endTime.'&initTime='.$initTime;
+                                $currentRequestElement='/farms/id/realIrrigations';
+                                $id_wiseconn=$farm->id_wiseconn;
+                                $realIrrigationsResponse = $this->requestWiseconn('GET',$currentRequestUri);
+                                $realIrrigations=json_decode($realIrrigationsResponse->getBody()->getContents());
+                                $this->info("==========Clonando nuevos elementos (".count($realIrrigations)." elementos)");
+                                foreach ($realIrrigations as $key => $realIrrigation) {
+                                    $this->cloneBy($realIrrigation,$farm);
+                                }
+                            } catch (\Exception $e) {
+                                $this->error("Error:" . $e->getMessage());
+                                $this->error("Linea:" . $e->getLine());
+                                $this->error("currentRequestUri:" . $currentRequestUri);
+                                if(is_null(CloningErrors::where("elements",$currentRequestElement)->where("uri",$currentRequestUri)->where("id_wiseconn",$id_wiseconn)->first())){
+                                    $cloningError=new CloningErrors();
+                                    $cloningError->elements=$currentRequestElement;
+                                    $cloningError->uri=$currentRequestUri;
+                                    $cloningError->id_wiseconn=$id_wiseconn;
+                                    $cloningError->save();
+                                }
+                            }
                         }
-                    }else{
-                        try {
-                            $currentRequestUri='/farms/'.$farm->id_wiseconn.'/realIrrigations/?endTime='.$endTime.'&initTime='.$initTime;
-                            $currentRequestElement='/farms/id/realIrrigations';
-                            $id_wiseconn=$farm->id_wiseconn;
-                            $realIrrigationsResponse = $this->requestWiseconn('GET',$currentRequestUri);
-                            $realIrrigations=json_decode($realIrrigationsResponse->getBody()->getContents());
-                            $this->info("==========Clonando nuevos elementos (".count($realIrrigations)." elementos)");
-                            foreach ($realIrrigations as $key => $realIrrigation) {
-                                $this->cloneBy($realIrrigation,$farm);
-                            }
-                        } catch (\Exception $e) {
-                            $this->error("Error:" . $e->getMessage());
-                            $this->error("Linea:" . $e->getLine());
-                            $this->error("currentRequestUri:" . $currentRequestUri);
-                            if(is_null(CloningErrors::where("elements",$currentRequestElement)->where("uri",$currentRequestUri)->where("id_wiseconn",$id_wiseconn)->first())){
-                                $cloningError=new CloningErrors();
-                                $cloningError->elements=$currentRequestElement;
-                                $cloningError->uri=$currentRequestUri;
-                                $cloningError->id_wiseconn=$id_wiseconn;
-                                $cloningError->save();
-                            }
-                        }
+                    } catch (\Exception $e) {
+                        $this->error("Error:" . $e->getMessage());
+                        $this->error("Linea:" . $e->getLine());
                     }
-                } catch (\Exception $e) {
-                    $this->error("Error:" . $e->getMessage());
-                    $this->error("Linea:" . $e->getLine());
                 }
             }
             $this->info("Success: Clone real irrigations and volumes data by farm");

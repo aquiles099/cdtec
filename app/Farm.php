@@ -8,7 +8,7 @@ use App\Zone;
 class Farm extends Model
 {
     protected $fillable = [
-        'name', 'description','latitude', 'longitude','postalAddress', 'timeZone','webhook','id_account','cloning_error','id_wiseconn'
+        'name', 'description','latitude', 'longitude','postalAddress', 'timeZone','webhook','id_account','active_cloning','id_wiseconn'
     ];
   	protected $with = ['account'];
     public function account()

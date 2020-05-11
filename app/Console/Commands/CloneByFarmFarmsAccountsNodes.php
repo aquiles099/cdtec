@@ -75,17 +75,17 @@ class CloneByFarmFarmsAccountsNodes extends Command
             'id_wiseconn' => $node->id
         ]);
     }
-    protected function cloneBy($farm,$farmsIdsToClone){
-        if(array_search($farm->id, $farmsIdsToClone)){
-            if(is_null(Farm::where("id_wiseconn",$farm->id)->first())){
-                if(isset($farm->account)){
-                    $account=Account::where("id_wiseconn",$farm->account->id)->first();
-                    if(is_null($account)){
-                        $account= $this->accountCreate($farm);
-                        $this->info("New account id:".$account->id);
-                    }
-                    $newFarm= $this->farmCreate($farm,$account);
-                    $this->info("New farm id:".$newFarm->id);
+    protected function cloneBy($farm){
+        if(is_null(Farm::where("id_wiseconn",$farm->id)->first())){
+            if(isset($farm->account)){
+                $account=Account::where("id_wiseconn",$farm->account->id)->first();
+                if(is_null($account)){
+                    $account= $this->accountCreate($farm);
+                    $this->info("New account id:".$account->id);
+                }
+                $newFarm= $this->farmCreate($farm,$account);
+                $this->info("New farm id:".$newFarm->id);
+                if($newFarm->active_cloning==1){
                     try {
                         $currentRequestUri='/farms/'.$farm->id.'/nodes';
                         $currentRequestElement='/farms/id/nodes';
@@ -109,11 +109,11 @@ class CloneByFarmFarmsAccountsNodes extends Command
                             $cloningError->id_wiseconn=$id_wiseconn;
                             $cloningError->save();
                         }
-                    } 
-                }
-            }else{
-                $this->info("Elemento existente");
+                    }    
+                }                
             }
+        }else{
+            $this->info("Elemento existente");
         }
     }
     /**
@@ -128,7 +128,6 @@ class CloneByFarmFarmsAccountsNodes extends Command
             $currentRequestElement='/farms';
             $id_wiseconn=null;
             $cloningErrors=CloningErrors::where("elements","/farms")->get();
-            $farmsIdsToClone=[520,1378,185,2110,719];
             if(count($cloningErrors)>0){
                 $this->info("==========Clonando pendientes por error en peticion (".count($cloningErrors)." elementos)");
                 foreach ($cloningErrors as $key => $cloningError) {
@@ -136,7 +135,7 @@ class CloneByFarmFarmsAccountsNodes extends Command
                     $farms=json_decode($farmsResponse->getBody()->getContents());
                     foreach ($farms as $key => $farm) {
                         //prueba de filtrado de farms a clonar
-                        $this->cloneBy($farm,$farmsIdsToClone);
+                        $this->cloneBy($farm);
                     }
                     $cloningError->delete();
                 }
@@ -146,7 +145,7 @@ class CloneByFarmFarmsAccountsNodes extends Command
                 $this->info("==========Clonando nuevos elementos(".count($farms)." elementos)");
                 foreach ($farms as $key => $farm) {
                     //prueba de filtrado de farms a clonar
-                    $this->cloneBy($farm,$farmsIdsToClone);
+                    $this->cloneBy($farm);
                 }
             }
             # code...

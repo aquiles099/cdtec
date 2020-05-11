@@ -82,45 +82,49 @@ class CloneByFarmAlarms extends Command
             if(count($cloningErrors)>0){
                 foreach ($cloningErrors as $key => $cloningError) {
                     $farm=Farm::find($cloningError->id_wiseconn);
-                    $alarmsResponse = $this->requestWiseconn('GET',$cloningError->uri);
-                    $alarms=json_decode($alarmsResponse->getBody()->getContents());
-                    $this->info("==========Clonando pendientes por error en peticion (".count($alarms)." elementos)");
-                    foreach ($alarms as $key => $alarm) {
-                        $this->info("alarm, id:".$newAlarm->id);
-                        $this->cloneBy($alarm,$farm);
+                    if($farm->active_cloning==1){
+                        $alarmsResponse = $this->requestWiseconn('GET',$cloningError->uri);
+                        $alarms=json_decode($alarmsResponse->getBody()->getContents());
+                        $this->info("==========Clonando pendientes por error en peticion (".count($alarms)." elementos)");
+                        foreach ($alarms as $key => $alarm) {
+                            $this->info("alarm, id:".$newAlarm->id);
+                            $this->cloneBy($alarm,$farm);
+                        }
+                        $cloningError->delete();
                     }
-                    $cloningError->delete();
                 }
             }else{
                 $farms=Farm::all();
                 $initTime=Carbon::now(date_default_timezone_get())->subDays(5)->format('Y-m-d');
                 $endTime=Carbon::now(date_default_timezone_get())->format('Y-m-d');
                 foreach ($farms as $key => $farm) {
-                    try {
-                        $initTime="2020-04-01";
-                        $endTime="2020-04-30";
-                        $currentRequestUri='/farms/'.$farm->id_wiseconn.'/alerts/triggered/?initTime='.$initTime.'&endTime='.$endTime;
+                    if($farm->active_cloning==1){
+                        try {
+                            $initTime="2020-04-01";
+                            $endTime="2020-04-30";
+                            $currentRequestUri='/farms/'.$farm->id_wiseconn.'/alerts/triggered/?initTime='.$initTime.'&endTime='.$endTime;
 
-                        $this->info($currentRequestUri);
-                        $currentRequestElement='/farms/id/alarms';
-                        $id_wiseconn=$farm->id_wiseconn;
-                        $alarmsResponse = $this->requestWiseconn('GET',$currentRequestUri);
-                        $alarms=json_decode($alarmsResponse->getBody()->getContents());
-                        $this->info("==========Clonando nuevos elementos (".count($alarms)." elementos)");
-                        foreach ($alarms as $key => $alarm) {
-                            $this->cloneBy($alarm,$farm);
-                        }
-                    } catch (\Exception $e) {
-                        $this->error("Error:" . $e->getMessage());
-                        $this->error("Linea:" . $e->getLine());
-                        $this->error("currentRequestUri:" . $currentRequestUri);
-                        $this->error("currentRequestElement:" . $currentRequestElement);
-                        if(is_null(CloningErrors::where("elements",$currentRequestElement)->where("uri",$currentRequestUri)->where("id_wiseconn",$id_wiseconn)->first())){
-                            $cloningError=new CloningErrors();
-                            $cloningError->elements=$currentRequestElement;
-                            $cloningError->uri=$currentRequestUri;
-                            $cloningError->id_wiseconn=$id_wiseconn;
-                            $cloningError->save();
+                            $this->info($currentRequestUri);
+                            $currentRequestElement='/farms/id/alarms';
+                            $id_wiseconn=$farm->id_wiseconn;
+                            $alarmsResponse = $this->requestWiseconn('GET',$currentRequestUri);
+                            $alarms=json_decode($alarmsResponse->getBody()->getContents());
+                            $this->info("==========Clonando nuevos elementos (".count($alarms)." elementos)");
+                            foreach ($alarms as $key => $alarm) {
+                                $this->cloneBy($alarm,$farm);
+                            }
+                        } catch (\Exception $e) {
+                            $this->error("Error:" . $e->getMessage());
+                            $this->error("Linea:" . $e->getLine());
+                            $this->error("currentRequestUri:" . $currentRequestUri);
+                            $this->error("currentRequestElement:" . $currentRequestElement);
+                            if(is_null(CloningErrors::where("elements",$currentRequestElement)->where("uri",$currentRequestUri)->where("id_wiseconn",$id_wiseconn)->first())){
+                                $cloningError=new CloningErrors();
+                                $cloningError->elements=$currentRequestElement;
+                                $cloningError->uri=$currentRequestUri;
+                                $cloningError->id_wiseconn=$id_wiseconn;
+                                $cloningError->save();
+                            }
                         }
                     }
                 }   

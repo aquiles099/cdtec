@@ -22,6 +22,7 @@ class CreateFarmsTable extends Migration
             $table->text('postalAddress')->nullable();
             $table->string('timeZone')->nullable();
             $table->string('webhook', 45)->nullable();
+            $table->boolean('active_cloning')->default(false);
             $table->unsignedBigInteger('id_account')->unsigned();
             $table->foreign('id_account')
                 ->references('id')

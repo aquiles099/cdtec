@@ -121,7 +121,7 @@ class CloneByFarmZones extends Command
         try { 
             $farms=Farm::all();
             foreach ($farms as $key => $farm) {
-                if($farm->id_wiseconn){
+                if($farm->active_cloning==1){
                     try {
                         $cloningErrors=CloningErrors::where("elements","/farms/id/zones")->get();
                         if(count($cloningErrors)>0){

@@ -620,79 +620,101 @@ class FarmController extends Controller
                     "data"=>$farm
                 ],404);
             }
-            //forzando no clonar desde controlador por lentitud en tiempo de respuesta 
-            //$cloningErrors=CloningErrors::where("elements","/farms/id/measures")->where("uri","/farms/".$farm->id_wiseconn."/measures")->where("id_wiseconn",$farm->id_wiseconn)->get();
-            /*if(count($cloningErrors)>0){
-                foreach ($cloningErrors as $key => $cloningError) {
-                    try{
-                        $measures=json_decode(($this->requestWiseconn(new Client([
-                            'base_uri' => 'https://apiv2.wiseconn.com',
-                            'timeout'  => 100.0,
-                        ]),'GET',$cloningError->uri))->getBody()->getContents());
-                        foreach ($measures as $key => $measure) {
-                            $farm=null;$node=null;$zone=null;
-                            if(isset($measure->farmId)){
-                                $farm=Farm::where("id_wiseconn",$measure->farmId)->first();
-                            }
-                            if(isset($measure->nodeId)){
-                                $node=Node::where("id_wiseconn",$measure->nodeId)->first();
-                            }
-                            if(isset($measure->zoneId)){
-                                $zone=Zone::where("id_wiseconn",$measure->zoneId)->first(); 
-                            }
-                            if(!is_null($farm)&&!is_null($zone)){
-                             $measureRegistered=Measure::where("id_wiseconn",$measure->id)
-                             ->where("id_farm",$farm->id)
-                             ->where("id_zone",$zone->id)
-                             ->first();
-                                if(is_null($measureRegistered)){
-                                    if(isset($measure->sensorType)){
-                                        $newSensorType=$this->sensorTypeCreate($measure,$farm,$zone);
-                                    }
+                //forzando no clonar desde controlador por lentitud en tiempo de respuesta 
+                //$cloningErrors=CloningErrors::where("elements","/farms/id/measures")->where("uri","/farms/".$farm->id_wiseconn."/measures")->where("id_wiseconn",$farm->id_wiseconn)->get();
+                /*if(count($cloningErrors)>0){
+                    foreach ($cloningErrors as $key => $cloningError) {
+                        try{
+                            $measures=json_decode(($this->requestWiseconn(new Client([
+                                'base_uri' => 'https://apiv2.wiseconn.com',
+                                'timeout'  => 100.0,
+                            ]),'GET',$cloningError->uri))->getBody()->getContents());
+                            foreach ($measures as $key => $measure) {
+                                $farm=null;$node=null;$zone=null;
+                                if(isset($measure->farmId)){
+                                    $farm=Farm::where("id_wiseconn",$measure->farmId)->first();
+                                }
+                                if(isset($measure->nodeId)){
+                                    $node=Node::where("id_wiseconn",$measure->nodeId)->first();
+                                }
+                                if(isset($measure->zoneId)){
+                                    $zone=Zone::where("id_wiseconn",$measure->zoneId)->first(); 
+                                }
+                                if(!is_null($farm)&&!is_null($zone)){
+                                 $measureRegistered=Measure::where("id_wiseconn",$measure->id)
+                                 ->where("id_farm",$farm->id)
+                                 ->where("id_zone",$zone->id)
+                                 ->first();
+                                    if(is_null($measureRegistered)){
+                                        if(isset($measure->sensorType)){
+                                            $newSensorType=$this->sensorTypeCreate($measure,$farm,$zone);
+                                        }
 
+                                    }
                                 }
                             }
+                            $cloningError->delete();
+                        } catch (\Exception $e) {
+                            return response()->json([
+                                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                                'error' => $e->getMessage(),
+                                'linea' => $e->getLine()
+                            ], 500);
                         }
-                        $cloningError->delete();
-                    } catch (\Exception $e) {
-                        return response()->json([
-                            'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
-                            'error' => $e->getMessage(),
-                            'linea' => $e->getLine()
-                        ], 500);
                     }
-                }
-                $farm->touch();
-            }*/
-        $response = [
-            'message'=> 'Lista de SensorTypes',
-            'data' => SensorType::where("id_farm",$farm->id)->with("zones")->get(),
-        ];
-        return response()->json($response, 200);
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
-            'error' => $e->getMessage(),
-            'linea' => $e->getLine()
-        ], 500);
-    }
-}
-public function weatherStation($id){
-    try {
-        $weatherStation = Zone::where("id_farm",$id)->whereIn("name", ["Estación Meteorológica","Estación Metereológica"])->first();
-        $response = [
-            'message'=> 'Lista de zonas',
-            '$id'=> $id,
-            'data' => $weatherStation,
-        ];
-        return response()->json($response, 200);
+                    $farm->touch();
+                }*/
+                $response = [
+                    'message'=> 'Lista de SensorTypes',
+                    'data' => SensorType::where("id_farm",$farm->id)->with("zones")->get(),
+                ];
+                return response()->json($response, 200);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                    'error' => $e->getMessage(),
+                    'linea' => $e->getLine()
+                ], 500);
+            }
+        }
+        public function weatherStation($id){
+            try {
+                $weatherStation = Zone::where("id_farm",$id)->whereIn("name", ["Estación Meteorológica","Estación Metereológica"])->first();
+                $response = [
+                    'message'=> 'Lista de zonas',
+                    '$id'=> $id,
+                    'data' => $weatherStation,
+                ];
+                return response()->json($response, 200);
 
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
-            'error' => $e->getMessage(),
-            'linea' => $e->getLine()
-        ], 500);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                    'error' => $e->getMessage(),
+                    'linea' => $e->getLine()
+                ], 500);
+            }
+        }
+        public function activeCloning($id){
+            try {
+                $farm=Farm::find($id);
+                if(is_null($farm)){
+                    return response()->json(['message'=>'Campo no existente'],404);
+                }
+                $farm->active_cloning=!$farm->active_cloning;
+                $farm->update();
+                $response = [
+                    'message'=> $farm->active_cloning==1?'Clonado de valores de campo activado':'Clonado de valores de campo desactivado',
+                    'data'=> $farm
+                ];            
+                return response()->json($response, 200);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                    'error' => $e->getMessage(),
+                    'linea' => $e->getLine()
+                ], 500);
+            }
+        }
+
     }
-}
-}

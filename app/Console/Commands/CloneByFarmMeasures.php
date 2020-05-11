@@ -264,47 +264,48 @@ class CloneByFarmMeasures extends Command
         try{
             $farms=Farm::all();
             foreach ($farms as $key => $farm) {
-                try{
-                    $cloningErrors=CloningErrors::where("elements","/farms/id/measures")->get();
-                    if(count($cloningErrors)>0){
-                        foreach ($cloningErrors as $key => $cloningError) {
-                            $measuresResponse = $this->requestWiseconn('GET',$cloningError->uri);
-                            $measures=json_decode($measuresResponse->getBody()->getContents());
-                            $this->info("==========Clonando pendientes por error en peticion (".count($measures)." elementos)");
-                            foreach ($measures as $key => $measure) {                               
-                                $this->cloneBy($measure);
+                if($farm->active_cloning==1){
+                    try{
+                        $cloningErrors=CloningErrors::where("elements","/farms/id/measures")->get();
+                        if(count($cloningErrors)>0){
+                            foreach ($cloningErrors as $key => $cloningError) {
+                                $measuresResponse = $this->requestWiseconn('GET',$cloningError->uri);
+                                $measures=json_decode($measuresResponse->getBody()->getContents());
+                                $this->info("==========Clonando pendientes por error en peticion (".count($measures)." elementos)");
+                                foreach ($measures as $key => $measure) {                               
+                                    $this->cloneBy($measure);
+                                }
+                                $cloningError->delete();
                             }
-                            $cloningError->delete();
+                        }else{
+                            try{
+                                $currentRequestUri='/farms/'.$farm->id_wiseconn.'/measures';
+                                $currentRequestElement='/farms/id/measures';
+                                $id_wiseconn=$farm->id_wiseconn;
+                                $measuresResponse = $this->requestWiseconn('GET',$currentRequestUri);
+                                $measures=json_decode($measuresResponse->getBody()->getContents());
+                                $this->info("==========Clonando nuevos elementos (".count($measures)." elementos)");
+                                foreach ($measures as $key => $measure) {
+                                    $this->cloneBy($measure);
+                                }
+                            } catch (\Exception $e) {
+                                $this->error("Error:" . $e->getMessage());
+                                $this->error("Linea:" . $e->getLine());
+                                $this->error("currentRequestUri:" . $currentRequestUri);
+                                if(is_null(CloningErrors::where("elements",$currentRequestElement)->where("uri",$currentRequestUri)->where("id_wiseconn",$id_wiseconn)->first())){
+                                    $cloningError=new CloningErrors();
+                                    $cloningError->elements=$currentRequestElement;
+                                    $cloningError->uri=$currentRequestUri;
+                                    $cloningError->id_wiseconn=$id_wiseconn;
+                                    $cloningError->save();
+                                }
+                            }
                         }
-                    }else{
-                        try{
-                            $currentRequestUri='/farms/'.$farm->id_wiseconn.'/measures';
-                            $currentRequestElement='/farms/id/measures';
-                            $id_wiseconn=$farm->id_wiseconn;
-                            $measuresResponse = $this->requestWiseconn('GET',$currentRequestUri);
-                            $measures=json_decode($measuresResponse->getBody()->getContents());
-                            $this->info("==========Clonando nuevos elementos (".count($measures)." elementos)");
-                            foreach ($measures as $key => $measure) {
-                                $this->cloneBy($measure);
-                            }
-                        } catch (\Exception $e) {
-                            $this->error("Error:" . $e->getMessage());
-                            $this->error("Linea:" . $e->getLine());
-                            $this->error("currentRequestUri:" . $currentRequestUri);
-                            if(is_null(CloningErrors::where("elements",$currentRequestElement)->where("uri",$currentRequestUri)->where("id_wiseconn",$id_wiseconn)->first())){
-                                $cloningError=new CloningErrors();
-                                $cloningError->elements=$currentRequestElement;
-                                $cloningError->uri=$currentRequestUri;
-                                $cloningError->id_wiseconn=$id_wiseconn;
-                                $cloningError->save();
-                            }
-                        }
+                    } catch (\Exception $e) {
+                        $this->error("Error:" . $e->getMessage());
+                        $this->error("Linea:" . $e->getLine());
                     }
-                } catch (\Exception $e) {
-                    $this->error("Error:" . $e->getMessage());
-                    $this->error("Linea:" . $e->getLine());
                 }
-
             }
             $this->info("Success: Clone measures data by farm");
         } catch (\Exception $e) {
