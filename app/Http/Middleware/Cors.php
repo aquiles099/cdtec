@@ -14,11 +14,10 @@ class Cors
      * @return mixed
      */
     public function handle($request, Closure $next){
-          //->header("Access-Control-Allow-Origin", "https://dev.aparicioconsulting.com")
       return $next($request)
         ->header("Access-Control-Allow-Origin", "*")
-        ->header("Access-Control-Allow-Headers", "*");
-        ->header('Access-Control-Allow-Credentials', true);
-        ->header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+        ->header("Access-Control-Allow-Headers", "*")
+        ->header('Access-Control-Allow-Credentials', true)
+        ->header('Access-Control-Allow-Methods', "GET,PUT,POST,DELETE,OPTIONS");
     }
   }
